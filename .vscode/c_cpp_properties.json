@@ -1,0 +1,18 @@
+{
+    "configurations": [
+        {
+            "name": "Linux",
+            "includePath": [
+                "${default}",
+                "include",
+                "glfw/include",
+                "glad/include",
+                "Graphics/include"
+            ],
+            "defines": [],
+            "compilerPath": "/usr/bin/g++",
+            "cStandard": "c11"
+        }
+    ],
+    "version": 4
+}
