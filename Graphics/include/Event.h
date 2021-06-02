@@ -1,7 +1,7 @@
 #pragma once
 
 #include <string>
-#include <map>
+#include <unordered_map>
 #include <algorithm>
 #include <functional>
 #include <mutex>
@@ -45,5 +45,6 @@ public:
 protected:
     std::mutex _lock;
     uint64_t _id_counter = 0;
-    std::map<uint64_t, std::function<void(Args...)>> _actions;
+
+    std::unordered_map<uint64_t, std::function<void(Args...)>> _actions;
 };

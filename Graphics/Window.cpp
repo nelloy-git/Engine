@@ -1,5 +1,7 @@
 #include "Window.h"
 
+#include "glad/glad.h"
+
 #include <iostream>
 
 using namespace Graphics;
@@ -25,10 +27,7 @@ Window::Window(int width, int height, std::string title) :
     }
     __glfw2win[__glfw_window] = this;
 
-    glfwSetWindowCloseCallback(__glfw_window, [](GLFWwindow* glfw_win){
-        auto win = __glfw2win[glfw_win];
-        win->onClose.run();
-    });
+    __initEvents();
 
     gladLoadGL();
     glfwSwapInterval(0);
@@ -89,4 +88,43 @@ void Window::__glfwInit(){
     glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 0);
 
     __glfw_inited = true;
+}
+
+void Window::__initEvents(){
+    glfwSetWindowCloseCallback(__glfw_window, [](GLFWwindow* glfw_win){
+        auto win = __glfw2win[glfw_win];
+        win->onClose.run();
+    });
+
+    glfwSetCursorEnterCallback(__glfw_window, [](GLFWwindow* glfw_win, int entered){
+        auto win = __glfw2win[glfw_win];
+        if (entered == GLFW_TRUE){
+            win->onMouseEnter.run();
+        } else {
+            win->onMouseLeave.run();
+        }
+    });
+
+    glfwSetCursorPosCallback(__glfw_window, [](GLFWwindow* glfw_win, double x, double y){
+        auto win = __glfw2win[glfw_win];
+        win->onMouseMove.run(x, y);
+    });
+
+    glfwSetMouseButtonCallback(__glfw_window, [](GLFWwindow* glfw_win, int btn, int pressed, int mode){
+        auto win = __glfw2win[glfw_win];
+        if (pressed == GLFW_PRESS){
+            win->onMousePressed.run(btn, mode);
+        } else if (pressed == GLFW_RELEASE) {
+            win->onMouseReleased.run(btn, mode);
+        }
+    });
+    
+    glfwSetKeyCallback(__glfw_window, [](GLFWwindow* glfw_win, int key, int scancode, int action, int mode){
+        auto win = __glfw2win[glfw_win];
+        if (action == GLFW_PRESS){
+            win->onKeyboardPressed.run(key, scancode, mode);
+        } else if (action == GLFW_RELEASE){
+            win->onKeyboardReleased.run(key, scancode, mode);
+        }
+    });
 }

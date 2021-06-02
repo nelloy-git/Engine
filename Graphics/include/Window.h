@@ -6,7 +6,6 @@
 #include <thread>
 #include <mutex>
 
-#include <glad/glad.h>
 #define GLFW_INCLUDE_NONE
 #include "GLFW/glfw3.h"
 
@@ -29,7 +28,18 @@ public:
 
     Event<> onClose;
 
+    Event<> onMouseEnter;
+    Event<> onMouseLeave;
+    Event<double, double> onMouseMove;
+    Event<int, int> onMousePressed;
+    Event<int, int> onMouseReleased;
+
+    Event<int, int, int> onKeyboardPressed;
+    Event<int, int, int> onKeyboardReleased;
+
 private:
+    void __initEvents();
+
     GLFWwindow *__glfw_window;
 
     int __width;
