@@ -3,12 +3,13 @@
 #include <string>
 
 #include "glad/glad.h"
+#include "GLSL/Types.h"
 
 namespace Graphics::GLSL {
 
 class Shader {
 public:
-    Shader(const std::string& source);
+    Shader(ShaderType type, const std::string& source);
     virtual ~Shader();
 
     const GLuint id = 0;

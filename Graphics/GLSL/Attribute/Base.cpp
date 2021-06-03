@@ -4,13 +4,14 @@
 
 using namespace Graphics::GLSL::Attribute;
 
-Base::Base(const Program& program, const std::string& name) :
-    name(name){
-    auto pId = const_cast<GLuint*>(&id);
-    *pId = glGetAttribLocation(program.id, name.c_str());
+Base::Base(const std::shared_ptr<Program> program, const std::string& attr_name) :
+    program(program),
+    name(attr_name),
+    id(glGetAttribLocation(program->id, attr_name.c_str())){
 
     if (id == -1){
         std::string msg = "Graphics::GLSL::Attribute::Base " + name + " name is not available";
-        std::invalid_argument(msg.c_str());
+        printf(name.c_str());
+        throw std::invalid_argument(msg.c_str());
     }
 }

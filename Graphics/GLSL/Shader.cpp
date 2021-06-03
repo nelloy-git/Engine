@@ -2,11 +2,13 @@
 
 using namespace Graphics::GLSL;
 
-Shader::Shader(const std::string& source){
+Shader::Shader(ShaderType type, const std::string& source){
     auto pId = const_cast<GLuint*>(&id);
-    glCreateShader(1, pId);
-    glShaderSource(id, 1, source.c_str(), nullptr);
-    glCompileShader(id)
+    *pId = glCreateShader(static_cast<GLenum>(type));
+
+    auto c_str = source.c_str();
+    glShaderSource(id, 1, &c_str, nullptr);
+    glCompileShader(id);
 }
 
 Shader::~Shader(){

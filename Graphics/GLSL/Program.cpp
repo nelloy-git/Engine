@@ -2,7 +2,7 @@
 
 using namespace Graphics::GLSL;
 
-Program::Program(std::vector<Shader*>& attach){
+Program::Program(const std::vector<std::shared_ptr<Shader>>& attach){
     auto pId = const_cast<GLuint*>(&id);
     *pId = glCreateProgram();
 
@@ -12,6 +12,6 @@ Program::Program(std::vector<Shader*>& attach){
     glLinkProgram(id);
 }
 
-Shader::~Shader(){
-    glDeleteShader(id);
+Program::~Program(){
+    glDeleteProgram(id);
 }

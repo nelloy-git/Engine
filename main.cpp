@@ -6,22 +6,21 @@
  
 #include <stdlib.h>
 #include <stdio.h>
+#include <memory>
  
 #include "Window.h"
 #include "VBO/Array.h"
+#include "GLSL/Shader.h"
+#include "GLSL/Program.h"
+#include "GLSL/Attribute/VertexArray.h"
 
 struct Vertices
 {
     float x, y;
     float r, g, b;
-} vertices[3] =
-{
-    { -0.6f, -0.4f, 1.f, 0.f, 0.f },
-    {  0.6f, -0.4f, 0.f, 1.f, 0.f },
-    {   0.f,  0.6f, 0.f, 0.f, 1.f }
 };
  
-static const char* vertex_shader_text =
+std::string vertex_shader_text =
 "#version 110\n"
 "uniform mat4 MVP;\n"
 "attribute vec3 vCol;\n"
@@ -33,7 +32,7 @@ static const char* vertex_shader_text =
 "    color = vCol;\n"
 "}\n";
  
-static const char* fragment_shader_text =
+std::string fragment_shader_text =
 "#version 110\n"
 "varying vec3 color;\n"
 "void main()\n"
@@ -46,44 +45,45 @@ int main(int argc, const char** argv){
     auto window = new Graphics::Window(640, 480, "Test");
     window->setActive(true);
     
-    GLuint vertex_buffer, vertex_shader, fragment_shader, program;
-    GLint mvp_location, vpos_location, vcol_location;
-    
     gladLoadGL();
     glfwSwapInterval(0);
  
     // NOTE: OpenGL error checks have been omitted for brevity
 
-    auto vbo = new Graphics::VBO::Array<Vertices>();
-    vbo->load(vertices, Graphics::VBO::UsageType::STATIC);
- 
-    vertex_shader = glCreateShader(GL_VERTEX_SHADER);
-    glShaderSource(vertex_shader, 1, &vertex_shader_text, NULL);
-    glCompileShader(vertex_shader);
- 
-    fragment_shader = glCreateShader(GL_FRAGMENT_SHADER);
-    glShaderSource(fragment_shader, 1, &fragment_shader_text, NULL);
-    glCompileShader(fragment_shader);
- 
-    program = glCreateProgram();
-    glAttachShader(program, vertex_shader);
-    glAttachShader(program, fragment_shader);
-    glLinkProgram(program);
- 
-    mvp_location = glGetUniformLocation(program, "MVP");
-    vpos_location = glGetAttribLocation(program, "vPos");
-    vcol_location = glGetAttribLocation(program, "vCol");
- 
-    vbo->bind();
+    Vertices vertices[3] = {
+        { -0.6f, -0.4f, 1.f, 0.f, 0.f },
+        {  0.6f, -0.4f, 0.f, 1.f, 0.f },
+        {   0.f,  0.6f, 0.f, 0.f, 1.f }
+    };
 
-    glEnableVertexAttribArray(vpos_location);
-    glVertexAttribPointer(vpos_location, 2, GL_FLOAT, GL_FALSE,
-                          sizeof(vertices[0]), (void*) 0);
+    auto vbo = std::make_shared<Graphics::VBO::Array>();
+    vbo->load(sizeof(Vertices[3]), &vertices, Graphics::VBO::UsageType::STATIC);
 
-    glEnableVertexAttribArray(vcol_location);
-    glVertexAttribPointer(vcol_location, 3, GL_FLOAT, GL_FALSE,
-                          sizeof(vertices[0]), (void*) (sizeof(float) * 2));
+    auto vshader = std::make_shared<Graphics::GLSL::Shader>(
+        Graphics::GLSL::ShaderType::VERTEX, vertex_shader_text);
 
+    auto fshader = std::make_shared<Graphics::GLSL::Shader>(
+        Graphics::GLSL::ShaderType::FRAGMENT, fragment_shader_text);
+ 
+    std::vector<std::shared_ptr<Graphics::GLSL::Shader>> shader_list;
+    shader_list.push_back(vshader);
+    shader_list.push_back(fshader);
+
+    auto progr = std::make_shared<Graphics::GLSL::Program>(shader_list);
+
+    GLuint mvp_location = glGetUniformLocation(progr->id, "MVP");
+
+    auto vpos = std::make_shared<Graphics::GLSL::Attribute::VertexArray>(
+        progr, "vPos", vbo,
+        Graphics::GLSL::DataSize::Vec2, Graphics::GLSL::DataType::Float, false, 
+        sizeof(Vertices), 0
+    );
+
+    auto vcol = std::make_shared<Graphics::GLSL::Attribute::VertexArray>(
+        progr, "vCol", vbo,
+        Graphics::GLSL::DataSize::Vec3, Graphics::GLSL::DataType::Float, false, 
+        sizeof(Vertices), 2 * sizeof(float)
+    );
 
     double lastTime = glfwGetTime();
     int nbFrames = 0;
@@ -109,7 +109,7 @@ int main(int argc, const char** argv){
         mat4x4_ortho(p, -ratio, ratio, -1.f, 1.f, 1.f, -1.f);
         mat4x4_mul(mvp, p, m);
  
-        glUseProgram(program);
+        glUseProgram(progr->id);
         glUniformMatrix4fv(mvp_location, 1, GL_FALSE, (const GLfloat*) mvp);
         glDrawArrays(GL_TRIANGLES, 0, 3);
 

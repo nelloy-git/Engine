@@ -8,13 +8,9 @@
 
 namespace Graphics::VBO {
 
-template<typename T>
-class Array : public Object<T> {
+class Array : public Object {
 public:
-    Array() : Object<T>(Graphics::VBO::DataType::ARRAY){
-
-    };
-
+    Array() : Object(Graphics::VBO::DataType::ARRAY){};
     virtual ~Array(){};
 
 private:

@@ -1,5 +1,7 @@
 #pragma once
 
+#include <memory>
+
 #include "glad/glad.h"
 
 #include "VBO/utils/DataType.h"
@@ -7,48 +9,25 @@
 
 namespace Graphics::VBO {
 
-template<typename T>
 class Object {
 public:
-    Object(DataType type) :
-        type(type){
+    Object(DataType type);
+    virtual ~Object();
 
-        auto pId = const_cast<GLuint*>(&id);
-        glGenBuffers(1, pId);
-    };
+    void load(const size_t size, const void* ptr, UsageType usage);
 
-    virtual ~Object(){
-        glDeleteBuffers(1, &id);
-    };
+    virtual void bind();
+    virtual void unbind();
 
-    template<int n>
-    void load(const T(&data)[n], UsageType usage){
-        __size = n;
-        __data = &data[0];
-        __usage = usage;
-
-        glBindBuffer(static_cast<GLenum>(type), id);
-        glBufferData(static_cast<GLenum>(type), n * sizeof(T), &data, static_cast<GLenum>(usage));
-        glBindBuffer(static_cast<GLenum>(type), 0);
-    };
-
-    virtual void bind(){
-        glBindBuffer(static_cast<GLenum>(type), id);
-    };
-
-    virtual void unbind(){
-        glBindBuffer(static_cast<GLenum>(type), 0);
-    };
-
+    const GLuint id;
     const DataType type;
-    const GLuint id = 0;
 
+    const void* ptr();
     int size();
-    const T* ptr();
     UsageType usage();
 
-private:
-    const T* __data;
+protected:
+    const void* __ptr;
     GLsizeiptr __size;
     UsageType __usage;
 };

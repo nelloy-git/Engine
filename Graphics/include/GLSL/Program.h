@@ -1,5 +1,6 @@
 #pragma once
 
+#include <memory>
 #include <vector>
 
 #include "glad/glad.h"
@@ -10,7 +11,7 @@ namespace Graphics::GLSL {
 
 class Program {
 public:
-    Program(std::vector<Shader*>& attach);
+    Program(const std::vector<std::shared_ptr<Shader>>& attach);
     virtual ~Program();
 
     

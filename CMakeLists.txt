@@ -10,7 +10,12 @@ include_directories(
     ./Graphics/glad/include
 )
 
-add_executable(main main.cpp)
-target_link_libraries(main
+add_executable(${PROJECT_NAME} main.cpp)
+target_link_libraries(${PROJECT_NAME}
     Graphics
+)
+set_property (TARGET ${PROJECT_NAME}
+  PROPERTY
+    # Enable C++17 standard compliance
+    CXX_STANDARD 17
 )
