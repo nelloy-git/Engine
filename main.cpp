@@ -8,8 +8,9 @@
 #include <stdio.h>
  
 #include "Window.h"
+#include "VBO/Array.h"
 
-static const struct
+struct Vertices
 {
     float x, y;
     float r, g, b;
@@ -40,22 +41,21 @@ static const char* fragment_shader_text =
 "    gl_FragColor = vec4(color, 1.0);\n"
 "}\n";
  
-int main(void)
-{
-    GLuint vertex_buffer, vertex_shader, fragment_shader, program;
-    GLint mvp_location, vpos_location, vcol_location;
+int main(int argc, const char** argv){
     
     auto window = new Graphics::Window(640, 480, "Test");
     window->setActive(true);
+    
+    GLuint vertex_buffer, vertex_shader, fragment_shader, program;
+    GLint mvp_location, vpos_location, vcol_location;
     
     gladLoadGL();
     glfwSwapInterval(0);
  
     // NOTE: OpenGL error checks have been omitted for brevity
- 
-    glGenBuffers(1, &vertex_buffer);
-    glBindBuffer(GL_ARRAY_BUFFER, vertex_buffer);
-    glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
+
+    auto vbo = new Graphics::VBO::Array<Vertices>();
+    vbo->load(vertices, Graphics::VBO::UsageType::STATIC);
  
     vertex_shader = glCreateShader(GL_VERTEX_SHADER);
     glShaderSource(vertex_shader, 1, &vertex_shader_text, NULL);
@@ -74,9 +74,12 @@ int main(void)
     vpos_location = glGetAttribLocation(program, "vPos");
     vcol_location = glGetAttribLocation(program, "vCol");
  
+    vbo->bind();
+
     glEnableVertexAttribArray(vpos_location);
     glVertexAttribPointer(vpos_location, 2, GL_FLOAT, GL_FALSE,
                           sizeof(vertices[0]), (void*) 0);
+
     glEnableVertexAttribArray(vcol_location);
     glVertexAttribPointer(vcol_location, 3, GL_FLOAT, GL_FALSE,
                           sizeof(vertices[0]), (void*) (sizeof(float) * 2));

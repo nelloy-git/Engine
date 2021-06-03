@@ -5,9 +5,9 @@
             "includePath": [
                 "${default}",
                 "include",
-                "glfw/include",
-                "glad/include",
-                "Graphics/include"
+                "Graphics/include",
+                "Graphics/glfw/include",
+                "Graphics/glad/include"
             ],
             "defines": [],
             "compilerPath": "/usr/bin/g++",

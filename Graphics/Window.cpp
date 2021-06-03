@@ -3,6 +3,7 @@
 #include "glad/glad.h"
 
 #include <iostream>
+#include <exception>
 
 using namespace Graphics;
 
@@ -23,7 +24,8 @@ Window::Window(int width, int height, std::string title) :
     __glfw_window = glfwCreateWindow(width, height, title.c_str(), NULL, NULL);
     if (__glfw_window == nullptr){
         glfwTerminate();
-        throw "glfwCreateWindow failed";
+        __glfw_inited = false;
+        throw std::runtime_error("glfwCreateWindow failed");
     }
     __glfw2win[__glfw_window] = this;
 
@@ -81,11 +83,11 @@ bool Window::setActive(bool f){
 
 void Window::__glfwInit(){
     if (!glfwInit()){
-        throw "glfwInit failed.";
+        throw std::runtime_error("glfwInit failed.");
     }
 
-    glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
-    glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 0);
+    glfwWindowHint(GLFW_VERSION_MAJOR, 3);
+    glfwWindowHint(GLFW_VERSION_MINOR, 0);
 
     __glfw_inited = true;
 }

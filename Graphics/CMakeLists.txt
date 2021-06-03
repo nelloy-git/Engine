@@ -11,6 +11,7 @@ add_subdirectory(./glfw)
 
 add_library (Graphics STATIC
     ./Window.cpp
+    ./VBO/Object.cpp
 )
 
 target_link_libraries(Graphics
