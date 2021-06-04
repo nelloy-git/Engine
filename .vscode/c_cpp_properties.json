@@ -5,7 +5,8 @@
             "includePath": [
                 "${default}",
                 "include",
-                "Graphics/include",
+                "Graphics",
+                "Graphics/assimp/include",
                 "Graphics/glfw/include",
                 "Graphics/glad/include"
             ],

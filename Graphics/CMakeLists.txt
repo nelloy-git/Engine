@@ -2,26 +2,32 @@ cmake_minimum_required(VERSION 3.1...3.17 FATAL_ERROR)
 
 project(Graphics LANGUAGES CXX)
 
-include_directories(./include)
+include_directories(.)
 include_directories(./glad/include)
 include_directories(./glfw/include)
+include_directories(./assimp/include)
 
+add_subdirectory(./assimp)
 add_subdirectory(./glad)
 add_subdirectory(./glfw)
 
 add_library (${PROJECT_NAME} STATIC
     ./Window.cpp
+
     ./VBO/Object.cpp
     
     ./GLSL/Shader.cpp
     ./GLSL/Program.cpp
-    ./GLSL/Attribute/Base.cpp
-    ./GLSL/Attribute/VertexArray.cpp
+
+    ./Data/AssimpImporter.cpp
+    ./Data/Mesh.cpp
+    ./Data/Model.cpp
 )
 
 target_link_libraries(${PROJECT_NAME}
     glad
     glfw
+    assimp
 )
 
 set_property (TARGET ${PROJECT_NAME}

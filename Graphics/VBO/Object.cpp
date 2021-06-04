@@ -2,44 +2,34 @@
 
 using namespace Graphics::VBO;
 
-Object::Object(DataType type) :
+Object::Object(BufferType type, size_t size, UsageType usage) :
     id(0),
-    type(type){
+    type(type),
+    size(size),
+    usage(usage){
 
     auto pId = const_cast<GLuint*>(&id);
     glGenBuffers(1, pId);
+
+    glBindBuffer(static_cast<GLenum>(type), id);
+    glBufferData(static_cast<GLenum>(type), size, nullptr, static_cast<GLenum>(usage));
+    glBindBuffer(static_cast<GLenum>(type), 0);
 }
 
 Object::~Object(){
     glDeleteBuffers(1, &id);
 }
 
-void Object::load(const size_t size, const void* ptr, UsageType usage){
-    __size = size;
-    __ptr = ptr;
-    __usage = usage;
-
+void Object::load(int bytes_offset, size_t size, const void* data){
     glBindBuffer(static_cast<GLenum>(type), id);
-    glBufferData(static_cast<GLenum>(type), __size, ptr, static_cast<GLenum>(usage));
+    glBufferSubData(static_cast<GLenum>(type), bytes_offset, size, data);
     glBindBuffer(static_cast<GLenum>(type), 0);
 }
 
-void Object::bind(){
+void Object::bind() const {
     glBindBuffer(static_cast<GLenum>(type), id);
 }
 
-void Object::unbind(){
+void Object::unbind() const {
     glBindBuffer(static_cast<GLenum>(type), 0);
-}
-
-int Object::size(){
-    return __size;
-}
-
-const void* Object::ptr(){
-    return __ptr;
-}
-
-UsageType Object::usage(){
-    return __usage;
 }
