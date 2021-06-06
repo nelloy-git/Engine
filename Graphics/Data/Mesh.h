@@ -1,41 +1,43 @@
 #pragma once
 
+#include <memory>
+#include <stdexcept>
+
 #include "assimp/mesh.h"
 
-#include "VBO/Array.h"
+#include "GLwrap/Ebo.h"
+#include "GLwrap/Vao.h"
+#include "GLwrap/Vbo.h"
 
 namespace Graphics::Data {
 
-class Mesh : public VBO::Array {
+class Mesh {
 public:
     Mesh(const aiMesh *ai_mesh);
     virtual ~Mesh();
 
-    int count_vertices(){return __count_vertices;};
+    void draw();
 
-    int offset_vertices(){return __offset_vertices;};
-    int offset_normals(){return __offset_normals;};
-    int offset_colors(){return __offset_colors;};
+    int vertices_count(){return __vertices_count;};
 
-    size_t size_vertices(){return __size_vertices;};
-    size_t size_normals(){return __size_normals;};
-    size_t size_colors(){return __size_colors;};
+    const int attribute_vertice = 0;
+    const int attribute_normal = 1;
+    const int attribute_color = 2;
 
 private:
-    static size_t __getBufferSize(const aiMesh *ai_mesh);
-    static size_t __getVerticesSize(const aiMesh *ai_mesh);
-    static size_t __getNormalsSize(const aiMesh *ai_mesh);
-    static size_t __getColorsSize(const aiMesh *ai_mesh);
+    void __initVBO(const aiMesh *ai_mesh);
+    void __initEBO(const aiMesh *ai_mesh);
+    void __initVAO();
 
-    int __count_vertices;
+    int __vertices_count;
+    int __faces_count;
+    std::unique_ptr<GLwrap::VBO> __vertices;
+    std::unique_ptr<GLwrap::VBO> __normals;
+    std::unique_ptr<GLwrap::VBO> __colors;
+    
+    std::unique_ptr<GLwrap::EBO> __faces;
 
-    int __offset_vertices;
-    int __offset_normals;
-    int __offset_colors;
-
-    size_t __size_vertices;
-    size_t __size_normals;
-    size_t __size_colors;
+    std::unique_ptr<GLwrap::VAO> __vao;
 };
 
 }

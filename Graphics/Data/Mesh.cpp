@@ -2,41 +2,74 @@
 
 using namespace Graphics::Data;
 
-Mesh::Mesh(const aiMesh *ai_mesh) :
-    VBO::Array(Mesh::__getBufferSize(ai_mesh), VBO::UsageType::STATIC){
+Mesh::Mesh(const aiMesh *ai_mesh){
+
+    __vao = std::make_unique<GLwrap::VAO>();
+    __vao->bind();
     
-    __count_vertices = ai_mesh->mNumVertices;
+    __initVBO(ai_mesh);
+    __initEBO(ai_mesh);
 
-    __offset_vertices = 0;
-    load(__offset_vertices, __getVerticesSize(ai_mesh), ai_mesh->mVertices);
+    __vertices->bind();
+    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), 0);
+    glEnableVertexAttribArray(0);
+    __vertices->unbind();
 
-    __offset_normals = __offset_vertices + __getVerticesSize(ai_mesh);
-    load(__offset_normals, __getNormalsSize(ai_mesh), ai_mesh->mNormals);
-
-    __offset_colors = __offset_normals + __getNormalsSize(ai_mesh);
-    load(__offset_colors, __getColorsSize(ai_mesh), ai_mesh->mColors[0]);
+    __vao->unbind();
 }
 
 Mesh::~Mesh(){
 
 }
 
-size_t Mesh::__getBufferSize(const aiMesh *ai_mesh){
-    size_t s = 0;
-    s += __getVerticesSize(ai_mesh);
-    s += __getNormalsSize(ai_mesh);
-    s += __getColorsSize(ai_mesh);
-    return s;
+void Mesh::draw(){
+    __vao->bind();
+    glDrawElements(GL_TRIANGLES, __vertices_count, GL_UNSIGNED_INT, 0);
 }
 
-size_t Mesh::__getVerticesSize(const aiMesh *ai_mesh){
-    return ai_mesh->mNumVertices * sizeof(ai_mesh->mVertices[0]);
+void Mesh::__initVBO(const aiMesh *ai_mesh){
+
+    __vertices_count = ai_mesh->mNumVertices;
+
+    __vertices = std::make_unique<GLwrap::VBO>(__vertices_count * sizeof(ai_mesh->mVertices[0]));
+    __vertices->load(ai_mesh->mVertices);
+
+    // __normals = std::make_unique<GLwrap::VBO>(count * sizeof(ai_mesh->mNormals[0]));
+    // __normals->load(ai_mesh->mNormals);
+
+    // // TODO
+    // __colors = std::make_unique<GLwrap::VBO>(count * sizeof(ai_mesh->mColors[0][0]));
+    // __colors->load(ai_mesh->mColors[0]);
+    
 }
 
-size_t Mesh::__getNormalsSize(const aiMesh *ai_mesh){
-    return ai_mesh->mNumVertices * sizeof(ai_mesh->mNormals[0]);
+void Mesh::__initEBO(const aiMesh *ai_mesh){
+    __faces_count = ai_mesh->mNumFaces;
+    
+    int offset = 0;
+    auto size = 3 * sizeof(ai_mesh->mFaces[0].mIndices[0]);
+    __faces = std::make_unique<GLwrap::EBO>(__faces_count * 3 * sizeof(ai_mesh->mFaces[0].mIndices[0]));
+
+    for (int i = 0; i < __faces_count; i++){
+        if (ai_mesh->mFaces->mNumIndices != 3){
+            throw std::invalid_argument("");
+        }
+
+        __faces->load(ai_mesh->mFaces[i].mIndices, offset, size);
+        offset += size;
+    }
+    __faces->bind();
+    // __faces.
 }
 
-size_t Mesh::__getColorsSize(const aiMesh *ai_mesh){
-    return ai_mesh->mNumVertices * sizeof(*ai_mesh->mColors[0]);
+void Mesh::__initVAO(){
+    // std::vector<GLwrap::VAOdata> buff_list = {
+    //     {GLwrap::ShaderDataSize::Vec3, GLwrap::ShaderDataType::Float, __vertices.get()},
+    //     {GLwrap::ShaderDataSize::Vec3, GLwrap::ShaderDataType::Float, __normals.get()},
+    //     {GLwrap::ShaderDataSize::Vec3, GLwrap::ShaderDataType::Float, __colors.get()},
+    //     {GLwrap::ShaderDataSize::Vec3, GLwrap::ShaderDataType::UInt, __faces.get()},
+    // };
+
+    // __vao = std::make_unique<GLwrap::VAO>();
+    // __vao->attrib(buff_list);
 }

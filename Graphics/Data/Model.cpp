@@ -18,6 +18,10 @@ bool Model::load(const std::string &path){
 
     auto scene =  std::unique_ptr<const aiScene>(importer->ReadFile(path,
         aiProcess_Triangulate | aiProcess_GenNormals));
+    if (!scene){
+        return false;
+    }
+
     __loadMeshes(*scene);
 
     return true;

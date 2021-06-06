@@ -7,8 +7,9 @@ add_subdirectory(Graphics)
 include_directories(
     ./include
     ./Graphics
-    ./Graphics/glad/include
-    ./Graphics/assimp/include
+    ./Graphics/3rdparty/glad/include
+    ./Graphics/3rdparty/assimp/include
+    ./Graphics/3rdparty/glm
 )
 
 add_executable(${PROJECT_NAME} main.cpp)

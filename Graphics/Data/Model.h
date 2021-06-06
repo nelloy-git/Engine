@@ -6,8 +6,6 @@
 
 #include "assimp/scene.h"
 
-#include "VBO/Array.h"
-
 #include "Data/Mesh.h"
 
 namespace Graphics::Data {

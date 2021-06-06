@@ -3,41 +3,35 @@
 #include <GLFW/glfw3.h>
  
 #include "linmath.h"
+#include "glm/glm.hpp"
+#include "glm/gtc/matrix_transform.hpp"
+#include "glm/gtc/type_ptr.hpp"
  
 #include <stdlib.h>
 #include <stdio.h>
 #include <memory>
  
 #include "Window.h"
-#include "VBO/Array.h"
-#include "GLSL/Shader.h"
-#include "GLSL/Program.h"
+#include "GLwrap/Shader.h"
+#include "GLwrap/Program.h"
 
 #include "Data/Model.h"
 
 using namespace Graphics;
-
-struct Vertices
-{
-    float x, y, z;
-    float r, g, b;
-};
  
 std::string vertex_shader_text =
-"#version 110\n"
-"uniform mat4 MVP;\n"
-"attribute vec3 vCol;\n"
-"attribute vec3 vPos;\n"
-"varying vec3 color;\n"
+"#version 330\n"
+"layout (location = 0) in vec3 vPos;\n"
+"uniform mat4 model;\n"
+// "uniform mat4 view;\n"
+// "uniform mat4 projection;\n"
 "void main()\n"
 "{\n"
-"    gl_Position = MVP * vec4(0.01 * vPos.x, 0.01 * vPos.y, 0.01 * vPos.z, 1.0);\n"
-"    color = vCol;\n"
+"    gl_Position = model * vec4(aPos, 1.0);\n"
 "}\n";
  
 std::string fragment_shader_text =
-"#version 110\n"
-"varying vec3 color;\n"
+"#version 330\n"
 "void main()\n"
 "{\n"
 "    gl_FragColor = vec4(1.0, 1.0, 1.0, 1.0);\n"
@@ -51,25 +45,24 @@ int main(int argc, const char** argv){
     gladLoadGL();
     glfwSwapInterval(0);
 
-    Data::Model model;
-    model.load("../test/OBJ/rifle.obj");
+    Data::Model model3d;
+    if (!model3d.load("../test/OBJ/rifle.obj")){
+        return 0;
+    }
 
 
-    auto vshader = std::make_shared<GLSL::Shader>(
-        GLSL::ShaderType::VERTEX, vertex_shader_text);
+    auto vshader = std::make_shared<GLwrap::Shader>(
+        GLwrap::ShaderType::VERTEX, vertex_shader_text);
 
-    auto fshader = std::make_shared<GLSL::Shader>(
-        GLSL::ShaderType::FRAGMENT, fragment_shader_text);
+    auto fshader = std::make_shared<GLwrap::Shader>(
+        GLwrap::ShaderType::FRAGMENT, fragment_shader_text);
  
-    std::vector<std::shared_ptr<GLSL::Shader>> shader_list;
+    std::vector<std::shared_ptr<GLwrap::Shader>> shader_list;
     shader_list.push_back(vshader);
     shader_list.push_back(fshader);
 
-    auto progr = std::make_shared<GLSL::Program>(shader_list);
-    // progr->linkFVec2Array("vPos", *vbo, sizeof(Vertices), 0);
-    // progr->linkFVec3Array("vCol", *vbo, sizeof(Vertices), (void*)(2 * sizeof(float)));
+    auto progr = std::make_shared<GLwrap::Program>(shader_list);
 
-    GLuint mvp_location = glGetUniformLocation(progr->id, "MVP");
 
     double lastTime = glfwGetTime();
     int nbFrames = 0;
@@ -83,26 +76,41 @@ int main(int argc, const char** argv){
         float ratio;
         int width = 640;
         int height = 480;
-        mat4x4 m, p, mvp;
+        
+        glm::mat4 model = glm::mat4(1.0f);
+        glm::vec3 pos = glm::vec3(1.f, 0, 0);
+        model = glm::translate<float>(model, pos);
+        GLuint model_loc = glGetUniformLocation(progr->id, "model");
+        glUniformMatrix4fv(model_loc, 1, GL_FALSE, glm::value_ptr(model));
+        // model = glm::rotate(model, (float)glfwGetTime() * glm::radians(50.0f), glm::vec3(0.5f, 1.0f, 0.0f)); 
+
+        // glm::mat4 view = glm::mat4(1.0f);
+        // // note that we're translating the scene in the reverse direction of where we want to move
+        // view = glm::translate<float>(view, glm::vec3(0.0f, 0.0f, -3.0f)); 
+        // GLuint view_loc = glGetUniformLocation(progr->id, "view");
+        // glUniformMatrix4fv(view_loc, 1, GL_FALSE, glm::value_ptr(view));
+
+        // glm::mat4 projection;
+        // projection = glm::perspective<float>(glm::radians(45.0f), width / height, 0.1f, 100.0f);
+        // GLuint projection_loc = glGetUniformLocation(progr->id, "projection");
+        // glUniformMatrix4fv(projection_loc, 1, GL_FALSE, glm::value_ptr(projection));
+
+        // glm::mat4 trans = glm::mat4(1.0f);
+        // trans = glm::rotate(trans, (float)glfwGetTime() * glm::pi<float>() / 4, glm::vec3(0.0, 0.0, 1.0));
+        // trans = glm::scale(trans, glm::vec3(0.01, 0.01, 0.01));  
  
         ratio = width / (float) height;
  
         glViewport(0, 0, width, height);
         glClear(GL_COLOR_BUFFER_BIT);
- 
-        mat4x4_identity(m);
-        mat4x4_rotate_Z(m, m, (float) glfwGetTime());
-        mat4x4_rotate_Y(m, m, (float) glfwGetTime() / 2);
-        mat4x4_ortho(p, -ratio, ratio, -1.f, 1.f, 1.f, -1.f);
-        mat4x4_mul(mvp, p, m);
 
-        for (auto mesh : model.meshes){
-            progr->linkFVec3Array("vPos", *mesh, sizeof(aiVector3D), (void*) mesh->offset_vertices());
-            progr->linkFVec3Array("vCol", *mesh, sizeof(aiColor4D), (void*) mesh->offset_colors());
+        glUseProgram(progr->id);
+            
 
-            glUseProgram(progr->id);
-            glUniformMatrix4fv(mvp_location, 1, GL_FALSE, (const GLfloat*) mvp);
-            glDrawArrays(GL_TRIANGLES, 0, mesh->count_vertices());
+        for (auto mesh : model3d.meshes){
+
+            mesh->draw();
+            // glDrawArrays(GL_TRIANGLES, 0, mesh->count_vertices());
         }
         
 
@@ -121,6 +129,6 @@ int main(int argc, const char** argv){
     }
  
     glfwTerminate();
-    exit(EXIT_SUCCESS);
+    return 0;
 }
  
