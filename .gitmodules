@@ -1,3 +1,6 @@
 [submodule "glfw"]
 	path = glfw
 	url = https://github.com/glfw/glfw.git
+[submodule "Graphics/3rdparty/glm"]
+	path = Graphics/3rdparty/glm
+	url = https://github.com/g-truc/glm.git
