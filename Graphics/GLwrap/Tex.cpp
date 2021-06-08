@@ -28,6 +28,11 @@ void Tex::unbind(){
     glBindTexture(GL_TEXTURE_2D, 0);
 }
 
+void Tex::setActive(GLuint index){
+    glActiveTexture(GL_TEXTURE0 + index);
+    glBindTexture(GL_TEXTURE_2D, id);
+}
+
 void Tex::load(GLsizei width, GLsizei height, const void *data,
                const std::vector<std::pair<Tex2DParamInt, GLuint>> &uint_params){
 

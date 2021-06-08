@@ -53,7 +53,7 @@ void Mesh::__initEBO(const aiMesh *ai_mesh){
     
     int offset = 0;
     auto size = 3 * sizeof(ai_mesh->mFaces[0].mIndices[0]);
-    __faces = std::make_unique<GLwrap::EBO>(__faces_count * 3 * sizeof(ai_mesh->mFaces[0].mIndices[0]));
+    __faces = std::make_unique<GLwrap::VEO>(__faces_count * 3 * sizeof(ai_mesh->mFaces[0].mIndices[0]));
 
     for (int i = 0; i < __faces_count; i++){
         if (ai_mesh->mFaces->mNumIndices != 3){

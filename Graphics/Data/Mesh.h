@@ -44,7 +44,7 @@ private:
     std::unique_ptr<GLwrap::VBO> __uv;
     std::shared_ptr<GLwrap::Tex> __texture;
     
-    std::unique_ptr<GLwrap::EBO> __faces;
+    std::unique_ptr<GLwrap::VEO> __faces;
 
     std::unique_ptr<GLwrap::VAO> __vao;
 };
