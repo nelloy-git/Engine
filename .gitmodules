@@ -7,3 +7,6 @@
 [submodule "Graphics/3rdparty/stb"]
 	path = Graphics/3rdparty/stb
 	url = https://github.com/nothings/stb.git
+[submodule ".\\Graphics\\GLwrap\\glfw"]
+	path = .\\Graphics\\GLwrap\\glfw
+	url = https://github.com/glfw/glfw.git
