@@ -4,11 +4,11 @@
             "name": "Linux",
             "includePath": [
                 "${default}",
-                "include",
-                "Graphics",
-                "Graphics/3rdparty/assimp/include",
-                "Graphics/3rdparty/glfw/include",
-                "Graphics/3rdparty/glad/include",
+                "Graphics/GLwrap",
+                "Graphics/GLwrap/glad/include",
+                "Graphics/GLwrap/glfw/include",
+
+                "Graphics/Data/assimp/include",
                 "Graphics/3rdparty/glm",
                 "Graphics/3rdparty/stb"
             ],
