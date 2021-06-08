@@ -8,7 +8,7 @@
                 "Graphics/GLwrap/glad/include",
                 "Graphics/GLwrap/glfw/include",
 
-                "Graphics/Data/assimp/include",
+                "Graphics/3rdparty/assimp/include",
                 "Graphics/3rdparty/glm",
                 "Graphics/3rdparty/stb"
             ],
