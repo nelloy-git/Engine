@@ -12,25 +12,25 @@ include_directories(
     ./Graphics/3rdparty/glm
 )
 
-set(OpenCV_DIR "/usr/local/opencv_3.4.7/share/OpenCV")
-find_package(OpenCV REQUIRED)
-if (NOT ${OPENCV_FOUND})
-    message(SEND_ERROR "Failed to find OpenCV")
-    return()
-endif()
-include_directories(${OpenCV_INCLUDE_DIRS})
+# set(OpenCV_DIR "/usr/local/opencv_3.4.7/share/OpenCV")
+# find_package(OpenCV REQUIRED)
+# if (NOT ${OPENCV_FOUND})
+#     message(SEND_ERROR "Failed to find OpenCV")
+#     return()
+# endif()
+# include_directories(${OpenCV_INCLUDE_DIRS})
 
-add_executable(undist undistortion.cpp)
-target_link_libraries(undist
-    Graphics
-    ${OpenCV_LIBRARIES}
-)
+# add_executable(undist undistortion.cpp)
+# target_link_libraries(undist
+#     Graphics
+#     ${OpenCV_LIBRARIES}
+# )
 
-set_property (TARGET undist
-  PROPERTY
-    # Enable C++17 standard compliance
-    CXX_STANDARD 17
-)
+# set_property (TARGET undist
+#   PROPERTY
+#     # Enable C++17 standard compliance
+#     CXX_STANDARD 17
+# )
 
 add_executable(${PROJECT_NAME} main.cpp)
 target_link_libraries(${PROJECT_NAME}

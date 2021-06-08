@@ -9,7 +9,8 @@
                 "Graphics/3rdparty/assimp/include",
                 "Graphics/3rdparty/glfw/include",
                 "Graphics/3rdparty/glad/include",
-                "Graphics/3rdparty/glm"
+                "Graphics/3rdparty/glm",
+                "Graphics/3rdparty/stb"
             ],
             "defines": [],
             "compilerPath": "/usr/bin/gcc-8",

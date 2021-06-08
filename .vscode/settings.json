@@ -83,6 +83,10 @@
         "*.ipp": "cpp",
         "hash_map": "cpp",
         "hash_set": "cpp",
-        "bitset": "cpp"
+        "bitset": "cpp",
+        "numeric": "cpp",
+        "regex": "cpp",
+        "stack": "cpp",
+        "unordered_set": "cpp"
     }
 }

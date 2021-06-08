@@ -4,12 +4,12 @@ project(GLAD LANGUAGES C)
 
 include_directories(./include)
 add_library (glad STATIC
-    ./src/egl.c
+    # ./src/egl.c
     ./src/gl.c
-    ./src/gles1.c
-    ./src/gles2.c
-    ./src/glsc2.c
-    ./src/glx.c
+    # ./src/gles1.c
+    # ./src/gles2.c
+    # ./src/glsc2.c
+    # ./src/glx.c
     # ./src/vulkan.c
     # ./src/wgl.c
 )

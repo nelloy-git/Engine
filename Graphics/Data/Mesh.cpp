@@ -4,15 +4,18 @@
 
 using namespace Graphics::Data;
 
-Mesh::Mesh(const aiMesh *ai_mesh){
-
+Mesh::Mesh(const aiMesh *ai_mesh, 
+           const std::vector<std::shared_ptr<Texture>> &textures){
     __vao = std::make_unique<GLwrap::VAO>();
     __vao->bind();
     
     __initVBO(ai_mesh);
     __initEBO(ai_mesh);
+    __initTex(ai_mesh, textures);
 
     __vertices->attrib(0, GLwrap::ShaderDataSize::Vec3, GLwrap::ShaderDataType::Float);
+    __normals->attrib(1, GLwrap::ShaderDataSize::Vec3, GLwrap::ShaderDataType::Float);
+    __uv->attrib(2, GLwrap::ShaderDataSize::Vec3, GLwrap::ShaderDataType::Float);
 
     __vao->unbind();
 }
@@ -23,7 +26,11 @@ Mesh::~Mesh(){
 
 void Mesh::draw(){
     __vao->bind();
-    glDrawElements(GL_TRIANGLES, __vertices_count, GL_UNSIGNED_INT, 0);
+
+    glActiveTexture(GL_TEXTURE0);
+    __texture->bind();
+
+    glDrawElements(GL_TRIANGLES, 3 * __faces_count, GL_UNSIGNED_INT, 0);
 }
 
 void Mesh::__initVBO(const aiMesh *ai_mesh){
@@ -35,6 +42,9 @@ void Mesh::__initVBO(const aiMesh *ai_mesh){
 
     __normals = std::make_unique<GLwrap::VBO>(__vertices_count * sizeof(ai_mesh->mNormals[0]));
     __normals->load(ai_mesh->mNormals);
+
+    __uv = std::make_unique<GLwrap::VBO>(__vertices_count * sizeof(ai_mesh->mTextureCoords[0][0]));
+    __uv->load(ai_mesh->mTextureCoords[0]);
     
 }
 
@@ -67,4 +77,17 @@ void Mesh::__initVAO(){
 
     // __vao = std::make_unique<GLwrap::VAO>();
     // __vao->attrib(buff_list);
+}
+
+void Mesh::__initTex(const aiMesh *ai_mesh, 
+                     const std::vector<std::shared_ptr<Texture>> &textures){
+
+    int pos = ai_mesh->mMaterialIndex;
+    auto data = textures[pos];
+
+    __texture = std::make_shared<GLwrap::Tex>();
+
+    printf("%s\n", data->path.c_str());
+
+    __texture->load(data->width, data->height, data->data.get());
 }

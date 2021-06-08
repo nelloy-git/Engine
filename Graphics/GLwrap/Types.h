@@ -39,6 +39,13 @@ enum class ShaderDataType : GLenum {
     UInt = GL_UNSIGNED_INT
 };
 
+enum class Tex2DParamInt : GLenum {
+    WRAP_S = GL_TEXTURE_WRAP_S,
+    WRAP_T = GL_TEXTURE_WRAP_T,
+    MIN_FILTER = GL_TEXTURE_MIN_FILTER,
+    MAG_FILTER = GL_TEXTURE_MAG_FILTER,
+};
+
 size_t getShaderDataTypeSize(ShaderDataType type);
 
 }

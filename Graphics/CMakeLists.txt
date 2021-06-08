@@ -7,6 +7,7 @@ include_directories(./3rdparty/glad/include)
 include_directories(./3rdparty/glfw/include)
 include_directories(./3rdparty/assimp/include)
 include_directories(./3rdparty/glm)
+include_directories(./3rdparty/stb)
 
 add_subdirectory(./3rdparty/assimp)
 add_subdirectory(./3rdparty/glad)
@@ -19,11 +20,13 @@ add_library (${PROJECT_NAME} STATIC
     ./GLwrap/Shader.cpp
     ./GLwrap/Program.cpp
     ./GLwrap/Vao.cpp
+    ./GLwrap/Tex.cpp
     ./GLwrap/Types.cpp
 
     ./Data/AssimpImporter.cpp
     ./Data/Mesh.cpp
     ./Data/Model.cpp
+    ./Data/Texture.cpp
 )
 
 target_link_libraries(${PROJECT_NAME}

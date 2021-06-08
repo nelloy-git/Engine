@@ -30,10 +30,17 @@ std::string vertex_shader_text =
 "}\n";
  
 std::string fragment_shader_text =
-"#version 330\n"
+"#version 330\n"   
+"out vec4 FragColor;"
+""
+"in vec2 TexCoord;\n"
+""
+"uniform sampler2D ourTexture;\n"
+""
 "void main()\n"
 "{\n"
-"    gl_FragColor = vec4(1.0, 1.0, 1.0, 1.0);\n"
+"   FragColor = texture(ourTexture, TexCoord);"
+// "    gl_FragColor = vec4(1.0, 1.0, 1.0, 1.0);\n"
 "}\n";
  
 int main(int argc, const char** argv){
@@ -46,7 +53,7 @@ int main(int argc, const char** argv){
     glEnable(GL_DEPTH_TEST);
 
     Data::Model model3d;
-    if (!model3d.load("../test/OBJ/rifle.obj")){
+    if (!model3d.load("../test/3DS/cube_with_diffuse_texture.3ds")){
         return 0;
     }
 
@@ -114,11 +121,12 @@ int main(int argc, const char** argv){
         ratio = width / (float) height;
  
         glViewport(0, 0, width, height);
+        glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
         glClear(GL_DEPTH_BUFFER_BIT | GL_COLOR_BUFFER_BIT);
 
             
 
-        for (auto mesh : model3d.meshes){
+        for (auto mesh : model3d.meshes()){
 
             mesh->draw();
             // glDrawArrays(GL_TRIANGLES, 0, mesh->count_vertices());
@@ -139,7 +147,7 @@ int main(int argc, const char** argv){
         glfwPollEvents();
     }
  
-    glfwTerminate();
+    // glfwTerminate();
     return 0;
 }
  
