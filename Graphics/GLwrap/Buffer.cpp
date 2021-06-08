@@ -1,23 +1,25 @@
 #include "GLwrap/Buffer.h"
 
-using namespace Graphics::GLwrap;
+using namespace GLwrap;
 
-Buffer::Buffer(BufferType type, size_t size, UsageType usage) :
-    id(0),
+Buffer::Buffer(BufferType type, size_t size, BufferUsage usage) : 
     type(type),
     size(size),
     usage(usage){
 
-    auto pId = const_cast<GLuint*>(&id);
-    glGenBuffers(1, pId);
+    glGenBuffers(1, &__id);
 
-    glBindBuffer(static_cast<GLenum>(type), id);
+    glBindBuffer(static_cast<GLenum>(type), __id);
     glBufferData(static_cast<GLenum>(type), size, nullptr, static_cast<GLenum>(usage));
     glBindBuffer(static_cast<GLenum>(type), 0);
 }
 
 Buffer::~Buffer(){
-    glDeleteBuffers(1, &id);
+    glDeleteBuffers(1, &__id);
+}
+
+GLuint Buffer::id(){
+    return __id;
 }
 
 void Buffer::load(const void* data, int offset, size_t size){
@@ -25,7 +27,7 @@ void Buffer::load(const void* data, int offset, size_t size){
         size = this->size;
     }
 
-    glBindBuffer(static_cast<GLenum>(type), id);
+    glBindBuffer(static_cast<GLenum>(type), __id);
     glBufferSubData(static_cast<GLenum>(type), offset, size, data);
     glBindBuffer(static_cast<GLenum>(type), 0);
 }
@@ -34,10 +36,10 @@ void Buffer::attrib(GLuint attr_id,
                     ShaderDataSize attr_size, ShaderDataType attr_type,
                     size_t step, size_t offset){
     if (step == 0){
-        step = static_cast<GLuint>(attr_size) * GLwrap::getShaderDataTypeSize(attr_type);
+        step = static_cast<GLuint>(attr_size) * Shader::getDataTypeSize(attr_type);
     }
 
-    glBindBuffer(static_cast<GLenum>(type), id);
+    glBindBuffer(static_cast<GLenum>(type), __id);
     glVertexAttribPointer(attr_id,
                           static_cast<GLuint>(attr_size),
                           static_cast<GLenum>(attr_type),
@@ -47,7 +49,7 @@ void Buffer::attrib(GLuint attr_id,
 }
 
 void Buffer::bind() const {
-    glBindBuffer(static_cast<GLenum>(type), id);
+    glBindBuffer(static_cast<GLenum>(type), __id);
 }
 
 void Buffer::unbind() const {

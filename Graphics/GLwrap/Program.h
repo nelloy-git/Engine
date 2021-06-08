@@ -7,16 +7,17 @@
 
 #include "GLwrap/Shader.h"
 
-namespace Graphics::GLwrap {
+namespace GLwrap {
 
 class Program {
 public:
     Program(const std::vector<std::shared_ptr<Shader>> &attach);
     virtual ~Program();
 
-    const GLuint id = 0;
+    GLuint id();
 
 private:
+    GLuint __id;
     
 };
 

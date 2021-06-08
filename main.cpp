@@ -53,7 +53,7 @@ int main(int argc, const char** argv){
     glEnable(GL_DEPTH_TEST);
 
     Data::Model model3d;
-    if (!model3d.load("../test/3DS/cube_with_diffuse_texture.3ds")){
+    if (!model3d.load("../test/OBJ/rifle.obj")){
         return 0;
     }
 

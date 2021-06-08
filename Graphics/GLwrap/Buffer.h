@@ -2,13 +2,25 @@
 
 #include "glad/gl.h"
 
-#include "GLwrap/Types.h"
+#include "GLwrap/Shader.h"
 
-namespace Graphics::GLwrap {
+namespace GLwrap {
+
+enum class BufferType : GLenum {
+    ARRAY = GL_ARRAY_BUFFER,
+    ELEMENT_ARRAY = GL_ELEMENT_ARRAY_BUFFER,
+};
+
+enum class BufferUsage : GLenum {
+    STREAM = GL_STREAM_DRAW,
+    STATIC = GL_STATIC_DRAW,
+    DYNAMIC = GL_DYNAMIC_DRAW,
+};
     
 class Buffer {
+
 public:
-    Buffer(BufferType type, size_t size, UsageType usage = UsageType::STATIC);
+    Buffer(BufferType type, size_t size, BufferUsage usage = BufferUsage::STATIC);
     virtual ~Buffer();
 
     // if (size == 0){size = this->size}
@@ -22,10 +34,15 @@ public:
     void bind() const;
     void unbind() const;
 
-    const GLuint id;
+    GLuint id();
+    const size_t size;
     const BufferType type;
-    size_t size;
-    UsageType usage;
+    const BufferUsage usage;
+
+
+
+private:
+    GLuint __id;
 };
 
 }

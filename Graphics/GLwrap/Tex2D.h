@@ -5,9 +5,7 @@
 
 #include "glad/gl.h"
 
-#include "GLwrap/Types.h"
-
-namespace Graphics::GLwrap {
+namespace GLwrap {
 
 enum class Tex2DParamInt : GLenum {
     WRAP_S = GL_TEXTURE_WRAP_S,
@@ -80,22 +78,67 @@ enum class Tex2DinternalFormat : GLenum {
     SRGB8_ALPHA8 = GL_SRGB8_ALPHA8
 };
 
-class Tex {
+enum class Tex2Dformat : GLenum {
+    COLOR_INDEX = GL_COLOR_INDEX,
+    RED = GL_RED,
+    GREEN = GL_GREEN,
+    BLUE = GL_BLUE,
+    ALPHA = GL_ALPHA,
+    RGB = GL_RGB,
+    BGR = GL_BGR,
+    RGBA = GL_RGBA,
+    BGRA = GL_BGRA,
+    LUMINANCE = GL_LUMINANCE,
+    LUMINANCE_ALPHA = GL_LUMINANCE_ALPHA
+};
+
+enum class Tex2DpixelType {
+    UNSIGNED_BYTE = GL_UNSIGNED_BYTE,
+    BYTE = GL_BYTE,
+    BITMAP = GL_BITMAP,
+    UNSIGNED_SHORT = GL_UNSIGNED_SHORT,
+    SHORT = GL_SHORT,
+    UNSIGNED_INT = GL_UNSIGNED_INT,
+    INT = GL_INT,
+    FLOAT = GL_FLOAT,
+    UNSIGNED_BYTE_3_3_2 = GL_UNSIGNED_BYTE_3_3_2,
+    UNSIGNED_BYTE_2_3_3_REV = GL_UNSIGNED_BYTE_2_3_3_REV,
+    UNSIGNED_SHORT_5_6_5 = GL_UNSIGNED_SHORT_5_6_5,
+    UNSIGNED_SHORT_5_6_5_REV = GL_UNSIGNED_SHORT_5_6_5_REV,
+    UNSIGNED_SHORT_4_4_4_4 = GL_UNSIGNED_SHORT_4_4_4_4,
+    UNSIGNED_SHORT_4_4_4_4_REV = GL_UNSIGNED_SHORT_4_4_4_4_REV,
+    UNSIGNED_SHORT_5_5_5_1 = GL_UNSIGNED_SHORT_5_5_5_1,
+    UNSIGNED_SHORT_1_5_5_5_REV = GL_UNSIGNED_SHORT_1_5_5_5_REV,
+    UNSIGNED_INT_8_8_8_8 = GL_UNSIGNED_INT_8_8_8_8,
+    UNSIGNED_INT_8_8_8_8_REV = GL_UNSIGNED_INT_8_8_8_8_REV,
+    UNSIGNED_INT_10_10_10_2 = GL_UNSIGNED_INT_10_10_10_2,
+    UNSIGNED_INT_2_10_10_10_REV = GL_UNSIGNED_INT_2_10_10_10_REV
+};
+
+class Tex2D {
 public:
-    Tex();
-    ~Tex();
+    Tex2D();
+    ~Tex2D();
+
+    void free();
 
     void bind();
     void unbind();
 
     void setActive(GLuint index);
 
-    void load(GLsizei width, GLsizei height, const void *data,
-              const std::vector<std::pair<Tex2DParamInt, GLuint>> &uint_params = Tex::__default_uint_params);
+    void load(const void *data, GLsizei width, GLsizei height, 
+              Tex2DinternalFormat in_fmt = Tex2DinternalFormat::RGBA,
+              Tex2Dformat usage = Tex2Dformat::RGBA,
+              Tex2DpixelType pixel = Tex2DpixelType::UNSIGNED_BYTE,
+              const std::vector<std::pair<Tex2DParamInt, GLuint>> &uint_params = Tex2D::__default_uint_params);
 
-    const GLuint id;
+    GLuint id();
 
 private:
+
+    GLuint __id;
+    bool __loaded = false;
 
     static const std::vector<std::pair<Tex2DParamInt, GLuint>> __default_uint_params;
 };

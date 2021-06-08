@@ -1,17 +1,20 @@
 #include "GLwrap/Program.h"
 
-using namespace Graphics::GLwrap;
+using namespace GLwrap;
 
 Program::Program(const std::vector<std::shared_ptr<Shader>>& attach){
-    auto pId = const_cast<GLuint*>(&id);
-    *pId = glCreateProgram();
+    __id = glCreateProgram();
 
     for (auto shader : attach){
-        glAttachShader(id, shader->id);
+        glAttachShader(__id, shader->id());
     }
-    glLinkProgram(id);
+    glLinkProgram(__id);
 }
 
 Program::~Program(){
-    glDeleteProgram(id);
+    glDeleteProgram(__id);
+}
+
+GLuint Program::id(){
+    return __id;
 }

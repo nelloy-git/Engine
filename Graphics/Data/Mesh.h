@@ -7,9 +7,9 @@
 
 #include "Data/Texture.h"
 
-#include "GLwrap/Ebo.h"
 #include "GLwrap/Vao.h"
 #include "GLwrap/Vbo.h"
+#include "GLwrap/Veo.h"
 #include "GLwrap/Tex.h"
 
 namespace Graphics::Data {
@@ -42,7 +42,7 @@ private:
     std::unique_ptr<GLwrap::VBO> __vertices;
     std::unique_ptr<GLwrap::VBO> __normals;
     std::unique_ptr<GLwrap::VBO> __uv;
-    std::shared_ptr<GLwrap::Tex> __texture;
+    std::shared_ptr<GLwrap::Tex2D> __texture;
     
     std::unique_ptr<GLwrap::VEO> __faces;
 

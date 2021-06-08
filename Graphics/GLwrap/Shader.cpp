@@ -1,16 +1,35 @@
 #include "GLwrap/Shader.h"
 
-using namespace Graphics::GLwrap;
+#include <stdexcept>
+
+using namespace GLwrap;
 
 Shader::Shader(ShaderType type, const std::string& source){
-    auto pId = const_cast<GLuint*>(&id);
-    *pId = glCreateShader(static_cast<GLenum>(type));
+    __id = glCreateShader(static_cast<GLenum>(type));
 
     auto c_str = source.c_str();
-    glShaderSource(id, 1, &c_str, nullptr);
-    glCompileShader(id);
+    glShaderSource(__id, 1, &c_str, nullptr);
+    glCompileShader(__id);
 }
 
 Shader::~Shader(){
-    glDeleteShader(id);
+    glDeleteShader(__id);
+}
+
+GLuint Shader::id(){
+    return __id;
+}
+
+size_t Shader::getDataTypeSize(ShaderDataType type){
+    switch (type){
+
+    case ShaderDataType::Float:
+        return sizeof(GLfloat);
+
+    case ShaderDataType::UInt:
+        return sizeof(GLuint);
+    
+    default:
+        throw std::invalid_argument("Unknown ShaderDataType");
+    }
 }

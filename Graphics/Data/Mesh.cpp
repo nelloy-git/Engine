@@ -85,7 +85,7 @@ void Mesh::__initTex(const aiMesh *ai_mesh,
     int pos = ai_mesh->mMaterialIndex;
     auto data = textures[pos];
 
-    __texture = std::make_shared<GLwrap::Tex>();
+    __texture = std::make_shared<GLwrap::Tex2D>();
 
     printf("%s\n", data->path.c_str());
 
