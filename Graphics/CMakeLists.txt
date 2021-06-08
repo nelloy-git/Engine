@@ -28,3 +28,9 @@ set_property (TARGET ${PROJECT_NAME}
     # Enable C++17 standard compliance
     CXX_STANDARD 17
 )
+[submodule ".\\Graphics\\3rdparty\\assimp"]
+	url = https://github.com/assimp/assimp.git
+	active = true
+[submodule ".\\Graphics\\3rdparty\\stb"]
+	url = https://github.com/nothings/stb.git
+	active = true
