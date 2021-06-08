@@ -2,18 +2,16 @@
 
 using namespace GLwrap;
 
-VAO::VAO() :
-    id(0){
-    auto pId = const_cast<GLuint*>(&id);
-    glGenVertexArrays(1, pId);
+VAO::VAO(){
+    glGenVertexArrays(1, &__id);
 }
 
 VAO::~VAO(){
-    glDeleteVertexArrays(1, &id);
+    glDeleteVertexArrays(1, &__id);
 }
 
 void VAO::bind(){
-    glBindVertexArray(id);
+    glBindVertexArray(__id);
 }
 
 void VAO::unbind(){

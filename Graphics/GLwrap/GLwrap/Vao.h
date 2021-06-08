@@ -16,7 +16,10 @@ public:
     void bind();
     void unbind();
 
-    const GLuint id;
+    GLuint id();
+
+private:
+    GLuint __id;
 };
 
 }

@@ -10,7 +10,7 @@
 #include "GLwrap/Vao.h"
 #include "GLwrap/Vbo.h"
 #include "GLwrap/Veo.h"
-#include "GLwrap/Tex.h"
+#include "GLwrap/Tex2D.h"
 
 namespace Graphics::Data {
 

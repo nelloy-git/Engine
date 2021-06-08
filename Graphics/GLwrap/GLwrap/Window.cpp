@@ -32,7 +32,6 @@ Window::Window(int width, int height, std::string title) :
     __initEvents();
 
     gladLoadGL(glfwGetProcAddress);
-    glfwSwapInterval(0);
 }
 
 Window::~Window(){
@@ -65,6 +64,8 @@ bool Window::setActive(bool f){
     if (winIdIt == __window_thread.end()){
         if (f){
             glfwMakeContextCurrent(__glfw_window);
+            gladLoadGL(glfwGetProcAddress);
+            glfwSwapInterval(0);
             __window_thread[this] = std::this_thread::get_id();
         }
         return true;
@@ -73,13 +74,33 @@ bool Window::setActive(bool f){
     auto winId = winIdIt->second;
     if (thId == winId){
         if (!f){
-            glfwMakeContextCurrent(__glfw_window);
+            glfwMakeContextCurrent(nullptr);
             __window_thread.erase(this);
         }
         return true;
     }
     return false;
 }
+
+bool Window::getGlParam(WindowGLparam param){
+    return glIsEnabled(static_cast<GLenum>(param)) == GL_TRUE ? true : false;
+}
+
+bool Window::setGlParam(WindowGLparam param, bool f){
+    if (!active()){
+        return false;
+    }
+    
+    if (f){
+        printf("%d", static_cast<GLenum>(param));
+        glEnable(static_cast<GLenum>(param));
+    } else {
+        glDisable(static_cast<GLenum>(param));
+    }
+
+    return true;
+}
+
 
 void Window::__glfwInit(){
     if (!glfwInit()){

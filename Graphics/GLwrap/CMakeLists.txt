@@ -10,7 +10,6 @@ include_directories(./glad/include)
 include_directories(./glfw/include)
 
 add_library (${PROJECT_NAME} STATIC
-
     ./GLwrap/Buffer.cpp
     ./GLwrap/Program.cpp
     ./GLwrap/Shader.cpp

@@ -30,7 +30,7 @@ enum class ShaderDataType : GLenum {
 
 class Shader {
 public:
-    Shader(ShaderType type, const std::string& source);
+    Shader(ShaderType type, const std::string& path);
     virtual ~Shader();
 
     static size_t getDataTypeSize(ShaderDataType type);
@@ -40,6 +40,7 @@ public:
 private:
     GLuint __id;
     
+    std::string __loadFromFile(const std::string &path);
 };
 
 }

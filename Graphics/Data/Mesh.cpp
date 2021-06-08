@@ -89,5 +89,5 @@ void Mesh::__initTex(const aiMesh *ai_mesh,
 
     printf("%s\n", data->path.c_str());
 
-    __texture->load(data->width, data->height, data->data.get());
+    __texture->load(data->data.get(), data->width, data->height);
 }

@@ -7,7 +7,7 @@
                 "Graphics/GLwrap",
                 "Graphics/GLwrap/glad/include",
                 "Graphics/GLwrap/glfw/include",
-
+                "Graphics",
                 "Graphics/3rdparty/assimp/include",
                 "Graphics/3rdparty/glm",
                 "Graphics/3rdparty/stb"
@@ -17,6 +17,8 @@
             "cStandard": "c17",
             "cppStandard": "c++17"
             // "configurationProvider": "ms-vscode.cmake-tools"
+            ,
+            "configurationProvider": "ms-vscode.cmake-tools"
         }
     ],
     "version": 4
