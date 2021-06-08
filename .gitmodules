@@ -1,12 +1,6 @@
 [submodule ".\\Graphics\\GLwrap\\glfw"]
 	path = .\\Graphics\\GLwrap\\glfw
 	url = https://github.com/glfw/glfw.git
-[submodule ".\\Graphics\\3rdparty\\assimp"]
-	url = https://github.com/assimp/assimp.git
-	active = true
-[submodule ".\\Graphics\\3rdparty\\stb"]
-	url = https://github.com/nothings/stb.git
-	active = true
 [submodule ".\\Graphics\\3rdparty\\glm"]
 	path = .\\Graphics\\3rdparty\\glm
 	url = https://github.com/g-truc/glm.git
