@@ -139,6 +139,8 @@ private:
 
     GLuint __id;
     bool __loaded = false;
+    GLsizei __loaded_width = 0;
+    GLsizei __loaded_height = 0;
 
     static const std::vector<std::pair<Tex2DParamInt, GLuint>> __default_uint_params;
 };

@@ -12,5 +12,5 @@ out vec2 fragUV;
 
 void main(){
     gl_Position = proj * view * model * vec4(inPos, 1.0);
-    fragUV = inUV.xy
+    fragUV = vec2(inUV.x, inUV.y);
 }

@@ -63,7 +63,7 @@ int main(int argc, const char** argv){
         auto proj_loc = progr->getUniformLoc("proj");
         
         glm::mat4 model = glm::mat4(1.0f);
-        model = glm::scale(model, glm::vec3(1, 1, 1));
+        model = glm::scale(model, glm::vec3(0.1, 0.1, 0.1));
         model = glm::rotate(model, (float)glfwGetTime() * glm::radians(50.0f), glm::vec3(0.5f, 1.0f, 0.0f));
         progr->setUniformMat4f("model", glm::value_ptr(model));
 

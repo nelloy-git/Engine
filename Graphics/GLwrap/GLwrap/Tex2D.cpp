@@ -46,15 +46,27 @@ void Tex2D::load(const void *data, GLsizei width, GLsizei height,
                Tex2DinternalFormat in_fmt, Tex2Dformat usage, Tex2DpixelType pixel,
                const std::vector<std::pair<Tex2DParamInt, GLuint>> &uint_params){
 
-    free();
+
+    bool need_realloc = width != __loaded_width && height != __loaded_height;
+
+    if (need_realloc){
+        free();
+    }
 
     glBindTexture(GL_TEXTURE_2D, __id);
     for (auto param : uint_params){
         glTexParameteri(GL_TEXTURE_2D, static_cast<GLenum>(param.first), param.second);
     }
-
-    glTexImage2D(GL_TEXTURE_2D, 0, static_cast<GLenum>(in_fmt), width, height, 0,
-                 static_cast<GLenum>(usage), static_cast<GLenum>(pixel), data);
+    
+    if (!need_realloc){
+        glTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, width, height,
+                        static_cast<GLenum>(in_fmt), static_cast<GLenum>(pixel), data);
+        __loaded_width = width;
+        __loaded_height = height;
+    } else {
+        glTexImage2D(GL_TEXTURE_2D, 0, static_cast<GLenum>(in_fmt), width, height, 0,
+                     static_cast<GLenum>(usage), static_cast<GLenum>(pixel), data);
+    }
 
     glGenerateMipmap(GL_TEXTURE_2D);
     glBindTexture(GL_TEXTURE_2D, 0);
