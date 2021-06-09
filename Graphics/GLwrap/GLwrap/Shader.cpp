@@ -16,6 +16,16 @@ Shader::Shader(ShaderType type, const std::string& path){
 
     glShaderSource(__id, 1, &c_code, nullptr);
     glCompileShader(__id);
+
+    auto res = GL_FALSE;
+    glGetShaderiv(__id, GL_COMPILE_STATUS, &res);
+    if (res == GL_FALSE){
+        char log[4096];
+        GLsizei msglen;
+        glGetShaderInfoLog(__id, 4096, &msglen, log);
+        std::string msg(typeid(this).name());
+        throw std::invalid_argument(msg + "(" + path + "): " + log);
+    }
 }
 
 Shader::~Shader(){

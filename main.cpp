@@ -9,6 +9,7 @@
 #include <iostream>
 #include <stdlib.h>
 #include <stdio.h>
+#include <stdexcept>
 #include <memory>
  
 #include "GLwrap/Window.h"
@@ -35,19 +36,24 @@ int main(int argc, const char** argv){
         return 0;
     }
 
-    auto vshader = std::make_shared<GLwrap::Shader>(
-        GLwrap::ShaderType::VERTEX, "../shaders/base.vert");
+    std::shared_ptr<GLwrap::Program> progr;
+    try{
+        auto vshader = std::make_shared<GLwrap::Shader>(
+            GLwrap::ShaderType::VERTEX, "../shaders/base.vert");
 
-    auto fshader = std::make_shared<GLwrap::Shader>(
-        GLwrap::ShaderType::FRAGMENT, "../shaders/base.frag");
+        auto fshader = std::make_shared<GLwrap::Shader>(
+            GLwrap::ShaderType::FRAGMENT, "../shaders/base.frag");
+    
+        std::vector<std::shared_ptr<GLwrap::Shader>> shader_list;
+        shader_list.push_back(vshader);
+        shader_list.push_back(fshader);
+
+        progr = std::make_shared<GLwrap::Program>(shader_list);
+    } catch (std::exception e){
+        std::cout << e.what() << std::endl;
+        return -1;
+    }
  
-    std::vector<std::shared_ptr<GLwrap::Shader>> shader_list;
-    shader_list.push_back(vshader);
-    shader_list.push_back(fshader);
-
-    auto progr = std::make_shared<GLwrap::Program>(shader_list);
-
-
     double lastTime = glfwGetTime();
     int nbFrames = 0;
 
@@ -68,9 +74,8 @@ int main(int argc, const char** argv){
         progr->setUniformMat4f("model", glm::value_ptr(model));
 
         glm::mat4 view = glm::mat4(1.0f);
-        // note that we're translating the scene in the reverse direction of where we want to move
         view = glm::translate<float>(view, glm::vec3(0.0f, 0.0f, -3.0f));
-        glUniformMatrix4fv(view_loc, 1, GL_FALSE, glm::value_ptr(view));
+        progr->setUniformMat4f("view", glm::value_ptr(view));
 
         glm::mat4 projection;
         projection = glm::perspective<float>(glm::radians(45.0f), width / height, 0.1f, 100.0f);
