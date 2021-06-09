@@ -12,7 +12,7 @@ public:
     Event(){};
     virtual ~Event(){};
 
-    uint64_t add(std::function<void(Args...)> callback){
+    uint64_t add(const std::function<void(Args...)> &callback){
         std::lock_guard<std::mutex> lg(_lock);
 
         uint64_t id = _id_counter++;

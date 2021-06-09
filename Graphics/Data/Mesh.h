@@ -26,9 +26,9 @@ public:
 
     int vertices_count(){return __vertices_count;};
 
-    const int attribute_vertice = 0;
-    const int attribute_normal = 1;
-    const int attribute_color = 2;
+    const int layout_vertice = 0;
+    const int layout_normal = 1;
+    const int layout_uv = 2;
 
 private:
     void __initVBO(const aiMesh *ai_mesh);
@@ -39,14 +39,14 @@ private:
 
     int __vertices_count;
     int __faces_count;
-    std::unique_ptr<GLwrap::VBO> __vertices;
-    std::unique_ptr<GLwrap::VBO> __normals;
-    std::unique_ptr<GLwrap::VBO> __uv;
+    std::shared_ptr<GLwrap::VBO> __vertices;
+    std::shared_ptr<GLwrap::VBO> __normals;
+    std::shared_ptr<GLwrap::VBO> __uv;
     std::shared_ptr<GLwrap::Tex2D> __texture;
     
-    std::unique_ptr<GLwrap::VEO> __faces;
+    std::shared_ptr<GLwrap::VEO> __faces;
 
-    std::unique_ptr<GLwrap::VAO> __vao;
+    std::shared_ptr<GLwrap::VAO> __vao;
 };
 
 }

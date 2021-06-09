@@ -6,6 +6,7 @@
 #include "glm/gtc/matrix_transform.hpp"
 #include "glm/gtc/type_ptr.hpp"
  
+#include <iostream>
 #include <stdlib.h>
 #include <stdio.h>
 #include <memory>
@@ -22,14 +23,15 @@ int main(int argc, const char** argv){
     int width = 640;
     int height = 480;
 
-    auto window = new Window(width, height, "Test");
+    auto window = std::make_unique<Window>(width, height, "Test");
     window->setActive(true);
     if (!window->setGlParam(WindowGLparam::DEPTH_TEST, true)){
         return 0;
     }
 
     Data::Model model3d;
-    if (!model3d.load("../test/OBJ/rifle.obj")){
+    if (!model3d.load("../test/vikingroom/scene.gltf")){
+        std::cout << "Can not open model." << std::endl;
         return 0;
     }
 
@@ -61,7 +63,7 @@ int main(int argc, const char** argv){
         auto proj_loc = progr->getUniformLoc("proj");
         
         glm::mat4 model = glm::mat4(1.0f);
-        model = glm::scale(model, glm::vec3(0.01, 0.01, 0.01));
+        model = glm::scale(model, glm::vec3(1, 1, 1));
         model = glm::rotate(model, (float)glfwGetTime() * glm::radians(50.0f), glm::vec3(0.5f, 1.0f, 0.0f));
         progr->setUniformMat4f("model", glm::value_ptr(model));
 
@@ -73,6 +75,8 @@ int main(int argc, const char** argv){
         glm::mat4 projection;
         projection = glm::perspective<float>(glm::radians(45.0f), width / height, 0.1f, 100.0f);
         glUniformMatrix4fv(proj_loc, 1, GL_FALSE, glm::value_ptr(projection));
+
+        glUniform1i(glGetUniformLocation(progr->id(), "texture0"), 0);
  
         glViewport(0, 0, width, height);
         glClearColor(0.2f, 0.3f, 0.3f, 1.0f);

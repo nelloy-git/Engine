@@ -1,5 +1,7 @@
 #include "Data/Model.h" 
 
+#include <iostream>
+
 #include "Data/AssimpImporter.h"
 #include "assimp/postprocess.h"
 
@@ -18,9 +20,10 @@ bool Model::load(const std::string &path){
 
     auto importer = AssimpImporter::inst();
 
-    auto scene =  std::unique_ptr<const aiScene>(importer->ReadFile(path,
-        aiProcess_Triangulate | aiProcess_GenNormals | aiProcess_OptimizeMeshes | aiProcess_OptimizeGraph));
+    auto scene =  importer->ReadFile(path,
+        aiProcess_Triangulate | aiProcess_GenNormals | aiProcess_OptimizeMeshes | aiProcess_OptimizeGraph);
     if (!scene){
+        std::cout << importer->GetErrorString() << std::endl;
         return false;
     }
 
@@ -69,6 +72,7 @@ bool Model::__loadTextures(const aiScene &scene){
 
         auto path = root + filename;
         __textures.push_back(std::make_shared<Texture>(path));
+        // __textures.push_back(std::make_shared<Texture>("../test/billiards-room/tex_u1_v1.jpg"));
     }
 
     return true;

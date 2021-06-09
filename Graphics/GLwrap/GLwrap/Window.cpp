@@ -92,7 +92,6 @@ bool Window::setGlParam(WindowGLparam param, bool f){
     }
     
     if (f){
-        printf("%d", static_cast<GLenum>(param));
         glEnable(static_cast<GLenum>(param));
     } else {
         glDisable(static_cast<GLenum>(param));

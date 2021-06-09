@@ -48,6 +48,10 @@ void Buffer::attrib(GLuint attr_id,
     glBindBuffer(static_cast<GLenum>(type), 0);
 }
 
+void Buffer::attrib(const Attrib &attr){
+    attrib(attr.id, attr.size, attr.type, attr.step, attr.offset);
+}
+
 void Buffer::bind() const {
     glBindBuffer(static_cast<GLenum>(type), __id);
 }

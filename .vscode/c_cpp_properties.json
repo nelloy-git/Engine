@@ -4,16 +4,18 @@
             "name": "Linux",
             "includePath": [
                 "${default}",
+                "Graphics",
+
                 "Graphics/GLwrap",
                 "Graphics/GLwrap/glad/include",
                 "Graphics/GLwrap/glfw/include",
-                "Graphics",
+
                 "Graphics/3rdparty/assimp/include",
                 "Graphics/3rdparty/glm",
                 "Graphics/3rdparty/stb"
             ],
             "defines": [],
-            "compilerPath": "/usr/bin/gcc-8",
+            "compilerPath": "/usr/bin/g++-7",
             "cStandard": "c17",
             "cppStandard": "c++17"
             // "configurationProvider": "ms-vscode.cmake-tools"

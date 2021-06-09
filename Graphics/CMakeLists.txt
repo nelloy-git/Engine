@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.1...3.17 FATAL_ERROR)
 
-project(Graphics LANGUAGES CXX)
+project(Graphics LANGUAGES C CXX)
 
 add_subdirectory(./GLwrap)
 add_subdirectory(./3rdparty/assimp)

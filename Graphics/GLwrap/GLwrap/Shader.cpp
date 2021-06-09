@@ -41,14 +41,9 @@ std::string Shader::__loadFromFile(const std::string &path){
         std::string line;
         while(!file.eof()){
 	        std::getline(file, line); // Saves the line in STRING.
-	        code += line + "\n"; // Prints our STRING.
-            std::cout << line.c_str() << std::endl;
+	        code += line + "\n"; 
         }
-
-        // close file handlers
         file.close();
-
-        // code = str_stream.str();	
     }
     catch(std::ifstream::failure e){
         std::cout << "ERROR::SHADER::FILE_NOT_SUCCESFULLY_READ" << std::endl;
