@@ -3,25 +3,25 @@ cmake_minimum_required(VERSION 3.1...3.17 FATAL_ERROR)
 project(Graphics LANGUAGES C CXX)
 
 add_subdirectory(./GLwrap)
-add_subdirectory(./3rdparty/assimp)
 
 include_directories(.)
 include_directories(./GLwrap)
+include_directories(./Utils)
 include_directories(./GLwrap/glad/include)
-include_directories(./3rdparty/assimp/include)
+include_directories(./3rdparty/tinygltf)
 include_directories(./3rdparty/glm)
-include_directories(./3rdparty/stb)
 
 add_library (${PROJECT_NAME} STATIC
-    ./Data/AssimpImporter.cpp
-    ./Data/Mesh.cpp
-    ./Data/Model.cpp
-    ./Data/Texture.cpp
+    ./Data/Mesh_glTF.cpp
+    ./Data/Model_glTF.cpp
+    ./Data/Primitive_glTF.cpp
+    # ./Data/Texture.cpp
+
+    ./Utils/Log.cpp
 )
 
 target_link_libraries(${PROJECT_NAME}
     GraphicsGLwrap
-    assimp
 )
 
 set_property (TARGET ${PROJECT_NAME}

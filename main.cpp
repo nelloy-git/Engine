@@ -16,7 +16,7 @@
 #include "GLwrap/Shader.h"
 #include "GLwrap/Program.h"
 
-#include "Data/Model.h"
+#include "Data/Model_glTF.h"
 
 using namespace Graphics;
  
@@ -30,7 +30,7 @@ int main(int argc, const char** argv){
         return 0;
     }
 
-    Data::Model model3d;
+    Data::Model_glTF model3d;
     if (!model3d.load("../test/vikingroom/scene.gltf")){
         std::cout << "Can not open model." << std::endl;
         return 0;
@@ -87,10 +87,7 @@ int main(int argc, const char** argv){
         glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
         glClear(GL_DEPTH_BUFFER_BIT | GL_COLOR_BUFFER_BIT);
 
-        for (auto mesh : model3d.meshes()){
-            mesh->draw();
-            // glDrawArrays(GL_TRIANGLES, 0, mesh->count_vertices());
-        }
+        model3d.draw();
 
         // Measure speed
         double currentTime = glfwGetTime();

@@ -6,15 +6,20 @@
 
 #include "glad/gl.h"
 
-// #include "GLwrap/Buffer.h"
+#include "GLwrap/BufferAttribute.h"
 #include "GLwrap/Vbo.h"
 #include "GLwrap/Veo.h"
 
 namespace GLwrap {
 
-struct VAOdata {
-    std::shared_ptr<VBO> vbo;
-
+enum class VAOdrawMode : GLenum {
+    POINTS = GL_POINTS,
+    LINE = GL_LINE,
+    LINE_LOOP = GL_LINE_LOOP,
+    LINE_STRIP = GL_LINE_STRIP,
+    TRIANGLES = GL_TRIANGLES,
+    TRIANGLE_STRIP = GL_TRIANGLE_STRIP,
+    TRIANGLE_FAN = GL_TRIANGLE_FAN,
 };
 
 class VAO {
@@ -22,9 +27,10 @@ public:
     VAO();
     virtual ~VAO();
 
-    using Attr = std::pair<std::shared_ptr<VBO>, std::shared_ptr<VBO::Attrib>>;
-    using AttrList = std::vector<Attr>; 
+    using AttrList = std::vector<std::shared_ptr<BufferAttrubute>>; 
     void load(const AttrList &attrs, std::shared_ptr<VEO> veo);
+
+    void draw(VAOdrawMode mode, int count, ShaderDataType component, size_t offset = 0);
 
     void bind();
     void unbind();
@@ -34,7 +40,7 @@ public:
 private:
     GLuint __id;
 
-    std::vector<std::shared_ptr<VBO>> __vbos;
+    AttrList __layouts;
     std::shared_ptr<VEO> __veo;
 };
 

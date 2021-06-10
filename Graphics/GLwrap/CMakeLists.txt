@@ -11,6 +11,7 @@ include_directories(./glfw/include)
 
 add_library (${PROJECT_NAME} STATIC
     ./GLwrap/Buffer.cpp
+    ./GLwrap/BufferAttribute.cpp
     ./GLwrap/Program.cpp
     ./GLwrap/Shader.cpp
     ./GLwrap/Vao.cpp

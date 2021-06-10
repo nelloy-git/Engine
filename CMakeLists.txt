@@ -9,8 +9,8 @@ include_directories(
     ./Graphics
     ./Graphics/GLwrap
     ./Graphics/GLwrap/glad/include
-    ./Graphics/3rdparty/assimp/include
     ./Graphics/3rdparty/glm
+    ./Graphics/3rdparty/tinygltf
 )
 
 add_executable(${PROJECT_NAME} main.cpp)

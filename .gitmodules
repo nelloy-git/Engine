@@ -4,12 +4,9 @@
 [submodule "Graphics/3rdparty/glm"]
 	path = Graphics/3rdparty/glm
 	url = https://github.com/g-truc/glm.git
-[submodule "Graphics/3rdparty/assimp"]
-	path = Graphics/3rdparty/assimp
-	url = https://github.com/assimp/assimp.git
 [submodule "Graphics/3rdparty/stb"]
 	path = Graphics/3rdparty/stb
 	url = https://github.com/nothings/stb.git
-[submodule ".\\Graphics\\3rdparty\\tinygltf"]
-	path = .\\Graphics\\3rdparty\\tinygltf
+[submodule "Graphics/3rdparty/tinygltf"]
+	path = Graphics/3rdparty/tinygltf
 	url = https://github.com/syoyo/tinygltf.git

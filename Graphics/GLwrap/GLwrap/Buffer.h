@@ -20,23 +20,6 @@ enum class BufferUsage : GLenum {
 class Buffer {
 
 public:
-    struct Attrib {
-        Attrib(GLuint attr_id,
-               ShaderDataSize attr_size, ShaderDataType attr_type,
-               size_t step = 0, size_t offset = 0){
-            id = attr_id;
-            size = attr_size;
-            type = attr_type;
-            step = step;
-            offset = offset;
-        }
-
-        GLuint id;
-        ShaderDataSize size;
-        ShaderDataType type;
-        size_t step = 0;
-        size_t offset = 0;
-    };
 
     Buffer(BufferType type, size_t size, BufferUsage usage = BufferUsage::STATIC);
     virtual ~Buffer();
@@ -45,10 +28,9 @@ public:
     void load(const void* data, int offset = 0, size_t size = 0);
 
     // if (step == 0){step = attr_size * sizeof(attr_type)}
-    void attrib(GLuint attr_id,
-                ShaderDataSize attr_size, ShaderDataType attr_type,
-                size_t step = 0, size_t offset = 0);
-    void attrib(const Attrib &attr);
+    // void attrib(GLuint layout_loc, ShaderDataSize size, ShaderDataType type,
+    //             size_t step = 0, size_t offset = 0);
+    // void attrib(const BufferAttrubute &attr);
 
     void bind() const;
     void unbind() const;

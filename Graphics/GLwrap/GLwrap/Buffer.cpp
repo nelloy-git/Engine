@@ -1,5 +1,7 @@
 #include "GLwrap/Buffer.h"
 
+#include <stdexcept>
+
 using namespace GLwrap;
 
 Buffer::Buffer(BufferType type, size_t size, BufferUsage usage) : 
@@ -25,6 +27,11 @@ GLuint Buffer::id(){
 void Buffer::load(const void* data, int offset, size_t size){
     if (size == 0){
         size = this->size;
+    } else if (offset + size > this->size){
+        std::string head(typeid(this).name());
+        head += ".";
+        head += __func__;
+        throw std::invalid_argument(head + ": data is outside of buffer size.");
     }
 
     glBindBuffer(static_cast<GLenum>(type), __id);
@@ -32,25 +39,24 @@ void Buffer::load(const void* data, int offset, size_t size){
     glBindBuffer(static_cast<GLenum>(type), 0);
 }
 
-void Buffer::attrib(GLuint attr_id,
-                    ShaderDataSize attr_size, ShaderDataType attr_type,
-                    size_t step, size_t offset){
-    if (step == 0){
-        step = static_cast<GLuint>(attr_size) * Shader::getDataTypeSize(attr_type);
-    }
+// void Buffer::attrib(GLuint layout_loc, ShaderDataSize size, ShaderDataType type,
+//                     size_t step = 0, size_t offset = 0){
+//     if (step == 0){
+//         step = static_cast<GLuint>(size) * Shader::getDataTypeSize(type);
+//     }
 
-    glBindBuffer(static_cast<GLenum>(type), __id);
-    glVertexAttribPointer(attr_id,
-                          static_cast<GLuint>(attr_size),
-                          static_cast<GLenum>(attr_type),
-                          GL_FALSE, step, (void*)offset);
-    glEnableVertexAttribArray(attr_id);
-    glBindBuffer(static_cast<GLenum>(type), 0);
-}
+//     glBindBuffer(static_cast<GLenum>(type), __id);
+//     glEnableVertexAttribArray(layout_loc);
+//     glVertexAttribPointer(layout_loc,
+//                           static_cast<GLuint>(size),
+//                           static_cast<GLenum>(type),
+//                           GL_FALSE, step, (void*)offset);
+//     glBindBuffer(static_cast<GLenum>(type), 0);
+// }
 
-void Buffer::attrib(const Attrib &attr){
-    attrib(attr.id, attr.size, attr.type, attr.step, attr.offset);
-}
+// void Buffer::attrib(const BufferAttrubute &attr){
+//     attrib(attr.layout_loc, attr.data_size, attr.data_type, attr.step, attr.offset);
+// }
 
 void Buffer::bind() const {
     glBindBuffer(static_cast<GLenum>(type), __id);

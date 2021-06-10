@@ -107,12 +107,14 @@ void Window::__glfwInit(){
     }
 
     glfwWindowHint(GLFW_VERSION_MAJOR, 3);
-    glfwWindowHint(GLFW_VERSION_MINOR, 0);
+    glfwWindowHint(GLFW_VERSION_MINOR, 3);
+    glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 
     __glfw_inited = true;
 }
 
 void Window::__initEvents(){
+
     glfwSetWindowCloseCallback(__glfw_window, [](GLFWwindow* glfw_win){
         auto win = __glfw2win[glfw_win];
         win->onClose.run();
@@ -149,4 +151,5 @@ void Window::__initEvents(){
             win->onKeyboardReleased.run(key, scancode, mode);
         }
     });
+
 }
