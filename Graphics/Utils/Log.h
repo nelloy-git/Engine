@@ -22,9 +22,9 @@ public:
     }
 
 private:
-    static std::string _getTime();
+    static std::string __getTime();
 
-    int _level;
+    int __level;
     
-    static std::mutex _mutex;
+    static std::mutex __mutex;
 };

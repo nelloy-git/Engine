@@ -147,6 +147,6 @@ void Primitive_glTF::__loadElements(const tinygltf::Model &model, const tinygltf
     __draw_mode = __getDrawMode(primitive.mode);
     __indices_type = __getAttrComponentType(accessor.componentType);
     __indices_offset = accessor.byteOffset;
-    __veo = std::make_shared<GLwrap::VEO>(buffer_view.byteLength);
+    __veo = std::make_shared<GLwrap::VEO>(bufTINYfer_view.byteLength);
     __veo->load(&buffer.data.at(0), buffer_view.byteOffset);
 }

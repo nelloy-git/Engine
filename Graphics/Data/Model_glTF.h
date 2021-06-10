@@ -4,15 +4,9 @@
 #include <string>
 #include <vector>
 
-#define TINYGLTF_IMPLEMENTATION
-#define STB_IMAGE_IMPLEMENTATION
-// #define STB_IMAGE_WRITE_IMPLEMENTATION
-// #define TINYGLTF_NOEXCEPTION
-// #define JSON_NOEXCEPTION
 #include "tiny_gltf.h"
 
 #include "Data/Mesh_glTF.h"
-#include "Data/Texture.h"
 
 namespace Graphics::Data {
 

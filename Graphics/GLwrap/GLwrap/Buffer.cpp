@@ -2,6 +2,8 @@
 
 #include <stdexcept>
 
+#include "Log.h"
+
 using namespace GLwrap;
 
 Buffer::Buffer(BufferType type, size_t size, BufferUsage usage) : 
@@ -28,10 +30,9 @@ void Buffer::load(const void* data, int offset, size_t size){
     if (size == 0){
         size = this->size;
     } else if (offset + size > this->size){
-        std::string head(typeid(this).name());
-        head += ".";
-        head += __func__;
-        throw std::invalid_argument(head + ": data is outside of buffer size.");
+        std::string msg = "data is outside of buffer size.";
+        LOG(ERR) << msg;
+        throw std::invalid_argument(msg);
     }
 
     glBindBuffer(static_cast<GLenum>(type), __id);

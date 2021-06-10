@@ -31,9 +31,12 @@ int main(int argc, const char** argv){
     }
 
     Data::Model_glTF model3d;
-    if (!model3d.load("../test/vikingroom/scene.gltf")){
-        std::cout << "Can not open model." << std::endl;
-        return 0;
+
+    try{
+        model3d.load("../test/vikingroom/scene.gltf");
+    } catch(std::exception e){
+        std::cout << e.what() << std::endl;
+        return -1;
     }
 
     std::shared_ptr<GLwrap::Program> progr;
@@ -103,7 +106,7 @@ int main(int argc, const char** argv){
         glfwPollEvents();
     }
  
-    // glfwTerminate();
+    glfwTerminate();
     return 0;
 }
  

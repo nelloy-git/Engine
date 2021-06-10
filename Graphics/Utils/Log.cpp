@@ -10,9 +10,11 @@
 
 #include "Log.h"
 
+std::mutex Log::__mutex;
+
 Log::Log(const std::string class_name, const std::string method_name, int level) :
-    _level(0){
-    _mutex.lock();
+    __level(0){
+    __mutex.lock();
 
     std::string lvl;
     switch (level){
@@ -22,15 +24,15 @@ Log::Log(const std::string class_name, const std::string method_name, int level)
         default: lvl = "Msg"; break;
     }
 
-    std::cout << "{" << lvl << "}" << "[" << _getTime() << "] " << class_name << "." << method_name << ": ";
+    std::cout << "{" << lvl << "}" << "[" << __getTime() << "] " << class_name << "." << method_name << ": ";
 }
 
 Log::~Log() {
     std::cout << std::endl;
-    _mutex.unlock();
+    __mutex.unlock();
 }
 
-std::string Log::_getTime() {
+std::string Log::__getTime() {
     auto now = std::chrono::system_clock::now();
     std::time_t t = std::chrono::system_clock::to_time_t(now);
     return std::ctime(&t);

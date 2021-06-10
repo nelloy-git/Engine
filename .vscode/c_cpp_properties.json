@@ -6,6 +6,7 @@
                 "${default}",
                 "Graphics",
 
+                "Graphics/Utils",
                 "Graphics/GLwrap",
                 "Graphics/GLwrap/glad/include",
                 "Graphics/GLwrap/glfw/include",

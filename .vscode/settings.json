@@ -89,6 +89,8 @@
         "stack": "cpp",
         "unordered_set": "cpp",
         "codecvt": "cpp",
-        "queue": "cpp"
+        "queue": "cpp",
+        "filesystem": "cpp",
+        "valarray": "cpp"
     }
 }

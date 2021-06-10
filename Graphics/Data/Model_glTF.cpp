@@ -20,6 +20,7 @@ void Model_glTF::draw(){
 }
 
 bool Model_glTF::load(const std::string &path){
+
     tinygltf::TinyGLTF loader;
     tinygltf::Model model;
     std::string err;
