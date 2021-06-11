@@ -2,10 +2,7 @@
 
 #include <unordered_map>
 
-#include "GLwrap/BufferAttribute.h"
-#include "GLwrap/Vao.h"
-#include "GLwrap/Vbo.h"
-#include "GLwrap/Veo.h"
+#include "GLwrap/Array.h"
 
 #include "Data/glTF.h"
 #include "Data/ModelBuffer.h"
@@ -18,10 +15,16 @@ public:
               const tinygltf::Primitive &primitive,
               const ModelBuffer &buffer);
 
+    virtual ~Primitive();
+
+    void draw();
+
 private:
-    std::unordered_map<std::string, std::shared_ptr<GLwrap::BufferAttrubute>> __attributes;
-    std::shared_ptr<GLwrap::VEO> __veo;
-    std::shared_ptr<GLwrap::VAO> __vao;
+    std::shared_ptr<GLwrap::Array> __array;
+
+    // int __count;
+    GLwrap::DrawMode __mode;
+    GLwrap::ComponentType __type;
 };
 
 }

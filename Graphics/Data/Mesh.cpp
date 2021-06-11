@@ -7,10 +7,16 @@ Mesh::Mesh(const tinygltf::Model &model,
            const ModelBuffer &buffer){
 
     for (auto &primitive : mesh.primitives){
-        __primitives.push_back(std::make_shared<Primitive>(model, primitive, buffer))
+        __primitives.push_back(std::make_shared<Primitive>(model, primitive, buffer));
     }
 }
 
 Mesh::~Mesh(){
 
+}
+
+void Mesh::draw(){
+    for (auto prim : __primitives){
+        prim->draw();
+    }
 }

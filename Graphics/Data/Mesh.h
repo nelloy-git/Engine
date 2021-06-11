@@ -13,6 +13,8 @@ public:
          const ModelBuffer &buffer);
     virtual ~Mesh();
 
+    void draw();
+
 private:
     std::vector<std::shared_ptr<Primitive>> __primitives;
 };

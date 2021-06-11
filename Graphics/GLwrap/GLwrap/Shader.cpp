@@ -62,13 +62,13 @@ std::string Shader::__loadFromFile(const std::string &path){
     return code;
 }
 
-size_t Shader::getDataTypeSize(ShaderDataType type){
+size_t GLwrap::getDataTypeSize(ComponentType type){
     switch (type){
 
-    case ShaderDataType::Float:
+    case ComponentType::Float:
         return sizeof(GLfloat);
 
-    case ShaderDataType::UInt:
+    case ComponentType::UInt:
         return sizeof(GLuint);
     
     default:

@@ -11,7 +11,7 @@ enum class ShaderType : GLenum {
     FRAGMENT = GL_FRAGMENT_SHADER
 };
 
-enum class ShaderDataSize : GLint {
+enum class ComponentSize : GLint {
     Scalar = 1,
     Vec2 = 2,
     Vec3 = 3,
@@ -21,7 +21,7 @@ enum class ShaderDataSize : GLint {
     Mat4 = 16
 };
 
-enum class ShaderDataType : GLenum {
+enum class ComponentType : GLenum {
     Byte = GL_BYTE, 
     UByte = GL_UNSIGNED_BYTE,
     Short = GL_SHORT,
@@ -32,12 +32,12 @@ enum class ShaderDataType : GLenum {
     Double = GL_DOUBLE,
 };
 
+size_t getDataTypeSize(ComponentType type);
+
 class Shader {
 public:
     Shader(ShaderType type, const std::string& path);
     virtual ~Shader();
-
-    static size_t getDataTypeSize(ShaderDataType type);
 
     GLuint id();
 

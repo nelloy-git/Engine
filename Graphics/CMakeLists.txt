@@ -12,9 +12,11 @@ include_directories(./3rdparty/tinygltf)
 include_directories(./3rdparty/glm)
 
 add_library (${PROJECT_NAME} STATIC
-    ./Data/Mesh_glTF.cpp
-    ./Data/Model_glTF.cpp
-    ./Data/Primitive_glTF.cpp
+    ./Data/glTF.cpp
+    ./Data/Mesh.cpp
+    ./Data/Model.cpp
+    ./Data/ModelBuffer.cpp
+    ./Data/Primitive.cpp
     # ./Data/Texture.cpp
 
     ./Utils/Log.cpp

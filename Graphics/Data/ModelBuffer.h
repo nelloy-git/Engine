@@ -1,5 +1,8 @@
 #pragma once
 
+#include "GLwrap/Buffer.h"
+#include "GLwrap/Elements.h"
+
 #include "Data/glTF.h"
 
 namespace Graphics {
@@ -9,15 +12,15 @@ public:
     ModelBuffer(const tinygltf::Model &model);
     virtual ~ModelBuffer();
 
-    const std::unordered_map<int, std::shared_ptr<GLwrap::VBO>> &vbos();
-    const std::unordered_map<int, std::shared_ptr<GLwrap::VEO>> &veos();
+    const std::unordered_map<int, std::shared_ptr<GLwrap::Buffer>> &data();
+    const std::unordered_map<int, std::shared_ptr<GLwrap::Elements>> &indices();
     
-    const std::unordered_map<int, std::shared_ptr<GLwrap::VBO>> &vbos() const;
-    const std::unordered_map<int, std::shared_ptr<GLwrap::VEO>> &veos() const;
+    const std::unordered_map<int, std::shared_ptr<GLwrap::Buffer>> &data() const;
+    const std::unordered_map<int, std::shared_ptr<GLwrap::Elements>> &indices() const;
 
 private:
-    std::unordered_map<int, std::shared_ptr<GLwrap::VBO>> __vbos;
-    std::unordered_map<int, std::shared_ptr<GLwrap::VEO>> __veos;
+    std::unordered_map<int, std::shared_ptr<GLwrap::Buffer>> __data;
+    std::unordered_map<int, std::shared_ptr<GLwrap::Elements>> __indices;
 };
 
 }

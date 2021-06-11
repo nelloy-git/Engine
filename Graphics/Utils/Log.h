@@ -8,11 +8,15 @@
 #define MSG (0)
 #define WRN (1)
 #define ERR (2)
-#define LOG(x) Log(typeid(*this).name(), __func__, x)
+#define LOG(x) Log(__FILE__, __LINE__, typeid(*this).name(), __func__, x)
 
 class Log {
 public:
-    Log(const std::string class_name, const std::string method_name, int level = 0);
+    Log(const std::string file_path,
+        const int file_line,
+        const std::string class_name,
+        const std::string method_name,
+        int level = 0);
     virtual ~Log();
 
     template<typename T>

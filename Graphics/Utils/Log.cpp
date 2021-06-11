@@ -12,8 +12,13 @@
 
 std::mutex Log::__mutex;
 
-Log::Log(const std::string class_name, const std::string method_name, int level) :
+Log::Log(const std::string file_path,
+         const int file_line,
+         const std::string class_name,
+         const std::string method_name,
+         int level) :
     __level(0){
+
     __mutex.lock();
 
     std::string lvl;
@@ -24,11 +29,17 @@ Log::Log(const std::string class_name, const std::string method_name, int level)
         default: lvl = "Msg"; break;
     }
 
-    std::cout << "{" << lvl << "}" << "[" << __getTime() << "] " << class_name << "." << method_name << ": ";
+    auto time = __getTime();
+    time = time.substr(0, time.size() - 1);
+
+    std::cout << file_path << std::endl;
+    std::cout << "{" << lvl << "}"
+              << "[" << time << "]" << std::endl;
+    std::cout << class_name << "." << method_name << ": ";
 }
 
 Log::~Log() {
-    std::cout << std::endl;
+    std::cout << std::endl << std::endl;
     __mutex.unlock();
 }
 

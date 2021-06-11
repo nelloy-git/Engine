@@ -11,13 +11,12 @@ include_directories(./glad/include)
 include_directories(./glfw/include)
 
 add_library (${PROJECT_NAME} STATIC
+    ./GLwrap/Accessor.cpp
+    ./GLwrap/Array.cpp
     ./GLwrap/Buffer.cpp
-    ./GLwrap/BufferAttribute.cpp
     ./GLwrap/Program.cpp
     ./GLwrap/Shader.cpp
-    ./GLwrap/Vao.cpp
     ./GLwrap/Tex2D.cpp
-    ./GLwrap/Vao.cpp
     ./GLwrap/Window.cpp
 )
 

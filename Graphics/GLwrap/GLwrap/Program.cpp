@@ -14,7 +14,9 @@ Program::Program(const std::vector<std::shared_ptr<Shader>>& attach){
 }
 
 Program::~Program(){
-    glDeleteProgram(__id);
+    if (__id != 0){
+        glDeleteProgram(__id);
+    }
 }
 
 GLuint Program::id(){

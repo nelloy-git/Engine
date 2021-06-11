@@ -16,7 +16,7 @@
 #include "GLwrap/Shader.h"
 #include "GLwrap/Program.h"
 
-#include "Data/Model_glTF.h"
+#include "Data/Model.h"
 
 using namespace Graphics;
  
@@ -30,14 +30,7 @@ int main(int argc, const char** argv){
         return 0;
     }
 
-    Data::Model_glTF model3d;
-
-    try{
-        model3d.load("../test/vikingroom/scene.gltf");
-    } catch(std::exception e){
-        std::cout << e.what() << std::endl;
-        return -1;
-    }
+    Graphics::Model model3d("../test/vikingroom/scene.gltf");
 
     std::shared_ptr<GLwrap::Program> progr;
     try{
@@ -105,8 +98,6 @@ int main(int argc, const char** argv){
         window->swapBuffers();
         glfwPollEvents();
     }
- 
-    glfwTerminate();
     return 0;
 }
  

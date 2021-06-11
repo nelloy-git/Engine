@@ -6,12 +6,26 @@ using namespace Graphics;
 
 Model::Model(const std::string &path){
     tinygltf::Model *model = __loadModel(path);
-    __buffer = std::make_shared<ModelBuffer>(model);
+
+    __buffer = std::make_shared<ModelBuffer>(*model);
+    __loadMeshes(*model);
+
+    delete model;
+}
+
+Model::~Model(){
+
+}
+
+void Model::draw(){
+    for (auto mesh : __meshes){
+        mesh->draw();
+    }
 }
 
 tinygltf::Model *Model::__loadModel(const std::string &path){
+    auto model = new tinygltf::Model();
     tinygltf::TinyGLTF loader;
-    tinygltf::Model *model;
     std::string err;
     std::string warn;
 
@@ -34,40 +48,12 @@ tinygltf::Model *Model::__loadModel(const std::string &path){
     return model;
 }
 
-void Model::__loadBuffers(const tinygltf::Model &model){
-    for (int i = 0; i < model.bufferViews.size(); i++){
-        const tinygltf::BufferView &view = model.bufferViews[i];
-
-        if (view.target == TINYGLTF_TARGET_ARRAY_BUFFER){
-            if (__vbos.find(view.buffer) != __vbos.end()){
-                continue;
-            }
-            auto vbo = std::make_shared<GLwrap::VBO>(view.byteLength);
-            vbo->load(&model.buffers[view.buffer].data.at(view.byteOffset));
-            __vbos[i] = vbo;
-
-        } else if (view.target == TINYGLTF_TARGET_ELEMENT_ARRAY_BUFFER){
-            if (__veos.find(view.buffer) != __veos.end()){
-                continue;
-            }
-            auto veo = std::make_shared<GLwrap::VEO>(view.byteLength);
-            veo->load(&model.buffers[view.buffer].data.at(view.byteOffset));
-            __veos[i] = veo;
-
-        } else {
-            std::string err = "unknown bufferView.target,";
-            LOG(ERR) << err;
-            throw std::runtime_error(err);
-        }
-    }
-}
-
 void Model::__loadMeshes(const tinygltf::Model &model){
     for (int i = 0; i < model.meshes.size(); i++){
         auto &mesh = model.meshes[i];
         
         for (int j = 0; j < mesh.primitives.size(); j++){
-
+            __meshes.push_back(std::make_shared<Mesh>(model, mesh, *__buffer));
         }
     }
 }

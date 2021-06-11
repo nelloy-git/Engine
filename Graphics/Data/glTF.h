@@ -4,14 +4,14 @@
 
 #include "tiny_gltf.h"
 
-#include "GLwrap/Vao.h"
+#include "GLwrap/Array.h"
 #include "GLwrap/Shader.h"
 
 namespace Graphics::glTF {
 
-int getAttrLoc(const std::string &name);
-GLwrap::ShaderDataSize getAttrComponentSize(int glTF_component_size);
-GLwrap::ShaderDataType getAttrComponentType(int glFT_component_type);
-GLwrap::VAOdrawMode getDrawMode(int glTF_draw_mode);
+int getLayoutLocation(const std::string &name);
+GLwrap::ComponentSize getComponentSize(int glTF_component_size);
+GLwrap::ComponentType getComponentType(int glFT_component_type);
+GLwrap::DrawMode getDrawMode(int glTF_draw_mode);
 
 }

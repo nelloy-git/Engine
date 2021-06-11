@@ -40,25 +40,6 @@ void Buffer::load(const void* data, int offset, size_t size){
     glBindBuffer(static_cast<GLenum>(type), 0);
 }
 
-// void Buffer::attrib(GLuint layout_loc, ShaderDataSize size, ShaderDataType type,
-//                     size_t step = 0, size_t offset = 0){
-//     if (step == 0){
-//         step = static_cast<GLuint>(size) * Shader::getDataTypeSize(type);
-//     }
-
-//     glBindBuffer(static_cast<GLenum>(type), __id);
-//     glEnableVertexAttribArray(layout_loc);
-//     glVertexAttribPointer(layout_loc,
-//                           static_cast<GLuint>(size),
-//                           static_cast<GLenum>(type),
-//                           GL_FALSE, step, (void*)offset);
-//     glBindBuffer(static_cast<GLenum>(type), 0);
-// }
-
-// void Buffer::attrib(const BufferAttrubute &attr){
-//     attrib(attr.layout_loc, attr.data_size, attr.data_type, attr.step, attr.offset);
-// }
-
 void Buffer::bind() const {
     glBindBuffer(static_cast<GLenum>(type), __id);
 }
