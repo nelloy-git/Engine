@@ -83,3 +83,50 @@ GLwrap::DrawMode glTF::getDrawMode(int glTF_draw_mode){
         throw std::invalid_argument("Unknown glTF_draw_mode");
     }
 }
+
+GLwrap::Tex2Dformat glTF::getImageFormat(int channels){
+    switch (channels){
+    case 1:
+        return GLwrap::Tex2Dformat::RED;
+    case 2:
+        return GLwrap::Tex2Dformat::RG;
+    case 3:
+        return GLwrap::Tex2Dformat::RGB;
+    case 4:
+        return GLwrap::Tex2Dformat::RGBA;
+    default:
+        throw std::invalid_argument("wrong channels count");
+    }
+}
+
+GLuint glTF::getImageWrap(int glTF_wrap){
+    switch (glTF_wrap){
+    case TINYGLTF_TEXTURE_WRAP_REPEAT:
+        return GL_REPEAT;
+    case TINYGLTF_TEXTURE_WRAP_CLAMP_TO_EDGE:
+        return GL_CLAMP_TO_EDGE;
+    case TINYGLTF_TEXTURE_WRAP_MIRRORED_REPEAT:
+        return GL_MIRRORED_REPEAT;
+    default:
+        throw std::invalid_argument("Unknown glTF_wrap");
+    }
+}
+
+GLuint glTF::getImageFilter(int glTF_filter){
+    switch (glTF_filter){
+    case TINYGLTF_TEXTURE_FILTER_LINEAR:
+        return GL_LINEAR;
+    case TINYGLTF_TEXTURE_FILTER_LINEAR_MIPMAP_LINEAR:
+        return GL_LINEAR_MIPMAP_LINEAR;
+    case TINYGLTF_TEXTURE_FILTER_LINEAR_MIPMAP_NEAREST:
+        return GL_LINEAR_MIPMAP_NEAREST;
+    case TINYGLTF_TEXTURE_FILTER_NEAREST:
+        return GL_NEAREST;
+    case TINYGLTF_TEXTURE_FILTER_NEAREST_MIPMAP_LINEAR:
+        return GL_NEAREST_MIPMAP_LINEAR;
+    case TINYGLTF_TEXTURE_FILTER_NEAREST_MIPMAP_NEAREST:
+        return GL_NEAREST_MIPMAP_NEAREST;
+    default:
+        throw std::invalid_argument("Unknown glTF_filter");
+    }
+}

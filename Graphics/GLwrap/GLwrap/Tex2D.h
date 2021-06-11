@@ -84,6 +84,7 @@ enum class Tex2Dformat : GLenum {
     GREEN = GL_GREEN,
     BLUE = GL_BLUE,
     ALPHA = GL_ALPHA,
+    RG = GL_RG,
     RGB = GL_RGB,
     BGR = GL_BGR,
     RGBA = GL_RGBA,
