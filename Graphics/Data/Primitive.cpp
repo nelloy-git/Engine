@@ -1,69 +1,110 @@
 #include "Data/Primitive.h"
 
+#include <stdexcept>
+#include <algorithm>
+
 #include "Log.h"
 
 using namespace Graphics;
 
 Primitive::Primitive(const tinygltf::Model &model,
                      const tinygltf::Primitive &primitive,
-                     const ModelBuffer &buffer){
+                     const ModelData &data){
+    
+    typedef std::pair<std::shared_ptr<GLwrap::Buffer>,
+                      std::shared_ptr<GLwrap::BufferAccessor>> BuffPair;
 
-    auto &indices_accessor = model.accessors[primitive.indices];
+    std::vector<BuffPair> list;
 
-    auto it = buffer.indices().find(indices_accessor.bufferView);
-    if (it == buffer.indices().end()){
-        std::string msg = "indices buffer " + std::to_string(indices_accessor.bufferView) + " not found.";
-        LOG(WRN) << msg;
-        throw std::runtime_error(msg);
-    }
-    // auto &indices_view = model.bufferViews[indices_accessor.bufferView];
-    auto indices = it->second;
-
-    std::vector<std::pair<std::shared_ptr<GLwrap::Buffer>, std::shared_ptr<GLwrap::Accessor>>> list;
+    std::unordered_map<std::shared_ptr<GLwrap::BufferAccessor>, int> locations;
     for (auto &attr : primitive.attributes){
-        auto &accessor = model.accessors[attr.second];
+        auto &info = model.accessors[attr.second];
 
-        int attr_loc;
-        GLwrap::ComponentSize attr_size;
-        GLwrap::ComponentType attr_type;
-        try {
-            attr_loc = glTF::getLayoutLocation(attr.first);
-            attr_size = glTF::getComponentSize(accessor.type);
-            attr_type = glTF::getComponentType(accessor.componentType);
-        } catch (std::exception e){
-            LOG(WRN) << e.what();
+        int loc;
+        auto buffer = _getBuffer(info, data);
+        auto accessor = _getAttrAccessor(attr.first, info, loc);
+
+        if (!buffer || !accessor){
+            LOG(WRN) << "Failed creating attribute: \""
+                     << attr.first << ": " << attr.second << "\"";
             continue;
         }
 
-        auto it = buffer.data().find(accessor.bufferView);
-        if (it == buffer.data().end()){
-            LOG(WRN) << "data buffer "  << accessor.bufferView << " not found.";
-            continue;
-        }
-
-        auto vbo = it->second;
-        list.push_back({vbo,
-                        std::make_shared<GLwrap::Accessor>(
-                            attr_loc, attr_size, attr_type, accessor.normalized)});
-
-        // LOG(MSG) << "\n"
-        //          << "id: " << accessor.bufferView << "\n"
-        //          << "buffer size: " << vbo->size << "\n"
-        //          << "location: " << attr_loc << "\n"
-        //          << "size: " << typeid(attr_size).name() << "\n"
-        //          << "type: " << typeid(attr_type).name() << "\n";
+        locations.insert(std::make_pair(accessor, loc)); 
+        list.push_back(std::make_pair(buffer, accessor));
     }
 
-    __mode = glTF::getDrawMode(primitive.mode);
-    __type = glTF::getComponentType(indices_accessor.componentType);
-    __array = std::make_shared<GLwrap::Array>();
-    __array->load(indices, list);
+    std::sort(list.begin(), list.end(), [&locations](const BuffPair &a, const BuffPair &b) -> bool {
+        return locations[a.second] < locations[b.second];
+    });
+
+    auto &indices_info = model.accessors[primitive.indices];
+
+    auto indices = _getBuffer(indices_info, data);
+    _vao = std::make_shared<GLwrap::Array>(indices, list);
+    _vao_accessor = _getIndicesAccessor(indices_info, primitive.mode);
+
+    auto &material = model.materials[primitive.material];
+    _material = std::make_shared<Material>(model, material, data);
 }
 
 Primitive::~Primitive(){
 
 }
 
+void Primitive::draw() const {
+    _material->apply();
+    _vao->bind();
+    _vao_accessor->draw();
+}
+
 void Primitive::draw(){
-    __array->draw(__mode, __type);
+    const_cast<const Primitive*>(this)->draw();
+}
+
+std::shared_ptr<GLwrap::BufferAccessor>
+Primitive::_getAttrAccessor(const std::string &name,
+                            const tinygltf::Accessor &info,
+                            int &attr_loc){
+
+    GLwrap::ComponentSize attr_size;
+    GLwrap::ComponentType attr_type;
+
+    try {
+        attr_loc = glTF::getLayoutLocation(name);
+        attr_size = glTF::getComponentSize(info.type);
+        attr_type = glTF::getComponentType(info.componentType);
+    } catch (std::exception e){
+        LOG(WRN) << e.what();
+        return nullptr;
+    }
+
+    return std::make_shared<GLwrap::BufferAccessor>(attr_size, attr_type,
+                                                    info.normalized, (size_t)0, info.byteOffset);
+}
+
+
+std::shared_ptr<GLwrap::Buffer>
+Primitive::_getBuffer(const tinygltf::Accessor &info, const ModelData &data){
+    int view_pos = info.bufferView;
+    auto &buffers = data.buffers();
+
+    if (view_pos < 0 || view_pos > buffers.size()){
+        std::string msg = "invalid buffer " + std::to_string(view_pos);
+        LOG(ERR) << msg;
+        throw std::runtime_error(msg);
+    }
+
+    return buffers[view_pos];
+}
+
+std::shared_ptr<GLwrap::ArrayAccessor>
+Primitive::_getIndicesAccessor(const tinygltf::Accessor &info, int draw_mode){
+    // return nullptr;
+    return std::make_shared<GLwrap::ArrayAccessor>(
+        glTF::getDrawMode(draw_mode),
+        glTF::getComponentType(info.componentType),
+        info.count,
+        info.byteOffset
+    );
 }

@@ -32,7 +32,7 @@ Log::Log(const std::string file_path,
     auto time = __getTime();
     time = time.substr(0, time.size() - 1);
 
-    std::cout << file_path << std::endl;
+    std::cout << file_path<< ":" << file_line << std::endl;
     std::cout << "{" << lvl << "}"
               << "[" << time << "]" << std::endl;
     std::cout << class_name << "." << method_name << ": ";

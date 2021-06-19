@@ -6,65 +6,40 @@
 
 using namespace GLwrap;
 
-Array::Array(){
-    glGenVertexArrays(1, &__id);
-}
+Array::Array(std::shared_ptr<Buffer> indices, 
+             const std::vector<std::pair<std::shared_ptr<Buffer>,
+                                         std::shared_ptr<BufferAccessor>>> &layouts) :
+    indices(indices),
+    layouts(layouts)
+{
+    glGenVertexArrays(1, &_id);
+    glBindVertexArray(_id);
 
-Array::~Array(){
-    if (__id != 0){
-        glDeleteVertexArrays(1, &__id);
-    }
-}
-
-bool Array::load(std::shared_ptr<Elements> indices, 
-                 const std::vector<std::pair<std::shared_ptr<Buffer>,
-                                             std::shared_ptr<Accessor>>> &layouts){
-                                                 
-    bool valid = indices != nullptr;
-    for (auto &pair : layouts){
-        valid = valid && pair.first != nullptr && pair.second != nullptr;
-    }
-    if (!valid){
-        LOG(WRN) << "some of pointers are nullptrs.";
-        return false;
-    }
-
-    if (__id != 0){
-        glDeleteVertexArrays(1, &__id);
-        glGenVertexArrays(1, &__id);
-    }
-
-    __indices = indices;
-    __layouts = layouts;
-    
-    glBindVertexArray(__id);
-
-    std::unordered_map<int, bool> used_locs;
-
-    for (auto &layout : layouts){
-        int loc = layout.second->location;
-        if (used_locs.find(loc) != used_locs.end()){
-            LOG(WRN) << "layout location " << loc << " used at least second time.";
-            continue;
-        }
-
-        layout.second->enable(*layout.first);
+    for (int loc = 0; loc < layouts.size(); loc++){
+        layouts[loc].first->bind();
+        layouts[loc].second->enable(loc);
     }
     indices->bind();
 
     glBindVertexArray(0);
 }
 
-void Array::draw(DrawMode mode, ComponentType type, int count, size_t offset){
-    glBindVertexArray(__id);
-    count = count == 0 ? __indices->size / getDataTypeSize(type) : count;
-    glDrawElements(static_cast<GLenum>(mode), count, static_cast<GLenum>(type), (void*)offset);
+Array::~Array(){
+    glDeleteVertexArrays(1, &_id);
 }
 
 void Array::bind(){
-    glBindVertexArray(__id);
+    glBindVertexArray(_id);
 }
 
 void Array::unbind(){
+    glBindVertexArray(0);
+}
+
+void Array::bind() const {
+    glBindVertexArray(_id);
+}
+
+void Array::unbind() const {
     glBindVertexArray(0);
 }

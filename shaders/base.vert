@@ -1,16 +1,15 @@
 #version 330 core
 
 uniform mat4 model;
-uniform mat4 view;
-uniform mat4 proj;
 
-layout (location = 0) in vec3 inPos;
-layout (location = 1) in vec3 inNorm;
-layout (location = 2) in vec3 inUV;
+layout (location = 0) in vec3 vertPos;
+layout (location = 1) in vec3 vertNorm;
+layout (location = 2) in vec2 vertUV;
+layout (location = 3) in vec4 vertTangent;
 
 out vec2 fragUV;
 
 void main(){
-    gl_Position = proj * view * model * vec4(inPos, 1.0);
-    fragUV = vec2(inUV.x, inUV.y);
+    gl_Position = model * vec4(vertPos, 1.0);
+    fragUV = vec2(vertUV);
 }

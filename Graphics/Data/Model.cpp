@@ -5,10 +5,11 @@
 using namespace Graphics;
 
 Model::Model(const std::string &path){
-    tinygltf::Model *model = __loadModel(path);
+    tinygltf::Model *model = _loadModel(path);
 
-    __buffer = std::make_shared<ModelBuffer>(*model);
-    __loadMeshes(*model);
+    _data = std::make_shared<ModelData>(*model);
+    _loadMeshes(*model);
+    // model->materials[0].
 
     delete model;
 }
@@ -18,12 +19,18 @@ Model::~Model(){
 }
 
 void Model::draw(){
-    for (auto mesh : __meshes){
+    for (auto mesh : _meshes){
         mesh->draw();
     }
 }
 
-tinygltf::Model *Model::__loadModel(const std::string &path){
+void Model::draw() const {
+    for (auto mesh : _meshes){
+        mesh->draw();
+    }
+}
+
+tinygltf::Model *Model::_loadModel(const std::string &path){
     auto model = new tinygltf::Model();
     tinygltf::TinyGLTF loader;
     std::string err;
@@ -48,12 +55,12 @@ tinygltf::Model *Model::__loadModel(const std::string &path){
     return model;
 }
 
-void Model::__loadMeshes(const tinygltf::Model &model){
+void Model::_loadMeshes(const tinygltf::Model &model){
     for (int i = 0; i < model.meshes.size(); i++){
         auto &mesh = model.meshes[i];
         
         for (int j = 0; j < mesh.primitives.size(); j++){
-            __meshes.push_back(std::make_shared<Mesh>(model, mesh, *__buffer));
+            _meshes.push_back(std::make_shared<Mesh>(model, mesh, *_data));
         }
     }
 }

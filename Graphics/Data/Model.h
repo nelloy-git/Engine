@@ -6,7 +6,7 @@
 
 #include "Data/glTF.h"
 #include "Data/Mesh.h"
-#include "Data/ModelBuffer.h"
+#include "Data/ModelData.h"
 
 namespace Graphics {
 
@@ -16,13 +16,14 @@ public:
     virtual ~Model();
 
     void draw();
+    void draw() const;
 
 private:
-    std::shared_ptr<ModelBuffer> __buffer = nullptr;
-    std::vector<std::shared_ptr<Mesh>> __meshes;
+    tinygltf::Model *_loadModel(const std::string &path);
+    void _loadMeshes(const tinygltf::Model &model);
 
-    tinygltf::Model *__loadModel(const std::string &path);
-    void __loadMeshes(const tinygltf::Model &model);
+    std::shared_ptr<ModelData> _data;
+    std::vector<std::shared_ptr<Mesh>> _meshes;
 };
 
 }

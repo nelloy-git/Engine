@@ -14,8 +14,10 @@ int glTF::getLayoutLocation(const std::string &name){
         return 1;
     } else if (name.compare("TEXCOORD_0") == 0){
         return 2;
+    } else if (name.compare("TANGENT") == 0){
+        return 3;
     } else {
-        throw std::invalid_argument("Unknown glTF_attribute_name.");
+        throw std::invalid_argument("Unknown glTF_attribute_name \"" + name + "\".");
     }
 }
 
@@ -36,7 +38,7 @@ GLwrap::ComponentSize glTF::getComponentSize(int glTF_component_size){
     case TINYGLTF_TYPE_MAT4:
         return GLwrap::ComponentSize::Mat4;
     default:
-        throw std::invalid_argument("Unknown glTF_component_size");
+        throw std::invalid_argument("Unknown glTF_component_size \"" + std::to_string(glTF_component_size) + "\".");
     }
 }
 
@@ -59,7 +61,7 @@ GLwrap::ComponentType glTF::getComponentType(int glFT_component_type){
     case TINYGLTF_COMPONENT_TYPE_DOUBLE:
         return GLwrap::ComponentType::Double;
     default:
-        throw std::invalid_argument("Unknown glTF_component_type");
+        throw std::invalid_argument("Unknown glTF_component_type \"" + std::to_string(glFT_component_type) + "\".");
     }
 }
 
@@ -80,7 +82,7 @@ GLwrap::DrawMode glTF::getDrawMode(int glTF_draw_mode){
     case TINYGLTF_MODE_TRIANGLE_FAN:
         return GLwrap::DrawMode::TRIANGLE_FAN;
     default:
-        throw std::invalid_argument("Unknown glTF_draw_mode");
+        throw std::invalid_argument("Unknown glTF_draw_mode \"" + std::to_string(glTF_draw_mode) + "\".");
     }
 }
 
@@ -95,7 +97,7 @@ GLwrap::Tex2Dformat glTF::getImageFormat(int channels){
     case 4:
         return GLwrap::Tex2Dformat::RGBA;
     default:
-        throw std::invalid_argument("wrong channels count");
+        throw std::invalid_argument("wrong channels count \"" + std::to_string(channels) + "\".");
     }
 }
 
@@ -108,7 +110,7 @@ GLuint glTF::getImageWrap(int glTF_wrap){
     case TINYGLTF_TEXTURE_WRAP_MIRRORED_REPEAT:
         return GL_MIRRORED_REPEAT;
     default:
-        throw std::invalid_argument("Unknown glTF_wrap");
+        throw std::invalid_argument("Unknown glTF_wrap \"" + std::to_string(glTF_wrap) + "\".");
     }
 }
 
@@ -127,6 +129,6 @@ GLuint glTF::getImageFilter(int glTF_filter){
     case TINYGLTF_TEXTURE_FILTER_NEAREST_MIPMAP_NEAREST:
         return GL_NEAREST_MIPMAP_NEAREST;
     default:
-        throw std::invalid_argument("Unknown glTF_filter");
+        throw std::invalid_argument("Unknown glTF_filter\"" + std::to_string(glTF_filter) + "\".");
     }
 }

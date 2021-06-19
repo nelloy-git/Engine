@@ -3,8 +3,6 @@
 #include <memory>
 #include <vector>
 
-#include "glad/gl.h"
-
 #include "GLwrap/Shader.h"
 
 namespace GLwrap {
@@ -14,16 +12,19 @@ public:
     Program(const std::vector<std::shared_ptr<Shader>> &attach);
     virtual ~Program();
 
-    void use();
-    GLuint getUniformLoc(const std::string &name);
+    static Program *getActive();
 
-    void setUniformMat4f(const std::string &name, const float mat[16]);
+    void use();
+
+    bool setUniformVec4f(const std::string &name, const float mat[4]);
+    bool setUniformMat4f(const std::string &name, const float mat[16]);
 
     GLuint id();
+    GLuint id() const;
 
 private:
     GLuint __id;
-    
+    static Program *__active_program;
 };
 
 }

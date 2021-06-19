@@ -13,11 +13,15 @@ include_directories(./3rdparty/glm)
 
 add_library (${PROJECT_NAME} STATIC
     ./Data/glTF.cpp
+    ./Data/Material.cpp
     ./Data/Mesh.cpp
     ./Data/Model.cpp
-    ./Data/ModelBuffer.cpp
+    ./Data/ModelData.cpp
     ./Data/Primitive.cpp
     # ./Data/Texture.cpp
+
+    ./Drawing/Camera.cpp
+    ./Drawing/Drawer.cpp
 
     ./Utils/Log.cpp
 )

@@ -11,13 +11,21 @@ include_directories(./glad/include)
 include_directories(./glfw/include)
 
 add_library (${PROJECT_NAME} STATIC
-    ./GLwrap/Accessor.cpp
     ./GLwrap/Array.cpp
+    ./GLwrap/ArrayAccessor.cpp
     ./GLwrap/Buffer.cpp
+    ./GLwrap/BufferAccessor.cpp
     ./GLwrap/Program.cpp
     ./GLwrap/Shader.cpp
     ./GLwrap/Tex2D.cpp
-    ./GLwrap/Window.cpp
+    ./GLwrap/Types.cpp
+    
+    ./Context/Keyboard.cpp
+    ./Context/Mouse.cpp
+    ./Context/Timer.cpp
+    ./Context/Window.cpp
+
+    ./Context/glfw/Convert.cpp
 )
 
 target_link_libraries(${PROJECT_NAME}

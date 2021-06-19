@@ -7,6 +7,7 @@ add_subdirectory(Graphics)
 include_directories(
     ./include
     ./Graphics
+    ./Graphics/Utils
     ./Graphics/GLwrap
     ./Graphics/GLwrap/glad/include
     ./Graphics/3rdparty/glm
