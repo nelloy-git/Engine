@@ -7,7 +7,9 @@ using namespace Graphics;
 ModelData::ModelData(const tinygltf::Model &model){
     _initBuffers(model);
     _initTextures(model);
-    // _initNodes(model);
+    _initMeshes(model);
+    _initNodes(model);
+    _initScenes(model);
 }
 
 ModelData::~ModelData(){
@@ -22,12 +24,36 @@ const std::vector<std::shared_ptr<GLwrap::Tex2D>> &ModelData::textures(){
     return _textures;
 }
 
+const std::vector<std::shared_ptr<Mesh>> &ModelData::meshes(){
+    return _meshes;
+}
+
+const std::vector<std::shared_ptr<Node>> &ModelData::nodes(){
+    return _nodes;
+}
+
+const std::vector<std::shared_ptr<Scene>> &ModelData::scenes(){
+    return _scenes;
+}
+
 const std::vector<std::shared_ptr<GLwrap::Buffer>> &ModelData::buffers() const{
     return _buffers;
 }
 
 const std::vector<std::shared_ptr<GLwrap::Tex2D>> &ModelData::textures() const{
     return _textures;
+}
+
+const std::vector<std::shared_ptr<Mesh>> &ModelData::meshes() const{
+    return _meshes;
+}
+
+const std::vector<std::shared_ptr<Node>> &ModelData::nodes() const{
+    return _nodes;
+}
+
+const std::vector<std::shared_ptr<Scene>> &ModelData::scenes() const{
+    return _scenes;
 }
 
 void ModelData::_initBuffers(const tinygltf::Model &model){
@@ -78,15 +104,26 @@ void ModelData::_initTextures(const tinygltf::Model &model){
     }
 }
 
-// void ModelData::_initNodes(const tinygltf::Model &model){
-//     for (int i = 0; i < model.nodes.size(); i++){
-//         _nodes.push_back(std::make_shared<Node>(model, model.nodes[i]));
-//     }
+void ModelData::_initMeshes(const tinygltf::Model &model){
+    for (int i = 0; i < model.meshes.size(); i++){
+        _meshes.push_back(std::make_shared<Mesh>(model, model.meshes[i], *this));
+    }   
+}
 
-//     for (int i = 0; i < model.nodes.size(); i++){
-//         for (int j = 0; j < model.nodes[i].children.size(); j++){
-//             _nodes[i]->children.push_back(_nodes[model.nodes[i].children[j]]);
-//         }
-//     }
+void ModelData::_initNodes(const tinygltf::Model &model){
+    for (int i = 0; i < model.nodes.size(); i++){
+        _nodes.push_back(std::make_shared<Node>(model, model.nodes[i], *this));
+    }
 
-// }
+    for (int i = 0; i < model.nodes.size(); i++){
+        for (int j = 0; j < model.nodes[i].children.size(); j++){
+            _nodes[i]->children.push_back(_nodes[model.nodes[i].children[j]]);
+        }
+    }
+}
+
+void ModelData::_initScenes(const tinygltf::Model &model){
+    for (int i = 0; i < model.scenes.size(); i++){
+        _scenes.push_back(std::make_shared<Scene>(model, model.scenes[i], *this));
+    }
+}

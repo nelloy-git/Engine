@@ -17,7 +17,9 @@ add_library (${PROJECT_NAME} STATIC
     ./Data/Mesh.cpp
     ./Data/Model.cpp
     ./Data/ModelData.cpp
+    ./Data/Node.cpp
     ./Data/Primitive.cpp
+    ./Data/Scene.cpp
     # ./Data/Texture.cpp
 
     ./Drawing/Camera.cpp

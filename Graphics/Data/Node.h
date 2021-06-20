@@ -2,25 +2,31 @@
 
 #include <unordered_map>
 
-#include "glm/gtc/quaternion.hpp"
+#include "glm/glm.hpp"
 
 #include "Data/glTF.h"
-#include "Data/ModelBuffer.h"
 
 namespace Graphics {
+
+class Mesh;
+class ModelData;
 
 class Node {
 public:
     Node(const tinygltf::Model &model,
          const tinygltf::Node &node,
-         const std::unordered_map<int, std::shared_ptr<Node>> &list);
+         const ModelData &data);
     virtual ~Node();
+
+    void draw();
+    void draw() const;
 
     std::shared_ptr<Mesh> mesh;
     std::vector<std::shared_ptr<Node>> children;
+    glm::mat4 matrix;
 
 private:
-    glm::mat4 _matrix;
+    void _initMatrix(const tinygltf::Node &node);
 };
 
 }

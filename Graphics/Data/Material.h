@@ -1,9 +1,10 @@
 #pragma once
 
 #include "Data/glTF.h"
-#include "Data/ModelData.h"
 
 namespace Graphics {
+
+class ModelData;
 
 class Material {
 public:

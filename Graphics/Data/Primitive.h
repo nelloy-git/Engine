@@ -7,9 +7,10 @@
 
 #include "Data/glTF.h"
 #include "Data/Material.h"
-#include "Data/ModelData.h"
 
 namespace Graphics {
+
+class ModelData;
 
 class Primitive {
 public:
@@ -37,7 +38,7 @@ private:
     std::shared_ptr<GLwrap::Array> _vao;
     std::shared_ptr<GLwrap::ArrayAccessor> _vao_accessor;
 
-    std::shared_ptr<Material> _material;
+    std::shared_ptr<Material> _material = nullptr;
 };
 
 }

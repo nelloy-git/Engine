@@ -15,15 +15,13 @@ public:
     Model(const std::string &path);
     virtual ~Model();
 
-    void draw();
-    void draw() const;
+    void draw(int scene);
+    void draw(int scene) const;
 
 private:
     tinygltf::Model *_loadModel(const std::string &path);
-    void _loadMeshes(const tinygltf::Model &model);
 
     std::shared_ptr<ModelData> _data;
-    std::vector<std::shared_ptr<Mesh>> _meshes;
 };
 
 }

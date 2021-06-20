@@ -1,22 +1,28 @@
 #pragma once
 
 #include <vector>
+#include <unordered_map>
 
 #include "Data/glTF.h"
-#include "Data/ModelData.h"
-#include "Data/Node.h"
 
 namespace Graphics {
+
+class ModelData;
+class Node;
 
 class Scene {
 public:
     Scene(const tinygltf::Model &model,
           const tinygltf::Scene &scene,
-          const ModelData &buffer);
+          const ModelData &data);
     virtual ~Scene();
 
+    void draw();
+    void draw() const;
+
+    std::vector<std::shared_ptr<Node>> nodes;
+
 private:
-    std::vector<std::shared_ptr<Node>> _nodes;
 };
 
 }

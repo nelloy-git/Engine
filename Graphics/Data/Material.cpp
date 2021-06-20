@@ -2,6 +2,8 @@
 
 #include "GLwrap/Program.h"
 
+#include "Data/ModelData.h"
+
 using namespace Graphics; 
 
 Material::Material(const tinygltf::Model &model,

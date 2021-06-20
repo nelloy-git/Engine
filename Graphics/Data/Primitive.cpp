@@ -3,6 +3,7 @@
 #include <stdexcept>
 #include <algorithm>
 
+#include "Data/ModelData.h"
 #include "Log.h"
 
 using namespace Graphics;
@@ -39,8 +40,8 @@ Primitive::Primitive(const tinygltf::Model &model,
     });
 
     auto &indices_info = model.accessors[primitive.indices];
-
     auto indices = _getBuffer(indices_info, data);
+    
     _vao = std::make_shared<GLwrap::Array>(indices, list);
     _vao_accessor = _getIndicesAccessor(indices_info, primitive.mode);
 

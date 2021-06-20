@@ -8,7 +8,7 @@ Model::Model(const std::string &path){
     tinygltf::Model *model = _loadModel(path);
 
     _data = std::make_shared<ModelData>(*model);
-    _loadMeshes(*model);
+    // _loadMeshes(*model);
     // model->materials[0].
 
     delete model;
@@ -18,16 +18,12 @@ Model::~Model(){
 
 }
 
-void Model::draw(){
-    for (auto mesh : _meshes){
-        mesh->draw();
-    }
+void Model::draw(int scene){
+    _data->scenes()[scene]->draw();
 }
 
-void Model::draw() const {
-    for (auto mesh : _meshes){
-        mesh->draw();
-    }
+void Model::draw(int scene) const {
+    _data->scenes()[scene]->draw();
 }
 
 tinygltf::Model *Model::_loadModel(const std::string &path){
@@ -53,14 +49,4 @@ tinygltf::Model *Model::_loadModel(const std::string &path){
     }
 
     return model;
-}
-
-void Model::_loadMeshes(const tinygltf::Model &model){
-    for (int i = 0; i < model.meshes.size(); i++){
-        auto &mesh = model.meshes[i];
-        
-        for (int j = 0; j < mesh.primitives.size(); j++){
-            _meshes.push_back(std::make_shared<Mesh>(model, mesh, *_data));
-        }
-    }
 }
