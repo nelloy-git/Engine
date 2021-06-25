@@ -11,7 +11,7 @@ Node::Node(const tinygltf::Model &model,
            const tinygltf::Node &node,
            const ModelData &data) :
     matrix(1.f){
-    // _initMatrix(node);
+    _initMatrix(node);
 
     if (node.mesh >= 0){
         mesh = data.meshes()[node.mesh];
@@ -42,7 +42,7 @@ void Node::draw() const{
     }
 }
 
-void Node::_initMatrix(const tinygltf::Node &node){
+void Node::_initMatrix(const tinygltf::Node &node){    
     if (node.matrix.size() != 0){
         if (node.matrix.size() == 16){
             for (int i = 0; i < 4; i++){
@@ -54,14 +54,25 @@ void Node::_initMatrix(const tinygltf::Node &node){
             LOG(WRN) << "wrong matrix size.";
         }
     } else {
-        glm::vec3 scale = {node.scale[0], node.scale[1], node.scale[2]};
-        glm::quat rot = {
-            (float)node.rotation[3], 
-            (float)node.rotation[0], 
-            (float)node.rotation[1], 
-            (float)node.rotation[2]
-        };
-        glm::vec3 trans = {node.scale[0], node.scale[1], node.scale[2]};
+        glm::vec3 scale(1.f);
+        if (node.scale.size() == 3){
+            scale = {node.scale[0], node.scale[1], node.scale[2]};
+        }
+
+        glm::quat rot = {1.f, 0, 0, 0};
+        if (node.rotation.size() == 4){
+            rot = {
+                (float)node.rotation[3], 
+                (float)node.rotation[0], 
+                (float)node.rotation[1], 
+                (float)node.rotation[2]
+            };
+        }
+
+        glm::vec3 trans(0.f);
+        if (node.translation.size() == 3){
+            trans = {node.translation[0], node.translation[1], node.translation[2]};
+        }
 
         matrix = glm::scale(matrix, scale);
         matrix = glm::mat4_cast(rot) * matrix;
