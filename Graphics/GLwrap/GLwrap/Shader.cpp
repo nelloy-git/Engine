@@ -6,12 +6,13 @@
 #include <codecvt>
 #include <stdexcept>
 
+#include "Log.h"
+
 using namespace GLwrap;
 
-Shader::Shader(ShaderType type, const std::string& path){
+Shader::Shader(ShaderType type, const std::string& code){
     __id = glCreateShader(static_cast<GLenum>(type));
 
-    auto code = __loadFromFile(path);
     auto c_code = code.c_str();
 
     glShaderSource(__id, 1, &c_code, nullptr);
@@ -20,24 +21,14 @@ Shader::Shader(ShaderType type, const std::string& path){
     auto res = GL_FALSE;
     glGetShaderiv(__id, GL_COMPILE_STATUS, &res);
     if (res == GL_FALSE){
-        char log[4096];
+        char msg[4096];
         GLsizei msglen;
-        glGetShaderInfoLog(__id, 4096, &msglen, log);
-        std::string msg(typeid(this).name());
-        throw std::invalid_argument(msg + "(" + path + "): " + log);
+        glGetShaderInfoLog(__id, 4096, &msglen, msg);
+        throw std::invalid_argument(msg);
     }
 }
 
-Shader::~Shader(){
-    glDeleteShader(__id);
-}
-
-GLuint Shader::id(){
-    return __id;
-}
-
-std::string Shader::__loadFromFile(const std::string &path){
-    // 1. retrieve the vertex/fragment source code from filePath
+std::shared_ptr<Shader> Shader::fromFile(ShaderType type, const std::string& path){
     std::string code;
     std::ifstream file;
 
@@ -54,12 +45,29 @@ std::string Shader::__loadFromFile(const std::string &path){
 	        code += line + "\n"; 
         }
         file.close();
-    }
-    catch(std::ifstream::failure e){
-        std::cout << "ERROR::SHADER::FILE_NOT_SUCCESFULLY_READ" << std::endl;
+    } catch(std::ifstream::failure e){
+        // auto s = __;
+        LOG(WRN) << "can not read file";
+        return nullptr;
     }
 
-    return code;
+    std::shared_ptr<Shader> shader;
+    try {
+        shader = std::make_shared<Shader>(type, code);
+    } catch (std::invalid_argument e){
+        LOG(ERR) << "Can not load shader from file: " << path << "\n\t" << e.what();
+        return nullptr;
+    }
+
+    return shader;
+}
+
+Shader::~Shader(){
+    glDeleteShader(__id);
+}
+
+GLuint Shader::id(){
+    return __id;
 }
 
 size_t GLwrap::getDataTypeSize(ComponentType type){

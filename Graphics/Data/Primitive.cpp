@@ -45,8 +45,10 @@ Primitive::Primitive(const tinygltf::Model &model,
     _vao = std::make_shared<GLwrap::Array>(indices, list);
     _vao_accessor = _getIndicesAccessor(indices_info, primitive.mode);
 
-    auto &material = model.materials[primitive.material];
-    _material = std::make_shared<Material>(model, material, data);
+    if (primitive.material >= 0){
+        auto &material = model.materials[primitive.material];
+        _material = std::make_shared<Material>(model, material, data);
+    }
 }
 
 Primitive::~Primitive(){
@@ -54,7 +56,9 @@ Primitive::~Primitive(){
 }
 
 void Primitive::draw() const {
-    _material->apply();
+    if (_material){
+        _material->apply();
+    }
     _vao->bind();
     _vao_accessor->draw();
 }

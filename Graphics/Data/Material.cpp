@@ -12,11 +12,11 @@ Material::Material(const tinygltf::Model &model,
 
     auto &pbr = material.pbrMetallicRoughness;
     for (int i = 0; i < 4; i++){
-        __base_color.push_back(pbr.baseColorFactor[i]);
+        _base_color.push_back(pbr.baseColorFactor[i]);
     }
 
-    __base_texture = buffer.textures().at(pbr.baseColorTexture.index);
-    __base_texture_uv = pbr.baseColorTexture.texCoord;
+    _base_texture = buffer.textures().at(pbr.baseColorTexture.index);
+    _base_texture_uv = pbr.baseColorTexture.texCoord;
 }
 
 Material::~Material(){
@@ -29,6 +29,6 @@ void Material::apply(){
         return;
     }
 
-    progr->setUniformVec4f("baseColor", &__base_color.at(0));
-    __base_texture->setActive(__base_texture_uv);
+    progr->setUniformVec4f("baseColor", &_base_color.at(0));
+    _base_texture->setActive(_base_texture_uv);
 }

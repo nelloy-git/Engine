@@ -16,9 +16,9 @@ public:
     void apply();
 
 private:
-    std::vector<float> __base_color;
-    std::shared_ptr<GLwrap::Tex2D> __base_texture;
-    int __base_texture_uv;
+    std::vector<float> _base_color;
+    std::shared_ptr<GLwrap::Tex2D> _base_texture;
+    int _base_texture_uv;
 };
 
 }

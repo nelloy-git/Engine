@@ -29,25 +29,24 @@ using namespace Graphics;
 
 const float cam_vel = 5;
 
-std::shared_ptr<GLwrap::Program> initShader(){
+std::shared_ptr<GLwrap::Program> initProgram(const std::string &vsh, const std::string &fsh){
     std::shared_ptr<GLwrap::Program> progr;
-    try{
-        auto vshader = std::make_shared<GLwrap::Shader>(
-            GLwrap::ShaderType::VERTEX, "../shaders/base.vert");
 
-        auto fshader = std::make_shared<GLwrap::Shader>(
-            GLwrap::ShaderType::FRAGMENT, "../shaders/base.frag");
-    
-        std::vector<std::shared_ptr<GLwrap::Shader>> shader_list;
-        shader_list.push_back(vshader);
-        shader_list.push_back(fshader);
+    auto vshader = GLwrap::Shader::fromFile(
+        GLwrap::ShaderType::VERTEX, vsh);
 
-        progr = std::make_shared<GLwrap::Program>(shader_list);
-    } catch (std::exception e){
-        std::cout << e.what() << std::endl;
+    auto fshader = GLwrap::Shader::fromFile(
+        GLwrap::ShaderType::FRAGMENT, fsh);
+
+    if (!vshader || !fshader){
         return nullptr;
     }
-    return progr;
+    
+    std::vector<std::shared_ptr<GLwrap::Shader>> shader_list;
+    shader_list.push_back(vshader);
+    shader_list.push_back(fshader);
+
+    return std::make_shared<GLwrap::Program>(shader_list);
 }
 
 
@@ -66,25 +65,10 @@ int main(int argc, const char** argv){
     window->onClose.add([&running](){
         running = false;
     });
-    
-    // Graphics::Model model3d("../test/book/scene.gltf");
 
-    // tinygltf::Model model3d;
-    // tinygltf::TinyGLTF loader;
-    // std::string err;
-    // std::string warn;
-    // bool res = loader.LoadASCIIFromFile(&model3d, &err, &warn, "../test/book/scene.gltf");
+    auto model3d = std::make_shared<Model>("../test/triang/triang.gltf");
 
-
-    // Graphics::ModelBuffer buffer(model3d);
-
-    // std::cout << "Meshes: " << model3d.meshes.size() << std::endl;
-    // std::cout << "Primitives: " << model3d.meshes[i].primitives.size() << std::endl;
-    // Graphics::Primitive prim(model3d, model3d.meshes[i].primitives[0], buffer);
-
-    auto model3d = std::make_shared<Model>("../test/book/scene.gltf");
-
-    std::shared_ptr<GLwrap::Program> progr = initShader();
+    std::shared_ptr<GLwrap::Program> progr = initProgram("../shaders/base.vert", "../shaders/base.frag");
     if (!progr){return -1;}
 
     auto timer = std::make_shared<GLwrap::Timer>();
@@ -93,6 +77,7 @@ int main(int argc, const char** argv){
     auto cam = std::make_shared<Graphics::Camera>();
     cam->width = width;
     cam->height = height;
+    cam->pos = glm::vec3(-0.3, 0, 0);
 
     auto drawer = std::make_shared<Graphics::Drawer>(glm::vec2(0, 0), glm::vec2(width, height));
     drawer->setCamera(cam);
@@ -141,18 +126,7 @@ int main(int argc, const char** argv){
             cam->pos -= cam->right * dist;
         }
 
-        // auto a = glm::vec3(0, 0, 0) - cam->pos;
-        // glm::vec3 a = cam->pos * 3.;
-
-        // glm::vec3 a = glm::vec3(0, 0, 0) - glm::vec3(0, 0, 0);
-        // cam->direction = glm::normalize();
-
-        // cam->yaw += 0.00005 * mdx;
-        // cam->pitch += 0.00005 * mdy;
-
         drawer->clear(back_color);
-        
-        // model_pos = glm::rotate<float>(model_pos, dt, glm::vec3(0.f, 1.f, 0.f));
         drawer->draw(*model3d, model_pos);
         
         window->swapBuffers();

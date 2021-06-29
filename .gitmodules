@@ -10,3 +10,6 @@
 [submodule "Graphics/3rdparty/tinygltf"]
 	path = Graphics/3rdparty/tinygltf
 	url = https://github.com/syoyo/tinygltf.git
+[submodule "Graphics/3rdparty/assimp"]
+	path = Graphics/3rdparty/assimp
+	url = https://github.com/assimp/assimp.git

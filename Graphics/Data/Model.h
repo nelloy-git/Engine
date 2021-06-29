@@ -15,8 +15,8 @@ public:
     Model(const std::string &path);
     virtual ~Model();
 
-    void draw(int scene);
-    void draw(int scene) const;
+    void draw(int scene, int animation = -1, int time = -1);
+    void draw(int scene, int animation = -1, int time = -1) const;
 
 private:
     tinygltf::Model *_loadModel(const std::string &path);

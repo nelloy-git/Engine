@@ -18,12 +18,12 @@ Model::~Model(){
 
 }
 
-void Model::draw(int scene){
-    _data->scenes()[scene]->draw();
+void Model::draw(int scene, int animation, int time){
+    _data->scenes[scene]->draw();
 }
 
-void Model::draw(int scene) const {
-    _data->scenes()[scene]->draw();
+void Model::draw(int scene, int animation, int time) const {
+    _data->scenes[scene]->draw();
 }
 
 tinygltf::Model *Model::_loadModel(const std::string &path){

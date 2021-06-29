@@ -8,14 +8,14 @@
 #define MSG (0)
 #define WRN (1)
 #define ERR (2)
-#define LOG(x) Log(__FILE__, __LINE__, typeid(*this).name(), __func__, x)
+
+#define LOG(lvl) Log(__FILE__, __LINE__, __PRETTY_FUNCTION__, lvl)
 
 class Log {
 public:
-    Log(const std::string file_path,
+    Log(const std::string &file_path,
         const int file_line,
-        const std::string class_name,
-        const std::string method_name,
+        const std::string &method_name,
         int level = 0);
     virtual ~Log();
 
@@ -26,7 +26,8 @@ public:
     }
 
 private:
-    static std::string __getTime();
+    static std::string _getTime();
+    static std::string _demandle(const std::string &class_or_method);
 
     int __level;
     
