@@ -6,18 +6,16 @@ using namespace Graphics;
 
 Scene::Scene(const tinygltf::Model &model,
              const tinygltf::Scene &scene,
-             const ModelData &data){
+             ModelData &data){
 
     for (int i = 0; i < scene.nodes.size(); i++){
-        auto iter = data.nodes.find(i);
+        auto node_pos = scene.nodes[i];
+        auto iter = data.nodes.find(node_pos);
         if (iter == data.nodes.end()){
-            auto node = std::make_signed<Node>();
+            data.nodes[node_pos] = std::make_shared<Node>(model, model.nodes[node_pos], data);
+            iter = data.nodes.find(node_pos);
         }
-
-    }
-    auto &list = data.nodes();
-    for (int i = 0; i < scene.nodes.size(); i++){
-        nodes.push_back(list[scene.nodes[i]]);
+        nodes.push_back(iter->second);
     }
 }
 

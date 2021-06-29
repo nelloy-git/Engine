@@ -10,7 +10,7 @@ class Material {
 public:
     Material(const tinygltf::Model &model,
              const tinygltf::Material &material,
-             const ModelData &buffer);
+             ModelData &data);
     virtual ~Material();
 
     void apply();

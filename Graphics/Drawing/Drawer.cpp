@@ -74,7 +74,7 @@ bool Drawer::draw(const Model &model, const glm::mat4 &pos){
     if (!_shader->setUniformMat4f("model", glm::value_ptr(model_mat))){
         LOG(ERR) << "\"model\" not found.";
     };
-    model.draw(0);
+    model.scenes[0]->draw();
     return true;
 }
 

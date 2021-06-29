@@ -6,7 +6,7 @@ using namespace Graphics;
 
 Mesh::Mesh(const tinygltf::Model &model,
            const tinygltf::Mesh &mesh,
-           const ModelData &data){
+           ModelData &data){
 
     for (auto &primitive : mesh.primitives){
         primitives.push_back(std::make_shared<Primitive>(model, primitive, data));

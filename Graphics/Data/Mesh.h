@@ -11,7 +11,7 @@ class Mesh {
 public:
     Mesh(const tinygltf::Model &model,
          const tinygltf::Mesh &mesh,
-         const ModelData &data);
+         ModelData &data);
     virtual ~Mesh();
 
     void draw();

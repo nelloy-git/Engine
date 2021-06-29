@@ -7,6 +7,7 @@
 #include "GLwrap/Tex2D.h"
 
 #include "Data/glTF.h"
+#include "Data/BufferView.h"
 #include "Data/Mesh.h"
 #include "Data/Node.h"
 #include "Data/Scene.h"
@@ -21,9 +22,9 @@ public:
     std::map<int, std::shared_ptr<Scene>> scenes;
     std::map<int, std::shared_ptr<Node>> nodes;
     std::map<int, std::shared_ptr<Mesh>> meshes;
-    // std::map<int, std::shar
 
-    std::unordered_map<int, char*> buffers;
+    std::map<int, std::shared_ptr<BufferView>> buffers;
+    std::map<int, std::shared_ptr<GLwrap::Tex2D>> textures;
 
 
     // const std::vector<std::shared_ptr<GLwrap::Buffer>> &buffers();

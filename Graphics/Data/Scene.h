@@ -14,7 +14,7 @@ class Scene {
 public:
     Scene(const tinygltf::Model &model,
           const tinygltf::Scene &scene,
-          const ModelData &data);
+          ModelData &data);
     virtual ~Scene();
 
     void draw();

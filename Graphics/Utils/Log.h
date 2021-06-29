@@ -9,6 +9,10 @@
 #define WRN (1)
 #define ERR (2)
 
+#ifdef _MSC_VER
+#define __PRETTY_FUNCTION__ __FUNCSIG__
+#endif
+
 #define LOG(lvl) Log(__FILE__, __LINE__, __PRETTY_FUNCTION__, lvl)
 
 class Log {

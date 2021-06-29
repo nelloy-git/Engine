@@ -10,7 +10,7 @@ using namespace Graphics;
 
 Primitive::Primitive(const tinygltf::Model &model,
                      const tinygltf::Primitive &primitive,
-                     const ModelData &data){
+                     ModelData &data){
     
     typedef std::pair<std::shared_ptr<GLwrap::Buffer>,
                       std::shared_ptr<GLwrap::BufferAccessor>> BuffPair;
@@ -90,17 +90,21 @@ Primitive::_getAttrAccessor(const std::string &name,
 
 
 std::shared_ptr<GLwrap::Buffer>
-Primitive::_getBuffer(const tinygltf::Accessor &info, const ModelData &data){
-    int view_pos = info.bufferView;
-    auto &buffers = data.buffers();
+Primitive::_getBuffer(const tinygltf::Accessor &info, ModelData &data){
+    auto view_pos = info.bufferView;
+    auto view_iter = data.buffers.find(view_pos);
 
-    if (view_pos < 0 || view_pos > buffers.size()){
+    if (view_iter == data.buffers.end()){
+        data.buffers[view_pos] = std::make_shared<BufferView>()
+    }
+
+    if (view_pos < 0 || view_pos >= buffers.size()){
         std::string msg = "invalid buffer " + std::to_string(view_pos);
         LOG(ERR) << msg;
         throw std::runtime_error(msg);
     }
 
-    return buffers[view_pos];
+    return buffers.at(view_pos);
 }
 
 std::shared_ptr<GLwrap::ArrayAccessor>
