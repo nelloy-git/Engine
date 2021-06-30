@@ -17,14 +17,14 @@ Material::Material(const tinygltf::Model &model,
         _base_color.push_back(pbr.baseColorFactor[i]);
     }
 
-    auto tex_pos = pbr.baseColorTexture.index;
-    auto tex_iter = data.textures.find(tex_pos);
-    if (tex_iter == data.textures.end()){
-        throw std::runtime_error("Can not get texture");
-    }
+    // auto tex_pos = pbr.baseColorTexture.index;
+    // auto tex_iter = data.textures.find(tex_pos);
+    // if (tex_iter == data.textures.end()){
+    //     throw std::runtime_error("Can not get texture");
+    // }
 
-    _base_texture = tex_iter->second;
-    _base_texture_uv = pbr.baseColorTexture.texCoord;
+    // _base_texture = tex_iter->second;
+    // _base_texture_uv = pbr.baseColorTexture.texCoord;
 }
 
 Material::~Material(){

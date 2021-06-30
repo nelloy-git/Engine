@@ -11,37 +11,51 @@ Buffer::Buffer(BufferType type, size_t size, BufferUsage usage) :
     size(size),
     usage(usage){
 
-    glGenBuffers(1, &__id);
+    glGenBuffers(1, &_id);
 
-    glBindBuffer(static_cast<GLenum>(type), __id);
+    glBindBuffer(static_cast<GLenum>(type), _id);
     glBufferData(static_cast<GLenum>(type), size, nullptr, static_cast<GLenum>(usage));
     glBindBuffer(static_cast<GLenum>(type), 0);
 }
 
 Buffer::~Buffer(){
-    glDeleteBuffers(1, &__id);
+    glDeleteBuffers(1, &_id);
 }
 
 GLuint Buffer::id(){
-    return __id;
+    return _id;
 }
 
-void Buffer::load(const void* data, int offset, size_t size){
+void Buffer::write(const void *data, int offset, size_t size){
     if (size == 0){
         size = this->size;
-    } else if (offset + size > this->size){
-        std::string msg = "data is outside of buffer size.";
-        LOG(ERR) << msg;
+    }
+    
+    if (offset + size > this->size){
+        std::string msg = "Data is outside of buffer size.";
         throw std::invalid_argument(msg);
     }
 
-    glBindBuffer(static_cast<GLenum>(type), __id);
+    glBindBuffer(static_cast<GLenum>(type), _id);
     glBufferSubData(static_cast<GLenum>(type), offset, size, data);
     glBindBuffer(static_cast<GLenum>(type), 0);
 }
 
+void Buffer::read(void *data, int offset, size_t size){
+    if (size == 0){
+        size = this->size;
+    }
+    
+    if (offset + size > this->size){
+        std::string msg = "Data is outside of buffer size.";
+        throw std::invalid_argument(msg);
+    }
+
+    glGetBufferSubData(_id, offset, size, data);
+}
+
 void Buffer::bind() const {
-    glBindBuffer(static_cast<GLenum>(type), __id);
+    glBindBuffer(static_cast<GLenum>(type), _id);
 }
 
 void Buffer::unbind() const {

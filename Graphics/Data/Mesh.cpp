@@ -4,12 +4,11 @@
 
 using namespace Graphics;
 
-Mesh::Mesh(const tinygltf::Model &model,
-           const tinygltf::Mesh &mesh,
+Mesh::Mesh(const tinygltf::Mesh &mesh,
            ModelData &data){
 
     for (auto &primitive : mesh.primitives){
-        primitives.push_back(std::make_shared<Primitive>(model, primitive, data));
+        primitives.push_back(std::make_shared<Primitive>(primitive, data));
     }
 }
 

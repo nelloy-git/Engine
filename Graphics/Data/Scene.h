@@ -12,8 +12,7 @@ class Node;
 
 class Scene {
 public:
-    Scene(const tinygltf::Model &model,
-          const tinygltf::Scene &scene,
+    Scene(const tinygltf::Scene &scene,
           ModelData &data);
     virtual ~Scene();
 

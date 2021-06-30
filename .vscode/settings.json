@@ -91,6 +91,7 @@
         "codecvt": "cpp",
         "queue": "cpp",
         "filesystem": "cpp",
-        "valarray": "cpp"
+        "valarray": "cpp",
+        "variant": "cpp"
     }
 }

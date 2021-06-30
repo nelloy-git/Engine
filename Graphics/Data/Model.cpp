@@ -5,31 +5,18 @@
 using namespace Graphics;
 
 Model::Model(const std::string &path){
-    tinygltf::Model *model = _loadModel(path);
 
-    _data = std::make_shared<ModelData>(*model);
+    std::shared_ptr<tinygltf::Model> model(_loadModel(path));
 
+    _data = std::make_shared<ModelData>(model);
     for (int i = 0; i < model->scenes.size(); i++){
-        scenes.push_back(std::make_shared<Scene>(*model, model->scenes[i], *_data));
+        scenes.push_back(_data->getScene(i));
     }
-
-    // _loadMeshes(*model);
-    // model->materials[0].
-
-    delete model;
 }
 
 Model::~Model(){
 
 }
-
-// void Model::draw(int scene, int animation, int time){
-//     // _data->scenes[scene]->draw();
-// }
-
-// void Model::draw(int scene, int animation, int time) const {
-//     // _data->scenes[scene]->draw();
-// }
 
 tinygltf::Model *Model::_loadModel(const std::string &path){
     auto model = new tinygltf::Model();

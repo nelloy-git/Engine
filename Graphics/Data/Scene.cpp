@@ -4,18 +4,11 @@
 
 using namespace Graphics;
 
-Scene::Scene(const tinygltf::Model &model,
-             const tinygltf::Scene &scene,
+Scene::Scene(const tinygltf::Scene &scene,
              ModelData &data){
 
     for (int i = 0; i < scene.nodes.size(); i++){
-        auto node_pos = scene.nodes[i];
-        auto iter = data.nodes.find(node_pos);
-        if (iter == data.nodes.end()){
-            data.nodes[node_pos] = std::make_shared<Node>(model, model.nodes[node_pos], data);
-            iter = data.nodes.find(node_pos);
-        }
-        nodes.push_back(iter->second);
+        nodes.push_back(data.getNode(scene.nodes[i]));
     }
 }
 

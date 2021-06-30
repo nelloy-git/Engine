@@ -12,6 +12,8 @@ include_directories(./3rdparty/tinygltf)
 include_directories(./3rdparty/glm)
 
 add_library (${PROJECT_NAME} STATIC
+    ./Data/Accessor.cpp
+    ./Data/BufferView.cpp
     ./Data/glTF.cpp
     ./Data/Material.cpp
     ./Data/Mesh.cpp

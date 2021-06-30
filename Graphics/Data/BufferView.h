@@ -10,9 +10,8 @@ class ModelData;
 
 class BufferView {
 public:
-    BufferView(const tinygltf::Model &model,
-               const tinygltf::BufferView &view,
-               ModelData &data);
+    BufferView(const tinygltf::BufferView &view,
+               const ModelData &data);
     virtual ~BufferView();
 
     std::shared_ptr<GLwrap::Buffer> buffer;

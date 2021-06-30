@@ -9,8 +9,7 @@ class ModelData;
 
 class Mesh {
 public:
-    Mesh(const tinygltf::Model &model,
-         const tinygltf::Mesh &mesh,
+    Mesh(const tinygltf::Mesh &mesh,
          ModelData &data);
     virtual ~Mesh();
 

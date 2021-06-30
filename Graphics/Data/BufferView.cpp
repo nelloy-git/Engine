@@ -4,9 +4,8 @@
 
 using namespace Graphics;
 
-BufferView::BufferView(const tinygltf::Model &model,
-                       const tinygltf::BufferView &view,
-                       ModelData &data){
+BufferView::BufferView(const tinygltf::BufferView &view,
+                       const ModelData &data){
     
     const static auto VERTEX_ARRAY = GLwrap::BufferType::ARRAY;
     const static auto INDEX_ARRAY = GLwrap::BufferType::ELEMENT_ARRAY;
@@ -16,5 +15,8 @@ BufferView::BufferView(const tinygltf::Model &model,
                 is_vertex ? VERTEX_ARRAY : INDEX_ARRAY,
                 view.byteLength
              );
-    buffer->load(&model.buffers[view.buffer].data.at(view.byteOffset));
+}
+
+BufferView::~BufferView(){
+
 }

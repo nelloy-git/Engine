@@ -24,7 +24,11 @@ public:
     Buffer(BufferType type, size_t size, BufferUsage usage = BufferUsage::STATIC);
     virtual ~Buffer();
 
-    void load(const void* data, int offset = 0, size_t size = 0);
+    /* if (size == 0){size = this->size;} */
+    void write(const void *data, int offset = 0, size_t size = 0);
+
+    /* if (size == 0){size = this->size;} */
+    void read(void *data, int offset = 0, size_t size = 0);
 
     void bind() const;
     void unbind() const;
@@ -35,7 +39,7 @@ public:
     const BufferUsage usage;
 
 private:
-    GLuint __id;
+    GLuint _id;
 };
 
 class VertexBuffer : public Buffer {

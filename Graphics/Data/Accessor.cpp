@@ -6,9 +6,9 @@
 
 using namespace Graphics;
 
-Accessor::Accessor(const tinygltf::Model &model,
-                           const tinygltf::Accessor &acc,
-                           ModelData &data){
+Accessor::Accessor(const tinygltf::Accessor &acc,
+                   ModelData &data) :
+    count(acc.count){
     
     GLwrap::ComponentSize attr_size;
     GLwrap::ComponentType attr_type;
@@ -25,6 +25,7 @@ Accessor::Accessor(const tinygltf::Model &model,
     accessor = std::make_shared<GLwrap::BufferAccessor>(
                     attr_size, attr_type, acc.normalized,
                     0, acc.byteOffset);
+    view = data.getBufferView(acc.bufferView);
 }
 
 Accessor::~Accessor(){

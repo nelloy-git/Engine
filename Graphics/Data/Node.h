@@ -13,8 +13,7 @@ class ModelData;
 
 class Node {
 public:
-    Node(const tinygltf::Model &model,
-         const tinygltf::Node &node,
+    Node(const tinygltf::Node &node,
          ModelData &data);
     virtual ~Node();
 
@@ -27,12 +26,6 @@ public:
 
 private:
     void _initMatrix(const tinygltf::Node &node);
-    void _initChildren(const tinygltf::Model &model,
-                       const tinygltf::Node &node,
-                       ModelData &data);
-    void _initMesh(const tinygltf::Model &model,
-                   const tinygltf::Node &node,
-                   ModelData &data);
 };
 
 }

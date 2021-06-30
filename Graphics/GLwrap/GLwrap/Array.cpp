@@ -7,8 +7,7 @@
 using namespace GLwrap;
 
 Array::Array(std::shared_ptr<Buffer> indices, 
-             const std::vector<std::pair<std::shared_ptr<Buffer>,
-                                         std::shared_ptr<BufferAccessor>>> &layouts) :
+             const std::unordered_map<int, BufferPair> &layouts) :
     indices(indices),
     layouts(layouts)
 {
@@ -16,8 +15,8 @@ Array::Array(std::shared_ptr<Buffer> indices,
     glBindVertexArray(_id);
 
     for (int loc = 0; loc < layouts.size(); loc++){
-        layouts[loc].first->bind();
-        layouts[loc].second->enable(loc);
+        layouts.at(loc).first->bind();
+        layouts.at(loc).second->enable(loc);
     }
     indices->bind();
 
@@ -42,4 +41,10 @@ void Array::bind() const {
 
 void Array::unbind() const {
     glBindVertexArray(0);
+}
+
+void Array::draw(DrawMode mode, ComponentType type, size_t vertex_count, size_t byte_offset) {
+    glBindVertexArray(_id);
+    glDrawElements(static_cast<GLenum>(mode), vertex_count,
+                   static_cast<GLenum>(type), (void*)byte_offset);
 }

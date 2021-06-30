@@ -15,10 +15,8 @@ public:
     Model(const std::string &path);
     virtual ~Model();
 
-    // void draw(int scene, int animation = -1, int time = -1);
-    // void draw(int scene, int animation = -1, int time = -1) const;
-
     std::vector<std::shared_ptr<Scene>> scenes;
+    // std::vector<>
 
 private:
     tinygltf::Model *_loadModel(const std::string &path);

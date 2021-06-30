@@ -4,7 +4,8 @@
 
 using namespace Graphics;
 
-ModelData::ModelData(const tinygltf::Model &model){
+ModelData::ModelData(std::shared_ptr<tinygltf::Model> model) :
+    _model(model){
     // _initBuffers(model);
     // _initTextures(model);
     // _initMeshes(model);
@@ -14,6 +15,29 @@ ModelData::ModelData(const tinygltf::Model &model){
 
 ModelData::~ModelData(){
 
+}
+
+std::shared_ptr<Scene> ModelData::getScene(int pos){
+    return _getData(pos, _scenes, _model->scenes[pos]);
+}
+
+std::shared_ptr<Node> ModelData::getNode(int pos){
+    return _getData(pos, _nodes, _model->nodes[pos]);
+}
+
+std::shared_ptr<Mesh> ModelData::getMesh(int pos){
+    return _getData(pos, _meshes, _model->meshes[pos]);
+}
+
+std::shared_ptr<BufferView> ModelData::getBufferView(int pos){
+    auto &tiny_view = _model->bufferViews[pos];
+    auto view = _getData(pos, _buffers, tiny_view);
+    view->buffer->write(&_model->buffers[tiny_view.buffer].data.at(tiny_view.byteOffset));
+    return view;
+}
+
+std::shared_ptr<Accessor> ModelData::getAccessor(int pos){
+    return _getData(pos, _accessors, _model->accessors[pos]);
 }
 
 // const std::vector<std::shared_ptr<GLwrap::Buffer>> &ModelData::buffers(){

@@ -16,41 +16,39 @@ namespace Graphics {
 
 class ModelData {
 public:
-    ModelData(const tinygltf::Model &model);
+    ModelData(std::shared_ptr<tinygltf::Model> model);
     virtual ~ModelData();
 
-    std::map<int, std::shared_ptr<Scene>> scenes;
-    std::map<int, std::shared_ptr<Node>> nodes;
-    std::map<int, std::shared_ptr<Mesh>> meshes;
+    std::shared_ptr<Scene> getScene(int pos);
+    std::shared_ptr<Node> getNode(int pos);
+    std::shared_ptr<Mesh> getMesh(int pos);
 
-    std::map<int, std::shared_ptr<BufferView>> buffers;
-    std::map<int, std::shared_ptr<GLwrap::Tex2D>> textures;
+    std::shared_ptr<BufferView> getBufferView(int pos);
+    std::shared_ptr<Accessor> getAccessor(int pos);
 
+private:
 
-    // const std::vector<std::shared_ptr<GLwrap::Buffer>> &buffers();
-//     const std::vector<std::shared_ptr<GLwrap::Tex2D>> &textures();
-//     const std::vector<std::shared_ptr<Mesh>> &meshes();
-//     const std::vector<std::shared_ptr<Node>> &nodes();
-//     const std::vector<std::shared_ptr<Scene>> &scenes();
-    
-//     const std::vector<std::shared_ptr<GLwrap::Buffer>> &buffers() const;
-//     const std::vector<std::shared_ptr<GLwrap::Tex2D>> &textures() const;
-//     const std::vector<std::shared_ptr<Mesh>> &meshes() const;
-//     const std::vector<std::shared_ptr<Node>> &nodes() const;
-//     const std::vector<std::shared_ptr<Scene>> &scenes() const;
+    std::shared_ptr<tinygltf::Model> _model;
 
-// private:
-//     void _initBuffers(const tinygltf::Model &model);
-//     void _initTextures(const tinygltf::Model &model);
-//     void _initMeshes(const tinygltf::Model &model);
-//     void _initNodes(const tinygltf::Model &model);
-//     void _initScenes(const tinygltf::Model &model);
+    std::map<int, std::shared_ptr<Scene>> _scenes;
+    std::map<int, std::shared_ptr<Node>> _nodes;
+    std::map<int, std::shared_ptr<Mesh>> _meshes;
 
-//     std::vector<std::shared_ptr<GLwrap::Buffer>> _buffers;
-//     std::vector<std::shared_ptr<GLwrap::Tex2D>> _textures;
-//     std::vector<std::shared_ptr<Mesh>> _meshes;
-//     std::vector<std::shared_ptr<Node>> _nodes;
-//     std::vector<std::shared_ptr<Scene>> _scenes;
+    std::map<int, std::shared_ptr<BufferView>> _buffers;
+    std::map<int, std::shared_ptr<Accessor>> _accessors;
+
+    std::map<int, std::shared_ptr<GLwrap::Tex2D>> _textures;
+
+    template<typename T, typename P>
+    auto _getData(int pos, std::map<int, std::shared_ptr<T>> map, const P &tiny_data){
+        auto iter = map.find(pos);
+        if (iter == map.end()){
+            map[pos] = std::make_shared<T>(tiny_data, *this);
+            iter = map.find(pos);
+        }
+        return iter->second;
+    }
+
 };
 
 }
