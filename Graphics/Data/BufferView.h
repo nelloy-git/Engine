@@ -3,6 +3,7 @@
 #include "GLwrap/Buffer.h"
 
 #include "Data/glTF.h"
+#include "Data/Buffer.h"
 
 namespace Graphics {
 
@@ -14,7 +15,7 @@ public:
                const ModelData &data);
     virtual ~BufferView();
 
-    std::shared_ptr<GLwrap::Buffer> buffer;
+    std::shared_ptr<Buffer> buffer;
 };
 
 }

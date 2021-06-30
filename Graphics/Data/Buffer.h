@@ -15,13 +15,16 @@ public:
     Buffer(GLwrap::BufferType type, size_t size, const void *ptr);
     virtual ~Buffer();
 
+    bool isGpu();
     void toGpu();
     void fromGpu();
 
-    bool isGpu = false;
     GLwrap::BufferType type;
     size_t size;
     std::variant<Cpu, Gpu> data;
+
+private:
+    bool _isGpu = false;
 };
 
 }

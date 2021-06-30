@@ -5,7 +5,7 @@
 using namespace Graphics;
 
 Buffer::Buffer(GLwrap::BufferType type, size_t size, const void *ptr) :
-    isGpu(false),
+    _isGpu(false),
     type(type),
     size(size){
 
@@ -19,28 +19,32 @@ Buffer::~Buffer(){
 
 }
 
+bool Buffer::isGpu(){
+    return _isGpu;
+}
+
 void Buffer::toGpu(){
-    if (isGpu){
+    if (_isGpu){
         return;
     }
 
     Cpu cpu = std::get<Cpu>(data);
     Gpu gpu = std::make_shared<GLwrap::Buffer>(type, size);
     data = gpu;
-    isGpu = true;
+    _isGpu = true;
 
     gpu->write(cpu.get());
 }
 
 void Buffer::fromGpu(){
-    if (!isGpu){
+    if (!_isGpu){
         return;
     }
 
     Gpu gpu = std::get<Gpu>(data);
     Cpu cpu = std::make_shared<char[]>(size);
     data = cpu;
-    isGpu = false;
+    _isGpu = false;
 
     gpu->read(cpu.get());
 }
