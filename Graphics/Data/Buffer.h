@@ -1,33 +1,22 @@
 #pragma once
 
-#include <variant>
-
-#include "GLwrap/Buffer.h"
+#include "Data/Types.h"
 
 namespace Graphics {
 
 class Buffer {
 public:
-    using Gpu = std::shared_ptr<GLwrap::Buffer>;
-    using Cpu = std::shared_ptr<char[]>;
+    Buffer(ComponentType data_type, ComponentSize data_size, size_t bytes) :
+        data_type(data_type), data_size(data_size), bytes(bytes){
+    };
+    virtual ~Buffer() = 0;
 
-public:
-    Buffer(GLwrap::BufferType type, size_t size);
-    virtual ~Buffer();
+    virtual bool write(const void *src, size_t size, size_t offset) = 0;
+    virtual bool read(void *dst, size_t size, size_t offset) = 0;
 
-    bool write(void *src, int offset = 0, size_t size = 0);
-    bool read(void *dst, int offset = 0, size_t size = 0);
-
-    bool isGpu();
-    void toGpu();
-    void fromGpu();
-
-    GLwrap::BufferType type;
-    size_t size;
-    std::variant<Cpu, Gpu> data;
-
-private:
-    bool _isGpu = false;
+    const ComponentType data_type;
+    const ComponentSize data_size;
+    const size_t bytes;
 };
 
 }

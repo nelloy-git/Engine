@@ -34,7 +34,7 @@ private:
     std::map<int, std::shared_ptr<Node>> _nodes;
     std::map<int, std::shared_ptr<Mesh>> _meshes;
 
-    std::map<int, std::shared_ptr<BufferView>> _buffers;
+    std::map<int, std::shared_ptr<BufferView>> _buffer_views;
     std::map<int, std::shared_ptr<Accessor>> _accessors;
 
     std::map<int, std::shared_ptr<GLwrap::Tex2D>> _textures;

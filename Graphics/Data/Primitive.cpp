@@ -22,12 +22,14 @@ Primitive::Primitive(const tinygltf::Primitive &primitive,
         try{
             loc = glTF::getLayoutLocation(name);
         } catch (std::exception e){
-            std::string what("Can not create primitive. ");
-            what += e.what();
-            throw std::invalid_argument(what);
+            LOG(ERR) << "Can not create primitive. " << e.what();
+            continue;
         }
 
         auto accessor = data.getAccessor(attr.second);
+        auto buffer = accessor->view->buffer;
+
+        // auto 
 
         layouts[loc] = std::make_pair(accessor->view->buffer, accessor->accessor);
     }

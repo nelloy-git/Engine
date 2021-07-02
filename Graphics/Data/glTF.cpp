@@ -21,47 +21,70 @@ int glTF::getLayoutLocation(const std::string &name){
     }
 }
 
-GLwrap::ComponentSize glTF::getComponentSize(int glTF_component_size){
+ComponentSize glTF::getComponentSize(int glTF_component_size){
     switch (glTF_component_size){
     case TINYGLTF_TYPE_SCALAR:
-        return GLwrap::ComponentSize::Scalar;
+        return ComponentSize::Scalar;
     case TINYGLTF_TYPE_VEC2:
-        return GLwrap::ComponentSize::Vec2;
+        return ComponentSize::Vec2;
     case TINYGLTF_TYPE_VEC3:
-        return GLwrap::ComponentSize::Vec3;
+        return ComponentSize::Vec3;
     case TINYGLTF_TYPE_VEC4:
-        return GLwrap::ComponentSize::Vec4;
+        return ComponentSize::Vec4;
     case TINYGLTF_TYPE_MAT2:
-        return GLwrap::ComponentSize::Mat2;
+        return ComponentSize::Mat2;
     case TINYGLTF_TYPE_MAT3:
-        return GLwrap::ComponentSize::Mat3;
+        return ComponentSize::Mat3;
     case TINYGLTF_TYPE_MAT4:
-        return GLwrap::ComponentSize::Mat4;
+        return ComponentSize::Mat4;
     default:
         throw std::invalid_argument("Unknown glTF_component_size \"" + std::to_string(glTF_component_size) + "\".");
     }
 }
 
-GLwrap::ComponentType glTF::getComponentType(int glFT_component_type){
+ComponentType glTF::getComponentType(int glFT_component_type){
     switch (glFT_component_type){
     case TINYGLTF_COMPONENT_TYPE_BYTE:
-        return GLwrap::ComponentType::Byte;
+        return ComponentType::Byte;
     case TINYGLTF_COMPONENT_TYPE_UNSIGNED_BYTE:
-        return GLwrap::ComponentType::UByte;
+        return ComponentType::UByte;
     case TINYGLTF_COMPONENT_TYPE_SHORT:
-        return GLwrap::ComponentType::Short;
+        return ComponentType::Short;
     case TINYGLTF_COMPONENT_TYPE_UNSIGNED_SHORT:
-        return GLwrap::ComponentType::UShort;
+        return ComponentType::UShort;
     case TINYGLTF_COMPONENT_TYPE_INT:
-        return GLwrap::ComponentType::Int;
+        return ComponentType::Int;
     case TINYGLTF_COMPONENT_TYPE_UNSIGNED_INT:
-        return GLwrap::ComponentType::UInt;
+        return ComponentType::UInt;
     case TINYGLTF_COMPONENT_TYPE_FLOAT:
-        return GLwrap::ComponentType::Float;
+        return ComponentType::Float;
     case TINYGLTF_COMPONENT_TYPE_DOUBLE:
-        return GLwrap::ComponentType::Double;
+        return ComponentType::Double;
     default:
         throw std::invalid_argument("Unknown glTF_component_type \"" + std::to_string(glFT_component_type) + "\".");
+    }
+}
+
+size_t getComponentTypeSize(ComponentType type){
+    switch (type){
+        case ComponentType::Byte:
+            return sizeof(GLbyte);
+        case ComponentType::UByte:
+            return sizeof(GLubyte);
+        case ComponentType::Short:
+            return sizeof(GLshort);
+        case ComponentType::UShort:
+            return sizeof(GLushort);
+        case ComponentType::Int:
+            return sizeof(GLint);
+        case ComponentType::UInt:
+            return sizeof(GLuint);
+        case ComponentType::Float:
+            return sizeof(GLfloat);
+        case ComponentType::Double:
+            return sizeof(GLdouble);
+        default:
+            throw std::invalid_argument("Unknown ComponentType.");
     }
 }
 

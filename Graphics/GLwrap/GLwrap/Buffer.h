@@ -42,8 +42,4 @@ private:
     GLuint _id;
 };
 
-class VertexBuffer : public Buffer {
-    VertexBuffer(size_t size, BufferUsage usage = BufferUsage::STATIC);
-};
-
 }

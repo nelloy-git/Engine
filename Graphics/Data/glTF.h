@@ -8,11 +8,14 @@
 #include "GLwrap/Shader.h"
 #include "GLwrap/Tex2D.h"
 
+#include "Data/Types.h"
+
 namespace Graphics::glTF {
 
 int getLayoutLocation(const std::string &name);
-GLwrap::ComponentSize getComponentSize(int glTF_component_size);
-GLwrap::ComponentType getComponentType(int glFT_component_type);
+ComponentSize getComponentSize(int glTF_component_size);
+ComponentType getComponentType(int glFT_component_type);
+size_t getComponentTypeSize(ComponentType type);
 GLwrap::DrawMode getDrawMode(int glTF_draw_mode);
 
 GLwrap::Tex2Dformat getImageFormat(int glTF_channels);
