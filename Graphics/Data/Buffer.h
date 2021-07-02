@@ -12,8 +12,11 @@ public:
     using Cpu = std::shared_ptr<char[]>;
 
 public:
-    Buffer(GLwrap::BufferType type, size_t size, const void *ptr);
+    Buffer(GLwrap::BufferType type, size_t size);
     virtual ~Buffer();
+
+    bool write(void *src, int offset = 0, size_t size = 0);
+    bool read(void *dst, int offset = 0, size_t size = 0);
 
     bool isGpu();
     void toGpu();

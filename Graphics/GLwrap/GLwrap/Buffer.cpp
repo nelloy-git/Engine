@@ -26,32 +26,34 @@ GLuint Buffer::id(){
     return _id;
 }
 
-void Buffer::write(const void *data, int offset, size_t size){
+bool Buffer::write(const void *data, int offset, size_t size){
     if (size == 0){
         size = this->size;
     }
     
     if (offset + size > this->size){
-        std::string msg = "Data is outside of buffer size.";
-        throw std::invalid_argument(msg);
+        LOG(WRN) << "Data is outside of buffer size.";
+        return false;
     }
 
     glBindBuffer(static_cast<GLenum>(type), _id);
     glBufferSubData(static_cast<GLenum>(type), offset, size, data);
     glBindBuffer(static_cast<GLenum>(type), 0);
+    return true;
 }
 
-void Buffer::read(void *data, int offset, size_t size){
+bool Buffer::read(void *data, int offset, size_t size){
     if (size == 0){
         size = this->size;
     }
     
     if (offset + size > this->size){
-        std::string msg = "Data is outside of buffer size.";
-        throw std::invalid_argument(msg);
+        LOG(WRN) << "Data is outside of buffer size.";
+        return false;
     }
 
     glGetBufferSubData(_id, offset, size, data);
+    return true;
 }
 
 void Buffer::bind() const {

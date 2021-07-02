@@ -32,7 +32,7 @@ std::shared_ptr<Mesh> ModelData::getMesh(int pos){
 std::shared_ptr<BufferView> ModelData::getBufferView(int pos){
     auto &tiny_view = _model->bufferViews[pos];
     auto view = _getData(pos, _buffers, tiny_view);
-    view->buffer->write(&_model->buffers[tiny_view.buffer].data.at(tiny_view.byteOffset));
+    // view->buffer->write(&_model->buffers[tiny_view.buffer].data.at(tiny_view.byteOffset));
     return view;
 }
 
