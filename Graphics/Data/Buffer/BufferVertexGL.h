@@ -8,10 +8,10 @@
 
 namespace Graphics {
 
-class BufferElementGL : public Buffer {
+class BufferVertexGL : public Buffer {
 public:
-    BufferElementGL(ComponentType data_type, ComponentSize data_size, size_t bytes);
-    ~BufferElementGL() override;
+    BufferVertexGL(ComponentType data_type, ComponentSize data_size, bool normalized, int count, size_t bytes);
+    ~BufferVertexGL() override;
 
     bool write(const void *src, size_t size, size_t offset) override;
     bool read(void *dst, size_t size, size_t offset) override;

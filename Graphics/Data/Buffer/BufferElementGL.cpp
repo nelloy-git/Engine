@@ -1,11 +1,11 @@
-#include "Data/BufferReceive/BufferElementGL.h"
+#include "Data/Buffer/BufferElementGL.h"
 
 #include <cstring>
 
 using namespace Graphics;
 
-BufferElementGL::BufferElementGL(Buffer::ComponentType data_type, Buffer::ComponentSize data_size, size_t bytes) : 
-    Buffer(data_type, data_size, bytes){
+BufferElementGL::BufferElementGL(ComponentType data_type, ComponentSize data_size, bool normalized, int count, size_t bytes) : 
+    Buffer(data_type, data_size, normalized, count, bytes){
 
     data = std::make_shared<GLwrap::Buffer>(GLwrap::BufferType::ELEMENT_ARRAY, bytes);
 }

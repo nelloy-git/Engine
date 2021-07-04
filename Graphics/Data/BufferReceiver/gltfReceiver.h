@@ -3,9 +3,9 @@
 #include <vector>
 
 #include "Data/glTF.h"
-#include "Data/BufferReceive/BufferCpu.h"
-#include "Data/BufferReceive/BufferVertexGL.h"
-#include "Data/BufferReceive/BufferElementGL.h"
+#include "Data/Buffer/BufferCpu.h"
+#include "Data/Buffer/BufferVertexGL.h"
+#include "Data/Buffer/BufferElementGL.h"
 
 namespace Graphics {
 

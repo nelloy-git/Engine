@@ -18,7 +18,7 @@
 #include "Context/Timer.h"
 #include "Context/Window.h"
 
-#include "Data/Model.h"
+#include "Data/Model/gltfModel.h"
 
 #include "Drawing/Camera.h"
 #include "Drawing/Drawer.h"
@@ -66,7 +66,8 @@ int main(int argc, const char** argv){
         running = false;
     });
 
-    auto model3d = std::make_shared<Model>("../test/triang/triang.gltf");
+    // std::shared_ptr<Model> model3d = std::make_shared<gltfModel>("../test/triang/triang.gltf");
+    std::shared_ptr<Model> model3d = std::make_shared<gltfModel>("../test/book/scene.gltf");
 
     std::shared_ptr<GLwrap::Program> progr = initProgram("../shaders/base.vert", "../shaders/base.frag");
     if (!progr){return -1;}

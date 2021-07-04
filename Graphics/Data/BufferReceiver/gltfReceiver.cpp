@@ -1,4 +1,4 @@
-#include "Data/BufferReceive/gltfReceiver.h"
+#include "Data/BufferReceiver/gltfReceiver.h"
 
 #include "Data/glTF.h"
 
@@ -23,22 +23,25 @@ std::vector<std::shared_ptr<Buffer>> gltfBufferReceiver::receive(const tinygltf:
 
         ComponentType data_type = glTF::getComponentType(accesor.componentType);
         ComponentSize data_size = glTF::getComponentSize(accesor.type);
-        size_t elem_size = accesor.type * glTF::getComponentTypeSize(data_type);
+        size_t elem_size = static_cast<int>(data_size) * glTF::getComponentTypeSize(data_type);
         size_t stride = view.byteStride == 0 ? elem_size : view.byteStride;
 
         std::shared_ptr<Buffer> buffer;
-        list.push_back(buffer);
-
         if (view.target == TINYGLTF_TARGET_ARRAY_BUFFER){
             buffer = std::make_shared<BufferVertexGL>(data_type, data_size,
+                                                      accesor.normalized, accesor.count,
                                                       accesor.count * elem_size);
         } else if (view.target == TINYGLTF_TARGET_ELEMENT_ARRAY_BUFFER){
             buffer = std::make_shared<BufferElementGL>(data_type, data_size,
-                                                      accesor.count * elem_size);
+                                                       accesor.normalized, accesor.count,
+                                                       accesor.count * elem_size);
         } else {
             buffer = std::make_shared<BufferCpu>(data_type, data_size,
-                                                      accesor.count * elem_size);
+                                                 accesor.normalized, accesor.count,
+                                                 accesor.count * elem_size);
         }
+        
+        list.push_back(buffer);
 
         for (auto i = 0; i < accesor.count; i++){
             if (!buffer->write(&data.data.at(view.byteOffset + accesor.byteOffset + i * stride),
@@ -48,4 +51,6 @@ std::vector<std::shared_ptr<Buffer>> gltfBufferReceiver::receive(const tinygltf:
             }
         }
     }
+
+    return list;
 }

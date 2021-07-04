@@ -1,5 +1,7 @@
 #pragma once
 
+#include "GLwrap/Types.h"
+
 namespace Graphics {
 
 enum class ComponentType : std::underlying_type_t<GLwrap::ComponentType> {

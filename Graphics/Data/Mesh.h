@@ -1,6 +1,8 @@
 #pragma once
 
-#include "Data/glTF.h"
+#include <vector>
+#include <memory>
+
 #include "Data/Primitive.h"
 
 namespace Graphics {
@@ -9,8 +11,7 @@ class ModelData;
 
 class Mesh {
 public:
-    Mesh(const tinygltf::Mesh &mesh,
-         ModelData &data);
+    Mesh();
     virtual ~Mesh();
 
     void draw();

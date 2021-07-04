@@ -3,7 +3,6 @@
 #include <iostream>
 #include <fstream>
 #include <sstream>
-#include <codecvt>
 #include <stdexcept>
 
 #include "Log.h"

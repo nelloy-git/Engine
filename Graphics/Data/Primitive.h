@@ -3,11 +3,11 @@
 #include <unordered_map>
 
 #include "GLwrap/Array.h"
+#include "GLwrap/BufferAccessor.h"
 
-#include "Data/glTF.h"
+#include "Data/Buffer/BufferElementGL.h"
+#include "Data/Buffer/BufferVertexGL.h"
 #include "Data/Material.h"
-#include "Data/Accessor.h"
-#include "Data/BufferView.h"
 
 namespace Graphics {
 
@@ -15,25 +15,24 @@ class ModelData;
 
 class Primitive {
 public:
-    Primitive(const tinygltf::Primitive &primitive,
-              ModelData &data);
+    Primitive(std::shared_ptr<BufferElementGL> indices,
+              std::unordered_map<int, std::shared_ptr<BufferVertexGL>> attributes,
+              GLwrap::DrawMode mode);
 
     virtual ~Primitive();
 
     void draw();
     void draw() const;
 
-
+    std::shared_ptr<Material> material = nullptr;
 
 private:
 
     std::shared_ptr<GLwrap::Array> _vao;
     GLwrap::DrawMode _mode;
-    GLwrap::ComponentType _type;
-    int _count;
-    size_t _offset;
 
-    std::shared_ptr<Material> _material = nullptr;
+    std::shared_ptr<BufferElementGL> _indices;
+    std::unordered_map<int, std::shared_ptr<BufferVertexGL>> _attributes;
 };
 
 }

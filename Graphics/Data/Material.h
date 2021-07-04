@@ -4,21 +4,18 @@
 
 namespace Graphics {
 
-class ModelData;
-
 class Material {
 public:
-    Material(const tinygltf::Model &model,
-             const tinygltf::Material &material,
-             ModelData &data);
+    Material();
     virtual ~Material();
 
     void apply();
 
+    float base_color[4] = {1, 1, 1, 1};
+    std::shared_ptr<GLwrap::Tex2D> base_texture;
+    int base_texture_uv = 0;
+
 private:
-    std::vector<float> _base_color;
-    std::shared_ptr<GLwrap::Tex2D> _base_texture;
-    int _base_texture_uv;
 };
 
 }

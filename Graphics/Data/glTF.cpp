@@ -65,7 +65,7 @@ ComponentType glTF::getComponentType(int glFT_component_type){
     }
 }
 
-size_t getComponentTypeSize(ComponentType type){
+size_t glTF::getComponentTypeSize(ComponentType type){
     switch (type){
         case ComponentType::Byte:
             return sizeof(GLbyte);

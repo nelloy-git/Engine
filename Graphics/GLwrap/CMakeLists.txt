@@ -34,6 +34,6 @@ target_link_libraries(${PROJECT_NAME}
 
 set_property (TARGET ${PROJECT_NAME}
   PROPERTY
-    # Enable C++17 standard compliance
-    CXX_STANDARD 17
+    # Enable C++20 standard compliance
+    CXX_STANDARD 20
 )

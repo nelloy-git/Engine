@@ -2,29 +2,13 @@
 
 #include <stdexcept>
 
-#include "GLwrap/Program.h"
+#include "Log.h"
 
-#include "Data/ModelData.h"
+#include "GLwrap/Program.h"
 
 using namespace Graphics; 
 
-Material::Material(const tinygltf::Model &model,
-                   const tinygltf::Material &material,
-                   ModelData &data){
-
-    auto &pbr = material.pbrMetallicRoughness;
-    for (int i = 0; i < 4; i++){
-        _base_color.push_back(pbr.baseColorFactor[i]);
-    }
-
-    // auto tex_pos = pbr.baseColorTexture.index;
-    // auto tex_iter = data.textures.find(tex_pos);
-    // if (tex_iter == data.textures.end()){
-    //     throw std::runtime_error("Can not get texture");
-    // }
-
-    // _base_texture = tex_iter->second;
-    // _base_texture_uv = pbr.baseColorTexture.texCoord;
+Material::Material(){
 }
 
 Material::~Material(){
@@ -37,6 +21,8 @@ void Material::apply(){
         return;
     }
 
-    progr->setUniformVec4f("baseColor", &_base_color.at(0));
-    _base_texture->setActive(_base_texture_uv);
+    progr->setUniformVec4f("baseColor", base_color);
+    if (base_texture){
+        base_texture->setActive(base_texture_uv);
+    }
 }

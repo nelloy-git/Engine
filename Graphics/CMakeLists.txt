@@ -12,17 +12,23 @@ include_directories(./3rdparty/tinygltf)
 include_directories(./3rdparty/glm)
 
 add_library (${PROJECT_NAME} STATIC
-    ./Data/Accessor.cpp
-    ./Data/BufferView.cpp
     ./Data/glTF.cpp
     ./Data/Material.cpp
     ./Data/Mesh.cpp
-    ./Data/Model.cpp
-    ./Data/ModelData.cpp
-    ./Data/Node.cpp
+    #./Data/Model.cpp
+    #./Data/ModelData.cpp
+    #./Data/Node.cpp
     ./Data/Primitive.cpp
-    ./Data/Scene.cpp
+    #./Data/Scene.cpp
     # ./Data/Texture.cpp
+
+    ./Data/Buffer/BufferCpu.cpp
+    ./Data/Buffer/BufferElementGL.cpp
+    ./Data/Buffer/BufferVertexGL.cpp
+
+    ./Data/BufferReceiver/gltfReceiver.cpp
+
+    ./Data/Model/gltfModel.cpp
 
     ./Drawing/Camera.cpp
     ./Drawing/Drawer.cpp
@@ -36,6 +42,6 @@ target_link_libraries(${PROJECT_NAME}
 
 set_property (TARGET ${PROJECT_NAME}
   PROPERTY
-    # Enable C++17 standard compliance
-    CXX_STANDARD 17
+    # Enable C++20 standard compliance
+    CXX_STANDARD 20
 )

@@ -1,15 +1,9 @@
 #include "Data/Mesh.h"
 
-#include "Data/ModelData.h"
-
 using namespace Graphics;
 
-Mesh::Mesh(const tinygltf::Mesh &mesh,
-           ModelData &data){
+Mesh::Mesh(){
 
-    for (auto &primitive : mesh.primitives){
-        primitives.push_back(std::make_shared<Primitive>(primitive, data));
-    }
 }
 
 Mesh::~Mesh(){
