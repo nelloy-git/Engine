@@ -3,7 +3,6 @@
 using namespace Graphics;
 
 Mesh::Mesh(){
-
 }
 
 Mesh::~Mesh(){

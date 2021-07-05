@@ -3,6 +3,8 @@
 #include <vector>
 #include <memory>
 
+#include "glm/glm.hpp"
+
 #include "Data/Primitive.h"
 
 namespace Graphics {

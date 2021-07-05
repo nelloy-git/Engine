@@ -25,7 +25,10 @@ public:
     void setShader(std::shared_ptr<GLwrap::Program> shader);
 
     bool clear(const glm::vec4 &color);
-    bool draw(const Model &model, const glm::mat4 &pos);
+    bool draw(const Model &model,
+              const glm::vec3 &translate,
+              const glm::quat &rotate,
+              const glm::vec3 &scale);
     bool draw(const Primitive &primitive, const glm::mat4 &pos);
 
 private:
@@ -35,6 +38,8 @@ private:
 
     std::shared_ptr<Camera> _camera = nullptr;
     std::shared_ptr<GLwrap::Program> _shader = nullptr;
+
+    // std::vector
 
     static Drawer *_gl_active;
 };

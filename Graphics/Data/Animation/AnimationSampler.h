@@ -10,15 +10,18 @@ namespace Graphics {
 
 class ModelData;
 
+template<typename T>
 class AnimationSampler {
 public:
-    typedef std::variant<float, glm::vec3, glm::vec4> Data;
+    AnimationSampler(float min_time, float max_time) :
+        min_time(min_time),
+        max_time(max_time){
+    };
+    virtual ~AnimationSampler(){};
 
-    AnimationSampler(const tinygltf::AnimationSampler &sampler,
-                     ModelData &data);
-    virtual ~AnimationSampler();
-
-    std::vector<std::pair<float, Data>> times;
+    float min_time;
+    float max_time;
+    std::unordered_map<float, T> frames;
 };
 
 }

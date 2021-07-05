@@ -2,8 +2,11 @@ cmake_minimum_required(VERSION 3.1...3.17 FATAL_ERROR)
 
 project(Engine VERSION 0.1 LANGUAGES CXX)
 
-set(CMAKE_CXX_COMPILER C:/MinGW/mingw64/bin/g++.exe)
-set(CMAKE_C_COMPILER C:/MinGW/mingw64/bin/gcc.exe)
+if (WIN32)
+    set(CMAKE_CXX_COMPILER C:/MinGW/mingw64/bin/g++.exe)
+    set(CMAKE_C_COMPILER C:/MinGW/mingw64/bin/gcc.exe)
+endif (WIN32)
+
 #set(CMAKE_BUILD_TYPE Debug)
 add_compile_options(-g -O0)
 #set(CMAKE_BUILD_TYPE RelWithDebInfo)

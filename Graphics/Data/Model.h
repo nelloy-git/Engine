@@ -2,11 +2,11 @@
 
 #include <string>
 
-// #include "Data/Scene.h"
-// #include "Data/Node.h"
+#include "Data/Buffer.h"
 #include "Data/Material.h"
 #include "Data/Mesh.h"
-#include "Data/Buffer.h"
+#include "Data/Node.h"
+#include "Data/Scene.h"
 
 // #include "GLwrap/Buffer.h"
 
@@ -19,7 +19,7 @@ namespace Graphics {
 class Model {
 public:
     // std::vector<std::shared_ptr<Scene>> scenes;
-    // std::vector<std::shared_ptr<Node>> nodes;
+    std::vector<std::shared_ptr<Node>> nodes;
     std::vector<std::shared_ptr<Mesh>> meshes;
     std::vector<std::shared_ptr<Buffer>> buffers;
 

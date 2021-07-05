@@ -23,16 +23,30 @@ gltfModel::gltfModel(const std::string &path) :
     gltfBufferReceiver buffer_receiver;
     buffers = buffer_receiver.receive(*gltf_model);
 
+    // Meshes
     for (auto &gltf_mesh : gltf_model->meshes){
-        auto mesh = std::make_shared<Mesh>();
-        meshes.push_back(mesh);
+        meshes.push_back(_loadMesh(gltf_mesh, *gltf_model));
+    }
 
-        for (auto &gltf_prim : gltf_mesh.primitives){
-            auto prim = _loadPrimitive(gltf_prim);
-            prim->material = materials[gltf_prim.material];
-            mesh->primitives.push_back(prim);
+    // Nodes
+    for (auto &gltf_node : gltf_model->nodes){
+        nodes.push_back(_loadNode(gltf_node, *gltf_model));
+    }
+    // Set mesh and children
+    for (int i = 0; i < nodes.size(); i++){
+        auto &gltf_node = gltf_model->nodes[i];
+
+        auto node = nodes[i];
+        if (gltf_node.mesh >= 0){
+            node->mesh = meshes[gltf_node.mesh];
+        }
+        
+        for (int child : gltf_node.children){
+            nodes[child]->parent = node;
+            node->children.push_back(nodes[child]);
         }
     }
+
 
     delete gltf_model;
 }
@@ -64,6 +78,70 @@ tinygltf::Model *gltfModel::_loadGltfModel(const std::string &path){
     }
 
     return model;
+}
+
+std::shared_ptr<Node> gltfModel::_loadNode(const tinygltf::Node &gltf_node,
+                                           const tinygltf::Model &gltf_model){
+
+    std::shared_ptr<Node> node;
+    
+    if (gltf_node.matrix.size() != 0){
+        if (gltf_node.matrix.size() == 16){
+            glm::mat4 mat;
+            for (int i = 0; i < 4; i++){
+                for (int j = 0; j < 4; j++){
+                    mat[i][j] = gltf_node.matrix[i * 4 + j];
+                }
+            }
+            node = std::make_shared<Node>(mat);
+        } else {
+            LOG(WRN) << "wrong matrix size.";
+        }
+    } else {
+        glm::vec3 scale(1.f);
+        if (gltf_node.scale.size() == 3){
+            scale = {
+                gltf_node.scale[0],
+                gltf_node.scale[1],
+                gltf_node.scale[2]
+            };
+        }
+
+        glm::quat rot = {1.f, 0.f, 0.f, 0.f};
+        if (gltf_node.rotation.size() == 4){
+            rot = {
+                (float)gltf_node.rotation[3], 
+                (float)gltf_node.rotation[0], 
+                (float)gltf_node.rotation[1], 
+                (float)gltf_node.rotation[2]
+            };
+        }
+
+        glm::vec3 trans(0.f);
+        if (gltf_node.translation.size() == 3){
+            trans = {
+                gltf_node.translation[0],
+                gltf_node.translation[1],
+                gltf_node.translation[2]};
+        }
+
+        node = std::make_shared<Node>(trans, rot, scale);
+    }
+
+    return node;
+}
+
+std::shared_ptr<Mesh> gltfModel::_loadMesh(const tinygltf::Mesh &gltf_mesh,
+                                           const tinygltf::Model &gltf_model){
+    auto mesh = std::make_shared<Mesh>();
+
+    for (auto &gltf_prim : gltf_mesh.primitives){
+        auto prim = _loadPrimitive(gltf_prim);
+        mesh->primitives.push_back(prim);
+        prim->material = materials[gltf_prim.material];
+    }
+
+    return mesh;
 }
 
 std::shared_ptr<Primitive> gltfModel::_loadPrimitive(const tinygltf::Primitive &gltf_prim){

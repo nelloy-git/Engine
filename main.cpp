@@ -86,10 +86,9 @@ int main(int argc, const char** argv){
     drawer->setActive(true);
 
     glm::vec4 back_color(0.2f, 0.3f, 0.3f, 1.0f);
-    glm::mat4 model_pos(1.0f);
-    model_pos = glm::scale(model_pos, glm::vec3(0.1, 0.1, 0.1));
-    // model_pos = glm::rotate<float>(model_pos, 3.14 / 2, glm::vec3(0, 1, 0));
-    model_pos = glm::rotate<float>(model_pos, 3 * 3.1415 / 2, glm::vec3(0, 1, 0));
+    glm::vec3 model_translation(0.f);
+    glm::quat model_rotation = glm::angleAxis((float)(3 * 3.1415 / 2), glm::vec3(0, 1, 0));
+    glm::vec3 model_scale = glm::vec3(0.1, 0.1, 0.1);
 
     float mx = width / 2;
     float my = height / 2;
@@ -104,6 +103,8 @@ int main(int argc, const char** argv){
     });
 
     float last = 0;
+    float rot_vel = (float)(3.14 / 8);
+    float angle = 0;
     while (running){
         float dt = timer->elapsed();
         last += dt;
@@ -127,14 +128,36 @@ int main(int argc, const char** argv){
             cam->pos -= cam->right * dist;
         }
 
+        angle += dt * rot_vel;
+        // model3d->nodes[11]->rotation = glm::angleAxis(angle, glm::vec3(1, 0, 0));
+        // model3d->nodes[0]
+
+        // model3d->nodes[11]->translation += (float)(0.1 * cam_vel * dt) * glm::vec3(1, 0, 0);
+
         drawer->clear(back_color);
-        drawer->draw(*model3d, model_pos);
+        drawer->draw(*model3d, model_translation, model_rotation, model_scale);
         
         window->swapBuffers();
         glfwPollEvents();
 
         if (last > 1){
+            // rot_vel = -rot_vel;
+
             std::cout << cam->pos[0] << "; " << cam->pos[1] << "; " << cam->pos[2] << std::endl;
+            std::cout << "Model:" << std::endl;
+            std::cout << "[" << model3d->nodes[0]->translation[0]
+                      << ", " << model3d->nodes[0]->translation[1]
+                      << ", " << model3d->nodes[0]->translation[2]
+                      << "]" << std::endl;
+            std::cout << "[" << model3d->nodes[0]->rotation[0] << ", "
+                      << model3d->nodes[0]->rotation[1] << ", "
+                      << model3d->nodes[0]->rotation[2] << ", "
+                      << model3d->nodes[0]->rotation[3] << "]" << std::endl;
+            std::cout << "[" << model3d->nodes[0]->scale[0]
+                      << ", " << model3d->nodes[0]->scale[1]
+                      << ", " << model3d->nodes[0]->scale[2]
+                      << "]" << std::endl;
+            std::cout << std::endl << std::endl;
             last = 0;
         }
     }

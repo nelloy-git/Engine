@@ -3,17 +3,11 @@
 #include <vector>
 #include <unordered_map>
 
-#include "Data/glTF.h"
-
 namespace Graphics {
-
-class ModelData;
-class Node;
 
 class Scene {
 public:
-    Scene(const tinygltf::Scene &scene,
-          ModelData &data);
+    Scene();
     virtual ~Scene();
 
     void draw();

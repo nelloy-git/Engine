@@ -1,6 +1,9 @@
 #include "Drawing/Drawer.h"
 
+#include <algorithm>
+
 #include "glm/gtc/matrix_transform.hpp"
+#include "glm/gtc/quaternion.hpp"
 #include "glm/gtc/type_ptr.hpp"
 
 #include "Log.h"
@@ -62,23 +65,41 @@ bool Drawer::clear(const glm::vec4 &color){
     return true;
 }
 
-bool Drawer::draw(const Model &model, const glm::mat4 &pos){
+bool Drawer::draw(const Model &model,
+                  const glm::vec3 &translation,
+                  const glm::quat &rotation,
+                  const glm::vec3 &scale){
     if (!_active || _camera == nullptr || _shader == nullptr){
         return false;
     }
 
     auto cam_mat = _camera->matrix();
 
-    glm::mat4 model_mat = cam_mat * pos;
+    auto scaled = glm::scale(glm::mat4(1.f), scale);
+    auto rotated = glm::mat4_cast(rotation) * scaled;
+    const glm::mat4 model_mat = cam_mat * glm::translate(rotated, translation);
     
-    if (!_shader->setUniformMat4f("model", glm::value_ptr(model_mat))){
-        LOG(ERR) << "\"model\" not found.";
-    };
     // model.scenes[0]->draw();
 
-    for (auto mesh : model.meshes){
-        mesh->draw();
+    // model.nodes[0]->translation = translate;
+    // model.nodes[0]->rotation = rotate;
+    // model.nodes[0]->scale = scale;
+
+    for (int i = 0; i < model.nodes.size(); i++){
+        const glm::mat4 &mat = model.nodes[i]->mat;
+
+        auto node_mat = model_mat * mat;
+        if (!_shader->setUniformMat4f("model", glm::value_ptr(node_mat))){
+            LOG(ERR) << "\"model\" not found.";
+        };
+
+        model.nodes[i]->draw();
     }
+
+
+    // for (auto node : model.nodes){
+    //     node->draw();
+    // }
 
     return true;
 }
