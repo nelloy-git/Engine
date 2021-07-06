@@ -1,13 +1,13 @@
 #pragma once
 
-#include <string>
+#include "GLwrap/Types.h"
 
 namespace Graphics::Model {
 
 class Buffer {
 public:
     enum class ElemType : unsigned int {
-        Byte,
+        Byte = 0,
         UByte,
         Short,
         UShort,
@@ -16,11 +16,12 @@ public:
         Float,
         Double,
     };
-    static inline std::string toString(ElemType elem_type);
+    static constexpr inline const char *toString(ElemType elem_type);
     static constexpr inline unsigned int toUint(ElemType elem_type);
+    static constexpr inline GLwrap::ComponentType toGL(ElemType elem_type);
 
     enum class ElemStruct : unsigned int {
-        Scalar,
+        Scalar = 0,
         Vec2,
         Vec3,
         Vec4,
@@ -28,8 +29,9 @@ public:
         Mat3,
         Mat4,
     };
-    static inline std::string toString(ElemStruct elem_type);
-    static constexpr inline unsigned int toUint(ElemStruct elem_type);
+    static constexpr inline const char *toString(ElemStruct elem_struct);
+    static constexpr inline unsigned int toUint(ElemStruct elem_struct);
+    static constexpr inline GLwrap::ComponentSize toGL(ElemStruct elem_struct);
 
 public:
     virtual bool write(const void *src, unsigned int size, unsigned int offset) = 0;
