@@ -129,7 +129,7 @@ int main(int argc, const char** argv){
         }
 
         angle += dt * rot_vel;
-        // model3d->nodes[11]->rotation = glm::angleAxis(angle, glm::vec3(1, 0, 0));
+        model3d->nodes[11]->rotation = glm::angleAxis(angle, glm::vec3(1, 0, 0));
         // model3d->nodes[0]
 
         // model3d->nodes[11]->translation += (float)(0.1 * cam_vel * dt) * glm::vec3(1, 0, 0);

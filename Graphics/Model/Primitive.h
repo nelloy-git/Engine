@@ -15,20 +15,6 @@ namespace Graphics {
 
 class Primitive {
 public:
-    enum class Attribute {
-        Position,
-        Normal,
-        Tangent,
-        TexCoord_0,
-        TexCoord_1,
-        Color_0,
-        Joints_0,
-        Joints_1,
-        Weights_0,
-        Weights_1,
-    };
-
-public:
     Primitive(std::shared_ptr<BufferElementGL> indices,
               std::unordered_map<int, std::shared_ptr<BufferVertexGL>> attributes,
               GLwrap::DrawMode mode);

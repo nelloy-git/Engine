@@ -5,26 +5,26 @@
 
 namespace Graphics {
 
-class ModelData;
 class Node;
-class Animation;
 
+enum class AnimationTarget {
+    Translation,
+    Rotation,
+    Scale,
+    Weight
+};
+
+template<AnimationTarget T>
 class AnimationChannel {
 public:
-    enum class Target {
-        Translation,
-        Rotation,
-        Scale,
-        Weight
-    };
 
-    AnimationChannel(const tinygltf::AnimationChannel &channel,
-                     Animation &anim, ModelData &data);
+    AnimationChannel(std::shared_ptr<Node> node,
+                     std::shared_ptr<AnimationSampler<T>> sampler);
     virtual ~AnimationChannel();
 
-    std::shared_ptr<AnimationSampler> sampler;
+    const AnimationTarget target = T;
     std::shared_ptr<Node> node;
-    Target target;
+    std::shared_ptr<AnimationSampler<T>> sampler;
 };
 
 }

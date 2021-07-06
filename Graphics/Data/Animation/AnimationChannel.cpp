@@ -2,29 +2,15 @@
 
 #include <stdexcept>
 
-#include "Data/ModelData.h"
-#include "Data/Animation/Animation.h"
+// #include "Data/Animation/Animation.h"
 
 using namespace Graphics;
 
-AnimationChannel::AnimationChannel(const tinygltf::AnimationChannel &channel,
-                                   Animation &anim, ModelData &data){
-    auto sampler_pos = channel.sampler;
-    sampler = anim.samplers.at(sampler_pos);
-    node = data.getNode(channel.target_node);
+template<>
+AnimationChannel::AnimationChannel(std::shared_ptr<Node> node,
+                                   std::shared_ptr<AnimationSampler<T>> sampler){
 
-    auto &path = channel.target_path;
-    if (path == "translation"){
-        target = Target::Translation;
-    } else if (path == "rotation"){
-        target = Target::Rotation;
-    } else if (path == "scale"){
-        target = Target::Scale;
-    } else if (path == "weights"){
-        target = Target::Weight;
-    } else {
-        throw std::invalid_argument("Can not create AnimationChannel. Unknown node target.");
-    }
+    static_assert(target == AnimationChannel::Target::Translation);
 }
 
 AnimationChannel::~AnimationChannel(){
