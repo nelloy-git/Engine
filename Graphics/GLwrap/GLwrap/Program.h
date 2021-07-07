@@ -1,6 +1,7 @@
 #pragma once
 
 #include <memory>
+#include <optional>
 #include <vector>
 
 #include "GLwrap/Shader.h"
@@ -16,6 +17,9 @@ public:
 
     void use();
 
+    GLuint getAttribLoc(const std::string &name);
+    GLuint getAttribLoc(const std::string &name) const;
+
     bool setUniformVec4f(const std::string &name, const float mat[4]);
     bool setUniformMat4f(const std::string &name, const float mat[16]);
 
@@ -23,8 +27,8 @@ public:
     GLuint id() const;
 
 private:
-    GLuint __id;
-    static Program *__active_program;
+    GLuint _id;
+    static Program *_active_program;
 };
 
 }

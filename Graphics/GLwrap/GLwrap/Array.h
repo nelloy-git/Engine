@@ -13,12 +13,15 @@ namespace GLwrap {
 
 class Array {
 public:
-    typedef std::pair<std::shared_ptr<GLwrap::Buffer>,
-                      std::shared_ptr<GLwrap::BufferAccessor>> BufferPair;
+    using BufferPair = std::pair<std::shared_ptr<GLwrap::Buffer>,
+                                 std::shared_ptr<GLwrap::BufferAccessor>>;
 
-    Array(std::shared_ptr<Buffer> indices, 
+    Array(const Buffer &indices, 
           const std::unordered_map<int, BufferPair> &layouts);
+    Array(const std::unordered_map<int, BufferPair> &layouts);
     virtual ~Array();
+
+    static GLint max_layouts();
 
     GLuint id();
 
@@ -28,11 +31,11 @@ public:
     void bind() const;
     void unbind() const;
 
-    void draw(DrawMode mode, ComponentType type, size_t vertex_count, size_t byte_offset);
-    void draw(DrawMode mode, ComponentType type, size_t vertex_count, size_t byte_offset) const;
+    void drawArrays(DrawMode mode, GLuint first, GLuint count);
+    void drawArrays(DrawMode mode, GLuint first, GLuint count) const;
 
-    std::shared_ptr<Buffer> indices;
-    std::unordered_map<int, BufferPair> layouts;
+    void drawElements(DrawMode mode, ComponentType type, GLuint vertex_count, GLuint64 byte_offset);
+    void drawElements(DrawMode mode, ComponentType type, GLuint vertex_count, GLuint64 byte_offset) const;
 
 private:
     GLuint _id = 0;

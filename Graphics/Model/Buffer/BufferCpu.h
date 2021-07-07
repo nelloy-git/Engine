@@ -3,17 +3,18 @@
 #include <memory>
 #include <vector>
 
-#include "Data/Buffer.h"
+#include "Model/Buffer.h"
 
-namespace Graphics {
+namespace Graphics::Model {
 
 class BufferCpu : public Buffer {
 public:
-    BufferCpu(ComponentType data_type, ComponentSize data_size, bool normalized, int count, size_t bytes);
+    BufferCpu(BufferType type, BufferElemType data_type, BufferElemStruct data_size,
+              unsigned int count, unsigned int bytes, bool normalized);
     ~BufferCpu() override;
 
-    bool write(const void *src, size_t size, size_t offset) override;
-    bool read(void *dst, size_t size, size_t offset) override;
+    bool write(const void *src, unsigned int size, unsigned int offset) override;
+    bool read(void *dst, unsigned int size, unsigned int offset) override;
 
     std::shared_ptr<std::vector<char>> data;
 };

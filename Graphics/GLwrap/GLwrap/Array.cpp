@@ -1,24 +1,56 @@
 #include "GLwrap/Array.h"
 
+#include <stdexcept>
 #include <unordered_map>
 
 #include "Log.h"
 
 using namespace GLwrap;
 
-Array::Array(std::shared_ptr<Buffer> indices, 
-             const std::unordered_map<int, BufferPair> &layouts) :
-    indices(indices),
-    layouts(layouts)
-{
+GLint getMaxLayouts(){
+    GLint _max;
+    glGetIntegerv(GL_MAX_VERTEX_ATTRIBS, &_max);
+    return _max;
+}
+
+GLint Array::max_layouts(){
+    static const GLint max = getMaxLayouts();
+    return max;
+}
+
+Array::Array(const Buffer &indices, 
+             const std::unordered_map<int, BufferPair> &layouts){
     glGenVertexArrays(1, &_id);
     glBindVertexArray(_id);
 
-    for (int loc = 0; loc < layouts.size(); loc++){
-        layouts.at(loc).first->bind();
-        layouts.at(loc).second->enable(loc);
+    for (auto iter : layouts){
+        auto loc = iter.first;
+        if (loc > Array::max_layouts()){
+            continue;
+        }
+
+        iter.second.first->bind();
+        iter.second.second->enable(loc);
     }
-    indices->bind();
+    
+    indices.bind();
+
+    glBindVertexArray(0);
+}
+
+Array::Array(const std::unordered_map<int, BufferPair> &layouts){
+    glGenVertexArrays(1, &_id);
+    glBindVertexArray(_id);
+
+    for (auto iter : layouts){
+        auto loc = iter.first;
+        if (loc > Array::max_layouts()){
+            continue;
+        }
+
+        iter.second.first->bind();
+        iter.second.second->enable(loc);
+    }
 
     glBindVertexArray(0);
 }
@@ -43,8 +75,15 @@ void Array::unbind() const {
     glBindVertexArray(0);
 }
 
-void Array::draw(DrawMode mode, ComponentType type, size_t vertex_count, size_t byte_offset) {
+void Array::drawArrays(DrawMode mode, GLuint first, GLuint count){
+    glBindVertexArray(_id);
+    glDrawArrays(static_cast<GLenum>(mode), first, count);
+    glBindVertexArray(0);
+}
+
+void Array::drawElements(DrawMode mode, ComponentType type, GLuint vertex_count, GLuint64 byte_offset) {
     glBindVertexArray(_id);
     glDrawElements(static_cast<GLenum>(mode), vertex_count,
                    static_cast<GLenum>(type), (void*)byte_offset);
+    glBindVertexArray(0);
 }

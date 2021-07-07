@@ -1,38 +1,50 @@
 #pragma once
 
+#include <optional>
+#include <map>
 #include <unordered_map>
+#include <vector>
 
-#include "GLwrap/Array.h"
-#include "GLwrap/BufferAccessor.h"
+#include "Model/Buffer/BufferGL.h"
+// #include "Model/Material.h"
 
-#include "Data/Buffer/BufferElementGL.h"
-#include "Data/Buffer/BufferVertexGL.h"
-#include "Data/Material.h"
+namespace GLwrap {
+    class Array;
+    class Program;
+}
 
-namespace Graphics {
+namespace Graphics::Model {
 
-
+struct PrimitiveTarget {
+    std::shared_ptr<BufferGL> pos;
+    std::shared_ptr<BufferGL> norm;
+    std::shared_ptr<BufferGL> tang;
+};
 
 class Primitive {
+    template<typename T>
+    using Ref = std::shared_ptr<T>;
+
 public:
-    Primitive(std::shared_ptr<BufferElementGL> indices,
-              std::unordered_map<int, std::shared_ptr<BufferVertexGL>> attributes,
-              GLwrap::DrawMode mode);
+    Primitive() = default;
+    virtual ~Primitive() = default;
 
-    virtual ~Primitive();
+    void initGL(const GLwrap::Program &prog);
+    GLwrap::Program const *getInitedProgram();
+    bool draw(const GLwrap::Program &prog);
+    bool draw(const GLwrap::Program &prog) const;
 
-    void draw();
-    void draw() const;
-
-    std::shared_ptr<Material> material = nullptr;
+    PrimitiveDrawMode mode;
+    Ref<BufferGL> indices;
+    // Ref<Material> material;
+    std::map<PrimitiveAttribute, Ref<BufferGL>> attributes;
+    std::vector<PrimitiveTarget> targets;
 
 private:
+    bool _verifyLoc(int loc, const std::string &name);
 
-    std::shared_ptr<GLwrap::Array> _vao;
-    GLwrap::DrawMode _mode;
-
-    std::shared_ptr<BufferElementGL> _indices;
-    std::unordered_map<int, std::shared_ptr<BufferVertexGL>> _attributes;
+    GLwrap::Program const *_inited_prog = nullptr;
+    Ref<GLwrap::Array> _vao = nullptr;
 };
 
 }

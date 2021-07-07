@@ -1,11 +1,12 @@
-#include "Data/Buffer/BufferCpu.h"
+#include "Model/Buffer/BufferCpu.h"
 
 #include <cstring>
 
-using namespace Graphics;
+using namespace Graphics::Model;
 
-BufferCpu::BufferCpu(ComponentType data_type, ComponentSize data_size, bool normalized, int count, size_t bytes) : 
-    Buffer(data_type, data_size, normalized, count, bytes){
+BufferCpu::BufferCpu(BufferType type, BufferElemType data_type, BufferElemStruct data_size,
+                     unsigned int count, unsigned int bytes, bool normalized) : 
+    Buffer(type, data_type, data_size, normalized, count, bytes){
     
     data = std::make_shared<std::vector<char>>(bytes);
 }
@@ -13,7 +14,7 @@ BufferCpu::BufferCpu(ComponentType data_type, ComponentSize data_size, bool norm
 BufferCpu::~BufferCpu(){
 }
 
-bool BufferCpu::write(const void *src, size_t size, size_t offset){
+bool BufferCpu::write(const void *src, unsigned int size, unsigned int offset){
     if (size + offset > bytes){
         return false;
     }
@@ -21,7 +22,7 @@ bool BufferCpu::write(const void *src, size_t size, size_t offset){
     return true;
 }
 
-bool BufferCpu::read(void *dst, size_t size, size_t offset){
+bool BufferCpu::read(void *dst, unsigned int size, unsigned int offset){
     if (size + offset > bytes){
         return false;
     }

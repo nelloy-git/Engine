@@ -26,7 +26,7 @@ Primitive::Primitive(std::shared_ptr<BufferElementGL> indices,
         layouts[iter.first] = std::make_pair(gl_buffer, gl_accessor);
     }
 
-    _vao = std::make_shared<GLwrap::Array>(indices->data, layouts);
+    _vao = std::make_shared<GLwrap::Array>(*indices->data, layouts);
     _mode = mode;
 }
 
@@ -72,12 +72,12 @@ void Primitive::draw() const {
     if (material){
         material->apply();
     }
-    _vao->draw(_mode, static_cast<GLwrap::ComponentType>(_indices->data_type), _indices->count, 0);
+    _vao->drawElements(_mode, static_cast<GLwrap::ComponentType>(_indices->data_type), _indices->count, 0);
 }
 
 void Primitive::draw(){
     if (material){
         material->apply();
     }
-    _vao->draw(_mode, static_cast<GLwrap::ComponentType>(_indices->data_type), _indices->count, 0);
+    _vao->drawElements(_mode, static_cast<GLwrap::ComponentType>(_indices->data_type), _indices->count, 0);
 }
