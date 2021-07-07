@@ -1,5 +1,7 @@
 #include "Model/Types.h"
 
+#include "GLwrap/Types.h"
+
 using namespace Graphics;
 
 constexpr inline const char *Model::toString(Model::BufferType type){
@@ -25,7 +27,8 @@ constexpr inline const char *Model::toString(Model::BufferElemType elem_type){
         "Int",
         "UInt",
         "Float",
-        "Double"
+        "Double",
+        "Unknown"
     };
 
     return map[Model::toUint(elem_type)];
@@ -33,6 +36,21 @@ constexpr inline const char *Model::toString(Model::BufferElemType elem_type){
 
 constexpr inline unsigned int Model::toUint(Model::BufferElemType elem_type){
     return static_cast<unsigned int>(elem_type);
+}
+
+constexpr inline unsigned int Model::getSize(BufferElemType elem_type){
+    constexpr unsigned int map[] = {
+        sizeof(GLbyte),
+        sizeof(GLubyte),
+        sizeof(GLshort),
+        sizeof(GLushort),
+        sizeof(GLint),
+        sizeof(GLuint),
+        sizeof(GLfloat),
+        sizeof(GLdouble),
+    };
+
+    return map[Model::toUint(elem_type)];
 }
 
 constexpr inline const char *Model::toString(Model::BufferElemStruct elem_struct){
@@ -44,6 +62,7 @@ constexpr inline const char *Model::toString(Model::BufferElemStruct elem_struct
         "Mat2",
         "Mat3",
         "Mat4",
+        "Unknown"
     };
 
     return map[Model::toUint(elem_struct)];
@@ -62,6 +81,7 @@ constexpr inline const char *Model::toString(Model::PrimitiveDrawMode mode){
         "Triangles",
         "TrianglesStrip",
         "TrianglesFan",
+        "Unknown"
     };
 
     return map[Model::toUint(mode)];
@@ -72,7 +92,7 @@ constexpr inline unsigned int Model::toUint(Model::PrimitiveDrawMode mode){
 }
 
 constexpr inline const char *Model::toString(Model::PrimitiveAttribute attr){
-    constexpr const char* map[10] = {
+    constexpr const char* map[] = {
         "vPos",
         "vNorm",
         "vTang",
@@ -83,6 +103,7 @@ constexpr inline const char *Model::toString(Model::PrimitiveAttribute attr){
         "vJoint1",
         "vWeight0",
         "vWeight1",
+        "Unknown"
     };
     
     return map[toUint(attr)];
@@ -90,4 +111,53 @@ constexpr inline const char *Model::toString(Model::PrimitiveAttribute attr){
 
 constexpr inline unsigned int Model::toUint(Model::PrimitiveAttribute attr){
     return static_cast<unsigned int>(attr);
+}
+
+constexpr inline const char *Model::toString(TextureFormat fmt){
+    constexpr const char *map[] = {
+        "RED",
+        "RG",
+        "RGB",
+        "RGBA",
+        "Unknown"
+    };
+
+    return map[toUint(fmt)];
+}
+
+constexpr inline unsigned int Model::toUint(TextureFormat fmt){
+    return static_cast<unsigned int>(fmt);
+}
+
+constexpr inline const char *Model::toString(TextureWrap wrap){
+    constexpr const char *map[] = {
+        "Repeat",
+        "ClampToEdge",
+        "MirroredRepeat",
+        "Unknown"
+    };
+
+    return map[toUint(wrap)];
+}
+
+constexpr inline unsigned int Model::toUint(TextureWrap wrap){
+    return static_cast<unsigned int>(wrap);
+}
+
+constexpr inline const char *Model::toString(TextureFilter filter){
+    constexpr const char *map[] = {
+        "Linear",
+        "LinearMipmapLinear",
+        "LinearMipmapNearest",
+        "Nearest",
+        "NearestMipmapLinear",
+        "NearestMipmapNearest",
+        "Unknown"
+    };
+
+    return map[toUint(filter)];
+}
+
+constexpr inline unsigned int Model::toUint(TextureFilter filter){
+    return static_cast<unsigned int>(filter);
 }

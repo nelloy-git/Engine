@@ -6,7 +6,7 @@
 #include <vector>
 
 #include "Model/Buffer/BufferGL.h"
-// #include "Model/Material.h"
+#include "Model/Material.h"
 
 namespace GLwrap {
     class Array;
@@ -36,7 +36,7 @@ public:
 
     PrimitiveDrawMode mode;
     Ref<BufferGL> indices;
-    // Ref<Material> material;
+    Ref<Material> material;
     std::map<PrimitiveAttribute, Ref<BufferGL>> attributes;
     std::vector<PrimitiveTarget> targets;
 

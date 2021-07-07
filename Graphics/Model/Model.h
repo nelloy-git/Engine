@@ -3,7 +3,9 @@
 #include <string>
 
 #include "Model/Buffer.h"
-// #include "Model/Material.h"
+#include "Model/Mesh.h"
+#include "Model/Material.h"
+#include "Model/Texture.h"
 // #include "Model/Mesh.h"
 // #include "Model/Node.h"
 // #include "Model/Scene.h"
@@ -23,11 +25,12 @@ public:
 
     // std::vector<std::shared_ptr<Scene>> scenes;
     // std::vector<std::shared_ptr<Node>> nodes;
-    // std::vector<std::shared_ptr<Mesh>> meshes;
+    std::vector<std::shared_ptr<Mesh>> meshes;
     std::vector<std::shared_ptr<Buffer>> buffers;
+    std::vector<std::shared_ptr<Material>> materials;
+    std::vector<std::shared_ptr<Texture>> textures;
 
     // std::vector<std::shared_ptr<Material>> materials;
-    // std::vector<std::shared_ptr<GLwrap::Tex2D>> textures;
     
 };
 

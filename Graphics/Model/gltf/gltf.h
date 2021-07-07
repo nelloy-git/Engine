@@ -8,18 +8,19 @@
 #include "GLwrap/Shader.h"
 #include "GLwrap/Tex2D.h"
 
-#include "Data/Types.h"
+#include "Model/Types.h"
 
 namespace Graphics::Model::gltfConvert {
 
-int getLayoutLocation(const std::string &name);
-ComponentSize getComponentSize(int gltf_component_size);
-ComponentType getComponentType(int gltf_component_type);
-size_t getComponentTypeSize(ComponentType gltf_component_type);
-GLwrap::DrawMode getDrawMode(int gltf_draw_mode);
+BufferType getBufferType(int type);
+BufferElemStruct getBufferElemSize(int gltf_elem_size);
+BufferElemType getBufferElemType(int gltf_elem_type);
+PrimitiveDrawMode getDrawMode(int gltf_draw_mode);
+PrimitiveAttribute getAttribute(const std::string attr);
 
-GLwrap::Tex2Dformat getImageFormat(int gltf_channels);
-GLuint getImageWrap(int gltf_wrap);
-GLuint getImageFilter(int gltf_filter);
+// size_t getComponentTypeSize(ComponentType gltf_elem_type);
+// GLwrap::Tex2Dformat getImageFormat(int gltf_channels);
+// GLuint getImageWrap(int gltf_wrap);
+// GLuint getImageFilter(int gltf_filter);
 
 }

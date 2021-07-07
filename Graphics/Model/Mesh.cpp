@@ -1,6 +1,6 @@
 #include "Model/Mesh.h"
 
-using namespace Graphics;
+using namespace Graphics::Model;
 
 Mesh::Mesh(){
 }
@@ -8,14 +8,14 @@ Mesh::Mesh(){
 Mesh::~Mesh(){
 }
 
-void Mesh::draw(){
+void Mesh::draw(const GLwrap::Program &prog){
     for (auto prim : primitives){
-        prim->draw();
+        prim->draw(prog);
     }
 }
 
-void Mesh::draw() const {
+void Mesh::draw(const GLwrap::Program &prog) const {
     for (auto prim : primitives){
-        prim->draw();
+        prim->draw(prog);
     }
 }

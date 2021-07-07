@@ -106,6 +106,10 @@ bool Primitive::draw(const GLwrap::Program &prog){
         return false;
     }
 
+    if (material){
+        material->apply();
+    }
+
     if (indices){
         _vao->drawElements(toGL(mode), toGL(indices->data_type), indices->count, 0);
     }
@@ -115,9 +119,9 @@ bool Primitive::_verifyLoc(int loc, const std::string &name){
     if (loc < 0){
         LOG(WRN) << "gl program does not have attribute " << name << ". Attribute ignored.";
         return false;
-    } else if (loc > GLwrap::Array::max_layouts){
+    } else if (loc > GLwrap::Array::max_layouts()){
         LOG(WRN) << "OpenGL can not use location " << loc << " for attribute" << name
-                 << ". Only " << GLwrap::Array::max_layouts << " are available. Attribute ignored.";
+                 << ". Only " << GLwrap::Array::max_layouts() << " are available. Attribute ignored.";
         return false;
     }
     return true;

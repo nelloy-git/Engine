@@ -6,7 +6,7 @@ namespace GLwrap {
     class Tex2D;
 }
 
-namespace Graphics {
+namespace Graphics::Model {
 
 class Material {
 public:

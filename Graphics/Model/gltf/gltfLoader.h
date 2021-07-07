@@ -4,12 +4,15 @@
 
 #include "Model/Model.h"
 
-#include "Model/gltf/gltf.h"
-
 namespace tinygltf {
+    class Accessor;
+    class Material;
+    class Mesh;
     class Model;
     class Node;
     class Primitive;
+    class Texture;
+    class Image;
 }
 
 namespace Graphics::Model {
@@ -22,10 +25,21 @@ public:
     std::shared_ptr<Model> load(const std::string &path);
 
 private:
+    std::shared_ptr<Model> _result;
+
     tinygltf::Model *_loadGltfModel(const std::string &path);
 
     std::shared_ptr<Buffer> _loadBuffer(const tinygltf::Accessor &accessor,
                                         const tinygltf::Model &model);
+
+    std::shared_ptr<Material> _loadMaterial(const tinygltf::Material &material,
+                                            const tinygltf::Model &model);
+
+    std::shared_ptr<Texture> _loadTexture(const tinygltf::Texture &texture,
+                                          const tinygltf::Model &Model);
+
+    std::shared_ptr<Mesh> _loadMesh(const tinygltf::Mesh &mesh,
+                                    const tinygltf::Model &model);
 
     
     // std::shared_ptr<Node> _loadNode(const tinygltf::Node &gltf_node,
