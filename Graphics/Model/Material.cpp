@@ -1,4 +1,4 @@
-#include "Data/Material.h"
+#include "Model/Material.h"
 
 #include <stdexcept>
 
@@ -6,13 +6,12 @@
 
 #include "GLwrap/Program.h"
 
-using namespace Graphics; 
+using namespace Graphics::Model; 
 
 Material::Material(){
 }
 
 Material::~Material(){
-
 }
 
 void Material::apply(){
@@ -23,6 +22,6 @@ void Material::apply(){
 
     progr->setUniformVec4f("baseColor", base_color);
     if (base_texture){
-        base_texture->setActive(base_texture_uv);
+        base_texture->enable(base_texture_uv);
     }
 }

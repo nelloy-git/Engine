@@ -23,7 +23,7 @@ add_library (${PROJECT_NAME} STATIC
 
     ./Creator.cpp
     ./Material.cpp
-#    ./Mesh.cpp
+    ./Mesh.cpp
     ./Model.cpp
     ./Types.cpp
 )

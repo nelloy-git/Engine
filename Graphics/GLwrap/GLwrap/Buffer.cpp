@@ -32,7 +32,9 @@ bool Buffer::write(const void *data, int offset, size_t size){
     }
     
     if (offset + size > this->size){
-        LOG(WRN) << "Data is outside of buffer size.";
+        LOG(WRN) << "Data is outside of buffer size.\n"
+                 << "Buffer size: " << this->size << "\n"
+                 << "Data size: " << size;
         return false;
     }
 

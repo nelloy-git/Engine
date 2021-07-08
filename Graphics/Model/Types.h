@@ -34,6 +34,7 @@ enum class BufferElemStruct : unsigned int {
     Unknown
 };
 const char *toString(BufferElemStruct elem_struct);
+unsigned int getSize(BufferElemStruct elem_struct);
 
 enum class PrimitiveDrawMode : unsigned int {
     Points = 0,

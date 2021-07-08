@@ -8,14 +8,14 @@ Mesh::Mesh(){
 Mesh::~Mesh(){
 }
 
-void Mesh::draw(const GLwrap::Program &prog){
+void Mesh::draw(){
     for (auto prim : primitives){
-        prim->draw(prog);
+        prim->draw();
     }
 }
 
-void Mesh::draw(const GLwrap::Program &prog) const {
+void Mesh::draw() const {
     for (auto prim : primitives){
-        prim->draw(prog);
+        prim->draw();
     }
 }

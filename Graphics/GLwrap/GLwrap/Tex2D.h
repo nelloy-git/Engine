@@ -16,10 +16,10 @@ public:
           Tex2DPixelFormat usage, Tex2DPixelType pixel_type);
     virtual ~Tex2D();
 
-    inline GLuint id();
-    inline void bind();
-    inline void unbind();
-    inline void setActive(GLuint index);
+    GLuint id();
+    void bind();
+    void unbind();
+    void setActive(GLuint index);
 
     void write(const void *data,  
                GLsizei x, GLsizei y,

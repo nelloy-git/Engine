@@ -13,7 +13,7 @@
 namespace Graphics::Model::gltfConvert {
 
 BufferType getBufferType(int type);
-BufferElemStruct getBufferElemSize(int gltf_elem_size);
+BufferElemStruct getBufferElemStruct(int gltf_elem_size);
 BufferElemType getBufferElemType(int gltf_elem_type);
 PrimitiveDrawMode getDrawMode(int gltf_draw_mode);
 PrimitiveAttribute getAttribute(const std::string &gltf_attr);

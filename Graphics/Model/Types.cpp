@@ -59,6 +59,27 @@ unsigned int Model::getSize(BufferElemType elem_type){
     }
 }
 
+unsigned int Model::getSize(BufferElemStruct elem_struct){
+    switch (elem_struct){
+        case Model::BufferElemStruct::Scalar:
+            return 1;
+        case Model::BufferElemStruct::Vec2:
+            return 2;
+        case Model::BufferElemStruct::Vec3:
+            return 3;
+        case Model::BufferElemStruct::Vec4:
+            return 4;
+        case Model::BufferElemStruct::Mat2:
+            return 4;
+        case Model::BufferElemStruct::Mat3:
+            return 9;
+        case Model::BufferElemStruct::Mat4:
+            return 16;
+        default:
+            return 0;
+    }
+}
+
 const char *Model::toString(Model::BufferElemStruct elem_struct){
     switch (elem_struct){
         case Model::BufferElemStruct::Scalar:

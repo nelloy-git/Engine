@@ -100,6 +100,25 @@ bool PrimitiveGLwrap::draw(){
     if (indices){
         vao->drawElements(toGLwrap(mode), toGLwrap(indices->data_type), indices->count, 0);
     }
+
+    return true;
+}
+
+bool PrimitiveGLwrap::draw() const {
+    if (!vao){
+        LOG(WRN) << "was not inited.";
+        return false;
+    }
+
+    if (material){
+        material->apply();
+    }
+
+    if (indices){
+        vao->drawElements(toGLwrap(mode), toGLwrap(indices->data_type), indices->count, 0);
+    }
+
+    return true;
 }
 
 bool PrimitiveGLwrap::_verifyLoc(int loc, const std::string &name){

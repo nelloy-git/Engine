@@ -35,5 +35,5 @@ private:
 
     int __level;
     
-    static std::mutex __mutex;
+    static std::mutex _mutex;
 };

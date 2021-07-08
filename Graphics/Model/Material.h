@@ -8,8 +8,8 @@ namespace Graphics::Model {
 
 class Material {
 public:
-    Material() = default;
-    virtual ~Material() = default;
+    Material();
+    virtual ~Material();
 
     void apply();
 

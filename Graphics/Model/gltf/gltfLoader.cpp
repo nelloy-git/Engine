@@ -71,19 +71,28 @@ std::shared_ptr<Buffer> gltfLoader::_loadBuffer(const tinygltf::Accessor &access
         return nullptr;
     }
 
-    auto data_size = gltfConvert::getBufferElemSize(accessor.type);
-    if (data_size == BufferElemStruct::Unknown){
+    auto data_struct = gltfConvert::getBufferElemStruct(accessor.type);
+    if (data_struct == BufferElemStruct::Unknown){
         LOG(ERR) << "BufferElemStruct::Unknown";
         return nullptr;
     }
 
-    size_t elem_size = static_cast<int>(data_size) * getSize(data_type);
+    size_t elem_size = getSize(data_struct) * getSize(data_type);
     size_t stride = view.byteStride == 0 ? elem_size : view.byteStride;
 
     auto type = gltfConvert::getBufferType(view.target);
-    auto buffer = Creator::newBuffer(type, data_type, data_size,
-                                     accessor.normalized, accessor.count,
-                                     accessor.count * elem_size);
+
+    LOG(MSG) << "Type: " << toString(type) << "\n"
+             << "ElemType: " << toString(data_type) << "\n"
+             << "ElemStruct: " << toString(data_struct) << "\n"
+             << "ElemSize: " << elem_size << "\n"
+             << "Count: " << accessor.count << "\n"
+             << "Size: " << accessor.count * elem_size;
+
+    auto buffer = Creator::newBuffer(type, data_type, data_struct,
+                                     accessor.count,
+                                     accessor.count * elem_size,
+                                     accessor.normalized);
 
     for (auto i = 0; i < accessor.count; i++){
         if (!buffer->write(&data.data.at(view.byteOffset + accessor.byteOffset + i * stride),

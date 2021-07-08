@@ -2,11 +2,13 @@
 
 #include <cstring>
 
+#include "Log.h"
+
 using namespace Graphics::Model;
 
 BufferCpu::BufferCpu(BufferElemType data_type, BufferElemStruct data_size,
                      unsigned int count, unsigned int bytes, bool normalized) : 
-    Buffer(BufferType::Other, data_type, data_size, normalized, count, bytes){
+    Buffer(BufferType::Other, data_type, data_size, count, bytes, normalized){
     
     data = std::make_shared<std::vector<char>>(bytes);
 }
@@ -18,6 +20,7 @@ bool BufferCpu::write(const void *src, unsigned int size, unsigned int offset){
     if (size + offset > bytes){
         return false;
     }
+
     memcpy(&data->at(offset), src, size);
     return true;
 }

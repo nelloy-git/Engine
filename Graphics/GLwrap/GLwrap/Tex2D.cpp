@@ -32,19 +32,19 @@ Tex2D::~Tex2D(){
     glDeleteTextures(1, &_id);
 }
 
-inline GLuint Tex2D::id(){
+GLuint Tex2D::id(){
     return _id;
 }
 
-inline void Tex2D::bind(){
+void Tex2D::bind(){
     glBindTexture(GL_TEXTURE_2D, _id);
 }
 
-inline void Tex2D::unbind(){
+void Tex2D::unbind(){
     glBindTexture(GL_TEXTURE_2D, 0);
 }
 
-inline void Tex2D::setActive(GLuint index){
+void Tex2D::setActive(GLuint index){
     glActiveTexture(GL_TEXTURE0 + index);
     glBindTexture(GL_TEXTURE_2D, _id);
 }

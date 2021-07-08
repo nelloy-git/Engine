@@ -78,6 +78,10 @@ bool Drawer::draw(const Model::Model &model,
     auto scaled = glm::scale(glm::mat4(1.f), scale);
     auto rotated = glm::mat4_cast(rotation) * scaled;
     const glm::mat4 model_mat = cam_mat * glm::translate(rotated, translation);
+
+    for (auto mesh : model.meshes){
+        mesh->draw();
+    }
     
     // model.scenes[0]->draw();
 

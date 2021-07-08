@@ -11,16 +11,14 @@ BufferType gltfConvert::getBufferType(int type){
     switch (type){
         case TINYGLTF_TARGET_ARRAY_BUFFER:
             return BufferType::Vertex;
-
         case TINYGLTF_TARGET_ELEMENT_ARRAY_BUFFER:
             return BufferType::Index;
-
         default:
            return BufferType::Other;
     }
 }
 
-BufferElemStruct gltfConvert::getBufferElemSize(int gltfConvert_component_size){
+BufferElemStruct gltfConvert::getBufferElemStruct(int gltfConvert_component_size){
     switch (gltfConvert_component_size){
     case TINYGLTF_TYPE_SCALAR:
         return BufferElemStruct::Scalar;
@@ -109,19 +107,61 @@ PrimitiveDrawMode gltfConvert::getDrawMode(int gltfConvert_draw_mode){
 }
 
 PrimitiveAttribute gltfConvert::getAttribute(const std::string &gltf_attr){
-    
+    if (gltf_attr == "POSITION"){
+        return PrimitiveAttribute::Position;
+    } else if (gltf_attr == "NORMAL"){  
+        return PrimitiveAttribute::Normal;
+    } else if (gltf_attr == "TANGENT"){
+        return PrimitiveAttribute::Tangent;
+    } else if (gltf_attr == "TEXCOORD_0"){
+        return PrimitiveAttribute::TexCoord_0;
+    } else if (gltf_attr == "TEXCOORD_1"){
+        return PrimitiveAttribute::TexCoord_1;
+    } else if (gltf_attr == "COLOR_0"){
+        return PrimitiveAttribute::Color_0;
+    } else if (gltf_attr == "JOINTS_0"){
+        return PrimitiveAttribute::Joints_0;
+    } else if (gltf_attr == "JPINTS_1"){
+        return PrimitiveAttribute::Joints_1;
+    } else if (gltf_attr == "WEIGHTS_0"){
+        return PrimitiveAttribute::Weights_0;
+    } else if (gltf_attr == "WEIGHTS_1"){
+        return PrimitiveAttribute::Weights_1;
+    } else {
+        return PrimitiveAttribute::Unknown;
+    }
 }
 
 TextureFilter gltfConvert::getTextureFilter(int gltf_filter){
-    
+    switch (gltf_filter){
+        case TINYGLTF_TEXTURE_FILTER_LINEAR: 
+            return TextureFilter::Linear;
+        case TINYGLTF_TEXTURE_FILTER_LINEAR_MIPMAP_LINEAR: 
+            return TextureFilter::LinearMipmapLinear;
+        case TINYGLTF_TEXTURE_FILTER_LINEAR_MIPMAP_NEAREST: 
+            return TextureFilter::LinearMipmapNearest;
+        case TINYGLTF_TEXTURE_FILTER_NEAREST: 
+            return TextureFilter::Nearest;
+        case TINYGLTF_TEXTURE_FILTER_NEAREST_MIPMAP_LINEAR: 
+            return TextureFilter::NearestMipmapLinear;
+        case TINYGLTF_TEXTURE_FILTER_NEAREST_MIPMAP_NEAREST: 
+            return TextureFilter::NearestMipmapNearest;
+        default:
+            return TextureFilter::Unknown;
+    }
 }
 
 TextureWrap gltfConvert::getTextureWrap(int gltf_wrap){
-
-}
-
-TextureFormat gltfConvert::getTextureFormat(int gltf_format){
-
+    switch (gltf_wrap){
+        case TINYGLTF_TEXTURE_WRAP_REPEAT:
+            return TextureWrap::Repeat;
+        case TINYGLTF_TEXTURE_WRAP_CLAMP_TO_EDGE:
+            return TextureWrap::ClampToEdge;
+        case TINYGLTF_TEXTURE_WRAP_MIRRORED_REPEAT:
+            return TextureWrap::MirroredRepeat;
+        default:
+            return TextureWrap::Unknown;
+    }
 }
 
 // GLwrap::Tex2Dformat gltfConvert::getImageFormat(int channels){

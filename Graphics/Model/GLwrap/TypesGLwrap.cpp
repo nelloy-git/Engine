@@ -4,7 +4,7 @@
 
 using namespace Graphics;
 
-constexpr inline GLwrap::BufferType Model::toGLwrap(Model::BufferType type){
+GLwrap::BufferType Model::toGLwrap(Model::BufferType type){
     switch (type){
         case Model::BufferType::Index:
             return GLwrap::BufferType::IndexArray;
@@ -16,7 +16,7 @@ constexpr inline GLwrap::BufferType Model::toGLwrap(Model::BufferType type){
     }
 }
 
-constexpr inline GLwrap::ElementType Model::toGLwrap(Model::BufferElemType elem_type){
+GLwrap::ElementType Model::toGLwrap(Model::BufferElemType elem_type){
     switch (elem_type){
         case Model::BufferElemType::Byte:
             return GLwrap::ElementType::Byte;
@@ -40,7 +40,7 @@ constexpr inline GLwrap::ElementType Model::toGLwrap(Model::BufferElemType elem_
     }
 }
 
-constexpr inline GLwrap::ElementStruct Model::toGLwrap(Model::BufferElemStruct elem_struct){
+GLwrap::ElementStruct Model::toGLwrap(Model::BufferElemStruct elem_struct){
     switch(elem_struct){
         case Model::BufferElemStruct::Scalar:
             return GLwrap::ElementStruct::Scalar;
@@ -62,7 +62,7 @@ constexpr inline GLwrap::ElementStruct Model::toGLwrap(Model::BufferElemStruct e
     }
 }
 
-constexpr inline GLwrap::Tex2DPixelFormat Model::toGLwrap(Model::TextureFormat fmt){
+GLwrap::Tex2DPixelFormat Model::toGLwrap(Model::TextureFormat fmt){
     switch (fmt){
         case Model::TextureFormat::RED:
             return GLwrap::Tex2DPixelFormat::RED;
@@ -78,7 +78,7 @@ constexpr inline GLwrap::Tex2DPixelFormat Model::toGLwrap(Model::TextureFormat f
     }
 }
 
-constexpr inline GLwrap::Tex2DWrap Model::toGLwrap(Model::TextureWrap wrap){
+GLwrap::Tex2DWrap Model::toGLwrap(Model::TextureWrap wrap){
     switch (wrap){
         case Model::TextureWrap::Repeat:
             return GLwrap::Tex2DWrap::Repeat;
@@ -92,7 +92,7 @@ constexpr inline GLwrap::Tex2DWrap Model::toGLwrap(Model::TextureWrap wrap){
     }
 }
 
-constexpr inline GLwrap::Tex2DFilter Model::toGLwrap(Model::TextureFilter filter){
+GLwrap::Tex2DFilter Model::toGLwrap(Model::TextureFilter filter){
     switch (filter){
         case Model::TextureFilter::Linear:
             return GLwrap::Tex2DFilter::Linear;
@@ -112,7 +112,7 @@ constexpr inline GLwrap::Tex2DFilter Model::toGLwrap(Model::TextureFilter filter
     }
 }
 
-constexpr inline GLwrap::DrawMode Model::toGLwrap(Model::PrimitiveDrawMode mode){
+GLwrap::DrawMode Model::toGLwrap(Model::PrimitiveDrawMode mode){
     switch (mode){
         case Model::PrimitiveDrawMode::Points:
             return GLwrap::DrawMode::Points;

@@ -14,7 +14,7 @@
 
 #include "Log.h"
 
-std::mutex Log::__mutex;
+std::mutex Log::_mutex;
 
 Log::Log(const std::string &file_path,
          const int file_line,
@@ -22,30 +22,28 @@ Log::Log(const std::string &file_path,
          int level) :
     __level(0){
 
-    __mutex.lock();
+    _mutex.lock();
 
     std::string lvl;
     switch (level){
-        case MSG: lvl = "Msg"; break;
-        case WRN: lvl = "Warn"; break;
-        case ERR: lvl = "ERR"; break;
-        default: lvl = "Msg"; break;
+        case ERR:
+            lvl = "ERR";
+            std::cout << file_path << ":" << file_line << std::endl;
+        case WRN:
+            lvl = lvl.size() > 0 ? lvl : "Warn";
+            std::cout << _demandle(method_name) << std::endl;
+        default:
+            lvl = lvl.size() > 0 ? lvl : "Msg";
+            auto time = _getTime();
+            time = time.substr(0, time.size() - 1);
+            std::cout << "[" << time << "]" << std::endl;
+            std::cout << "{" << lvl << "}: ";
     }
-
-    auto time = _getTime();
-    time = time.substr(0, time.size() - 1);
-
-    std::cout << file_path << ":" << file_line << std::endl;
-    auto method = _demandle(method_name);
-    std::cout << method << std::endl;;
-    std::cout << "[" << time << "]" << std::endl;
-    std::cout << "{" << lvl << "}: ";
-
 }
 
 Log::~Log() {
     std::cout << std::endl << std::endl;
-    __mutex.unlock();
+    _mutex.unlock();
 }
 
 std::string Log::_getTime() {
