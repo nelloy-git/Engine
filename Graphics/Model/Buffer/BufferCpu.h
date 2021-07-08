@@ -9,7 +9,7 @@ namespace Graphics::Model {
 
 class BufferCpu : public Buffer {
 public:
-    BufferCpu(BufferType type, BufferElemType data_type, BufferElemStruct data_size,
+    BufferCpu(BufferElemType data_type, BufferElemStruct data_size,
               unsigned int count, unsigned int bytes, bool normalized);
     ~BufferCpu() override;
 

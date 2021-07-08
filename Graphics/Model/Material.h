@@ -2,9 +2,7 @@
 
 #include <memory>
 
-namespace GLwrap {
-    class Tex2D;
-}
+#include "Model/Texture.h"
 
 namespace Graphics::Model {
 
@@ -16,7 +14,7 @@ public:
     void apply();
 
     float base_color[4] = {1, 1, 1, 1};
-    std::shared_ptr<GLwrap::Tex2D> base_texture;
+    std::shared_ptr<Texture> base_texture;
     int base_texture_uv = 0;
 
 private:

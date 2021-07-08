@@ -6,9 +6,9 @@ add_subdirectory(./glad)
 add_subdirectory(./glfw)
 
 include_directories(.)
-include_directories(../Utils)
 include_directories(./glad/include)
 include_directories(./glfw/include)
+include_directories(../Utils)
 
 add_library (${PROJECT_NAME} STATIC
     ./GLwrap/Array.cpp

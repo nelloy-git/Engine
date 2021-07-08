@@ -194,18 +194,14 @@ std::shared_ptr<GLwrap::Tex2D> gltfModel::_loadTexture(const tinygltf::Texture &
     auto &sampler = model.samplers[gltf_tex.sampler];
     auto &image = model.images[gltf_tex.source];
 
-    std::vector<std::pair<GLwrap::Tex2DParamInt, GLuint>> sampler_params = {
-        {GLwrap::Tex2DParamInt::WRAP_S, glTF::getImageWrap(sampler.wrapS)},
-        {GLwrap::Tex2DParamInt::WRAP_T, glTF::getImageWrap(sampler.wrapT)},
-    };
-
-    auto tex = std::make_shared<GLwrap::Tex2D>();
-    tex->load(&image.image.at(0), image.width, image.height,
-              GLwrap::Tex2DinternalFormat::RGBA,
-              glTF::getImageFormat(image.component),
-              image.bits == 8 ? GLwrap::Tex2DpixelType::UNSIGNED_BYTE : GLwrap::Tex2DpixelType::UNSIGNED_SHORT,
-              sampler_params
-    );
+    auto pixel_type = image.bits == 8 ? GLwrap::Tex2DPixelType::UNSIGNED_BYTE : GLwrap::Tex2DPixelType::UNSIGNED_SHORT;
+    auto tex = std::make_shared<GLwrap::Tex2D>(image.width, image.height,
+                                               GLwrap::Tex2DInternalFormat::RGBA,
+                                               glTF::getImageFormat(image.component),
+                                               pixel_type);
+    tex->write(&image.image.at(0), 0, 0, image.width, image.height);
+    tex->wrap_s = glTF::getImageWrap(sampler.wrapS);
+    tex->wrap_t = glTF::getImageWrap(sampler.wrapT);
 
     return tex;
 }

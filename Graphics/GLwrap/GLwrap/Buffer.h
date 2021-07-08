@@ -5,17 +5,6 @@
 #include "GLwrap/Shader.h"
 
 namespace GLwrap {
-
-enum class BufferType : GLenum {
-    ARRAY = GL_ARRAY_BUFFER,
-    ELEMENT_ARRAY = GL_ELEMENT_ARRAY_BUFFER,
-};
-
-enum class BufferUsage : GLenum {
-    STREAM = GL_STREAM_DRAW,
-    STATIC = GL_STATIC_DRAW,
-    DYNAMIC = GL_DYNAMIC_DRAW,
-};
     
 class Buffer {
 

@@ -91,47 +91,47 @@ size_t glTF::getComponentTypeSize(ComponentType type){
 GLwrap::DrawMode glTF::getDrawMode(int glTF_draw_mode){
     switch (glTF_draw_mode){
     case TINYGLTF_MODE_POINTS:
-        return GLwrap::DrawMode::POINTS;
+        return GLwrap::DrawMode::Points;
     case TINYGLTF_MODE_LINE:
-        return GLwrap::DrawMode::LINE;
+        return GLwrap::DrawMode::Line;
     case TINYGLTF_MODE_LINE_LOOP:
-        return GLwrap::DrawMode::LINE_LOOP;
+        return GLwrap::DrawMode::LineLoop;
     case TINYGLTF_MODE_LINE_STRIP:
-        return GLwrap::DrawMode::LINE_STRIP;
+        return GLwrap::DrawMode::LineStrip;
     case TINYGLTF_MODE_TRIANGLES:
-        return GLwrap::DrawMode::TRIANGLES;
+        return GLwrap::DrawMode::Triangles;
     case TINYGLTF_MODE_TRIANGLE_STRIP:
-        return GLwrap::DrawMode::TRIANGLE_STRIP;
+        return GLwrap::DrawMode::TriangleStrip;
     case TINYGLTF_MODE_TRIANGLE_FAN:
-        return GLwrap::DrawMode::TRIANGLE_FAN;
+        return GLwrap::DrawMode::TriangleFan;
     default:
         throw std::invalid_argument("Unknown glTF_draw_mode \"" + std::to_string(glTF_draw_mode) + "\".");
     }
 }
 
-GLwrap::Tex2Dformat glTF::getImageFormat(int channels){
+GLwrap::Tex2DPixelFormat glTF::getImageFormat(int channels){
     switch (channels){
     case 1:
-        return GLwrap::Tex2Dformat::RED;
+        return GLwrap::Tex2DPixelFormat::RED;
     case 2:
-        return GLwrap::Tex2Dformat::RG;
+        return GLwrap::Tex2DPixelFormat::RG;
     case 3:
-        return GLwrap::Tex2Dformat::RGB;
+        return GLwrap::Tex2DPixelFormat::RGB;
     case 4:
-        return GLwrap::Tex2Dformat::RGBA;
+        return GLwrap::Tex2DPixelFormat::RGBA;
     default:
         throw std::invalid_argument("wrong channels count \"" + std::to_string(channels) + "\".");
     }
 }
 
-GLuint glTF::getImageWrap(int glTF_wrap){
+GLwrap::Tex2DWrap glTF::getImageWrap(int glTF_wrap){
     switch (glTF_wrap){
     case TINYGLTF_TEXTURE_WRAP_REPEAT:
-        return GL_REPEAT;
+        return GLwrap::Tex2DWrap::Repeat;
     case TINYGLTF_TEXTURE_WRAP_CLAMP_TO_EDGE:
-        return GL_CLAMP_TO_EDGE;
+        return GLwrap::Tex2DWrap::ClampToEdge;
     case TINYGLTF_TEXTURE_WRAP_MIRRORED_REPEAT:
-        return GL_MIRRORED_REPEAT;
+        return GLwrap::Tex2DWrap::MirroredRepeat;
     default:
         throw std::invalid_argument("Unknown glTF_wrap \"" + std::to_string(glTF_wrap) + "\".");
     }

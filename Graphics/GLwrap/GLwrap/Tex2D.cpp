@@ -2,74 +2,104 @@
 
 using namespace GLwrap;
 
-const std::vector<std::pair<Tex2DParamInt, GLuint>> Tex2D::__default_uint_params = {
-    {Tex2DParamInt::WRAP_S, GL_REPEAT},
-    {Tex2DParamInt::WRAP_T, GL_REPEAT},
-    {Tex2DParamInt::MIN_FILTER, GL_LINEAR},
-    {Tex2DParamInt::MAG_FILTER, GL_LINEAR},
-};
+Tex2D::Tex2D(GLsizei width, GLsizei height, Tex2DInternalFormat format,
+             Tex2DPixelFormat pixel_format, Tex2DPixelType pixel_type) :
+    width(width),
+    height(height),
+    format(format),
+    usage(usage),
+    pixel_type(pixel_type),
+    wrap_s(this, &Tex2D::_getWrapS, &Tex2D::_setWrapS),
+    wrap_t(this, &Tex2D::_getWrapT, &Tex2D::_setWrapT),
+    min_filter(this, &Tex2D::_getMinFilter, &Tex2D::_setMinFilter),
+    mag_filter(this, &Tex2D::_getMagFilter, &Tex2D::_setMagFilter){
 
-Tex2D::Tex2D(){
-    glGenTextures(1, &__id);
+    glGenTextures(1, &_id);
+
+    wrap_s = Tex2DWrap::Repeat;
+    wrap_t = Tex2DWrap::Repeat;
+    min_filter = Tex2DFilter::Linear;
+    mag_filter = Tex2DFilter::Linear;
+
+    glBindTexture(GL_TEXTURE_2D, _id);
+    glTexImage2D(GL_TEXTURE_2D, 0, static_cast<GLenum>(format),
+                 width, height, 0, static_cast<GLenum>(usage),
+                 static_cast<GLenum>(pixel_type), nullptr);
+    glBindTexture(GL_TEXTURE_2D, 0);
 }
 
 Tex2D::~Tex2D(){
-    glDeleteTextures(1, &__id);
+    glDeleteTextures(1, &_id);
 }
 
-GLuint Tex2D::id(){
-    return __id;
+inline GLuint Tex2D::id(){
+    return _id;
 }
 
-void Tex2D::free(){
-    if (__loaded){
-        glDeleteTextures(1, &__id);
-        glGenTextures(1, &__id);
-        __loaded = false;
-    }
+inline void Tex2D::bind(){
+    glBindTexture(GL_TEXTURE_2D, _id);
 }
 
-void Tex2D::bind(){
-    glBindTexture(GL_TEXTURE_2D, __id);
-}
-
-void Tex2D::unbind(){
+inline void Tex2D::unbind(){
     glBindTexture(GL_TEXTURE_2D, 0);
 }
 
-void Tex2D::setActive(GLuint index){
+inline void Tex2D::setActive(GLuint index){
     glActiveTexture(GL_TEXTURE0 + index);
-    glBindTexture(GL_TEXTURE_2D, __id);
+    glBindTexture(GL_TEXTURE_2D, _id);
 }
 
-void Tex2D::load(const void *data, GLsizei width, GLsizei height,
-               Tex2DinternalFormat in_fmt, Tex2Dformat usage, Tex2DpixelType pixel,
-               const std::vector<std::pair<Tex2DParamInt, GLuint>> &uint_params){
+void Tex2D::write(const void *data,  
+                  GLsizei x, GLsizei y,
+                  GLsizei width, GLsizei height){
 
-
-    bool need_realloc = width != __loaded_width && height != __loaded_height;
-
-    if (need_realloc){
-        free();
-    }
-
-    glBindTexture(GL_TEXTURE_2D, __id);
-    for (auto param : uint_params){
-        glTexParameteri(GL_TEXTURE_2D, static_cast<GLenum>(param.first), param.second);
-    }
-    
-    if (!need_realloc){
-        glTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, width, height,
-                        static_cast<GLenum>(in_fmt), static_cast<GLenum>(pixel), data);
-        __loaded_width = width;
-        __loaded_height = height;
-    } else {
-        glTexImage2D(GL_TEXTURE_2D, 0, static_cast<GLenum>(in_fmt), width, height, 0,
-                     static_cast<GLenum>(usage), static_cast<GLenum>(pixel), data);
-    }
-
+    glBindTexture(GL_TEXTURE_2D, _id);
+    glTexSubImage2D(GL_TEXTURE_2D, 0, x, y, width, height,
+                    static_cast<GLenum>(format), static_cast<GLenum>(pixel_type), data);
     glGenerateMipmap(GL_TEXTURE_2D);
     glBindTexture(GL_TEXTURE_2D, 0);
+}
 
-    __loaded = true;
+const Tex2DWrap &Tex2D::_getWrapS(){
+    return _wrap_s;
+}
+
+void Tex2D::_setWrapS(const Tex2DWrap &wrap){
+    glBindTexture(GL_TEXTURE_2D, _id);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, static_cast<GLint>(wrap));
+    glBindTexture(GL_TEXTURE_2D, 0);
+    _wrap_s = wrap;
+}
+
+const Tex2DWrap &Tex2D::_getWrapT(){
+    return _wrap_t;
+}
+
+void Tex2D::_setWrapT(const Tex2DWrap &wrap){
+    glBindTexture(GL_TEXTURE_2D, _id);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, static_cast<GLint>(wrap));
+    glBindTexture(GL_TEXTURE_2D, 0);
+    _wrap_t = wrap;
+}
+
+const Tex2DFilter &Tex2D::_getMinFilter(){
+    return _min_filter;
+}
+
+void Tex2D::_setMinFilter(const Tex2DFilter &filter){
+    glBindTexture(GL_TEXTURE_2D, _id);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, static_cast<GLint>(filter));
+    glBindTexture(GL_TEXTURE_2D, 0);
+    _min_filter = filter;
+}
+
+const Tex2DFilter &Tex2D::_getMagFilter(){
+    return _mag_filter;
+}
+
+void Tex2D::_setMagFilter(const Tex2DFilter &filter){
+    glBindTexture(GL_TEXTURE_2D, _id);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, static_cast<GLint>(filter));
+    glBindTexture(GL_TEXTURE_2D, 0);
+    _mag_filter = filter;
 }

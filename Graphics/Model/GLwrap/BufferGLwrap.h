@@ -2,20 +2,18 @@
 
 #include <memory>
 
-#include "Model/Buffer.h"
+#include "GLwrap/Buffer.h"
+#include "GLwrap/BufferAccessor.h"
 
-namespace GLwrap {
-    class Buffer;
-    class BufferAccessor;
-}
+#include "Model/Buffer.h"
 
 namespace Graphics::Model {
 
-class BufferGL : public Buffer {
+class BufferGLwrap : public Buffer {
 public:
-    BufferGL(BufferType type, BufferElemType data_type, BufferElemStruct data_size,
-             unsigned int count, unsigned int bytes, bool normalized);
-    ~BufferGL() override;
+    BufferGLwrap(BufferType type, BufferElemType data_type, BufferElemStruct data_size,
+                 unsigned int count, unsigned int bytes, bool normalized);
+    ~BufferGLwrap() override;
 
     bool write(const void *src, unsigned int size, unsigned int offset) override;
     bool read(void *dst, unsigned int size, unsigned int offset) override;

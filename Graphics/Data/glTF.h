@@ -18,8 +18,8 @@ ComponentType getComponentType(int glFT_component_type);
 size_t getComponentTypeSize(ComponentType type);
 GLwrap::DrawMode getDrawMode(int glTF_draw_mode);
 
-GLwrap::Tex2Dformat getImageFormat(int glTF_channels);
-GLuint getImageWrap(int glTF_wrap);
+GLwrap::Tex2DPixelFormat getImageFormat(int glTF_channels);
+GLwrap::Tex2DWrap getImageWrap(int glTF_wrap);
 GLuint getImageFilter(int glTF_filter);
 
 }

@@ -65,7 +65,7 @@ bool Drawer::clear(const glm::vec4 &color){
     return true;
 }
 
-bool Drawer::draw(const Model &model,
+bool Drawer::draw(const Model::Model &model,
                   const glm::vec3 &translation,
                   const glm::quat &rotation,
                   const glm::vec3 &scale){
@@ -85,16 +85,16 @@ bool Drawer::draw(const Model &model,
     // model.nodes[0]->rotation = rotate;
     // model.nodes[0]->scale = scale;
 
-    for (int i = 0; i < model.nodes.size(); i++){
-        const glm::mat4 &mat = model.nodes[i]->mat;
+    // for (int i = 0; i < model.nodes.size(); i++){
+    //     const glm::mat4 &mat = model.nodes[i]->mat;
 
-        auto node_mat = model_mat * mat;
-        if (!_shader->setUniformMat4f("model", glm::value_ptr(node_mat))){
-            LOG(ERR) << "\"model\" not found.";
-        };
+    //     auto node_mat = model_mat * mat;
+    //     if (!_shader->setUniformMat4f("model", glm::value_ptr(node_mat))){
+    //         LOG(ERR) << "\"model\" not found.";
+    //     };
 
-        model.nodes[i]->draw();
-    }
+    //     model.nodes[i]->draw();
+    // }
 
 
     // for (auto node : model.nodes){
@@ -104,7 +104,7 @@ bool Drawer::draw(const Model &model,
     return true;
 }
 
-bool Drawer::draw(const Primitive &primitive, const glm::mat4 &pos){
+bool Drawer::draw(const Model::Primitive &primitive, const glm::mat4 &pos){
     if (!_active || _camera == nullptr || _shader == nullptr){
         return false;
     }

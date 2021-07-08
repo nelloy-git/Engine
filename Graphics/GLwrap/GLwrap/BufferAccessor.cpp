@@ -3,7 +3,7 @@
 using namespace GLwrap;
 
 BufferAccessor::BufferAccessor(
-                ComponentSize size, ComponentType type,
+                ElementStruct size, ElementType type,
                 bool normalized, size_t step, size_t offset):
     component_size(size),
     component_type(type),

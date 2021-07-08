@@ -69,13 +69,13 @@ GLuint Shader::id(){
     return __id;
 }
 
-size_t GLwrap::getDataTypeSize(ComponentType type){
+size_t GLwrap::getDataTypeSize(ElementType type){
     switch (type){
 
-    case ComponentType::Float:
+    case ElementType::Float:
         return sizeof(GLfloat);
 
-    case ComponentType::UInt:
+    case ElementType::UInt:
         return sizeof(GLuint);
     
     default:

@@ -5,7 +5,7 @@
 #include "glm/glm.hpp"
 
 #include "GLwrap/Program.h"
-#include "Data/Model.h"
+#include "Model/Model.h"
 #include "Drawing/Camera.h"
 
 namespace Graphics {
@@ -25,11 +25,11 @@ public:
     void setShader(std::shared_ptr<GLwrap::Program> shader);
 
     bool clear(const glm::vec4 &color);
-    bool draw(const Model &model,
+    bool draw(const Model::Model &model,
               const glm::vec3 &translate,
               const glm::quat &rotate,
               const glm::vec3 &scale);
-    bool draw(const Primitive &primitive, const glm::mat4 &pos);
+    bool draw(const Model::Primitive &primitive, const glm::mat4 &pos);
 
 private:
     bool _active = false;

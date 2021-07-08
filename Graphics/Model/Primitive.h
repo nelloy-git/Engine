@@ -5,46 +5,35 @@
 #include <unordered_map>
 #include <vector>
 
-#include "Model/Buffer/BufferGL.h"
+#include "Model/Buffer.h"
 #include "Model/Material.h"
-
-namespace GLwrap {
-    class Array;
-    class Program;
-}
 
 namespace Graphics::Model {
 
 struct PrimitiveTarget {
-    std::shared_ptr<BufferGL> pos;
-    std::shared_ptr<BufferGL> norm;
-    std::shared_ptr<BufferGL> tang;
+    std::shared_ptr<Buffer> pos;
+    std::shared_ptr<Buffer> norm;
+    std::shared_ptr<Buffer> tang;
 };
 
 class Primitive {
-    template<typename T>
-    using Ref = std::shared_ptr<T>;
-
 public:
-    Primitive() = default;
-    virtual ~Primitive() = default;
 
-    void initGL(const GLwrap::Program &prog);
-    GLwrap::Program const *getInitedProgram();
-    bool draw(const GLwrap::Program &prog);
-    bool draw(const GLwrap::Program &prog) const;
+    virtual bool draw() = 0;
+    virtual bool draw() const = 0;
+
+    virtual void update() = 0;
 
     PrimitiveDrawMode mode;
-    Ref<BufferGL> indices;
-    Ref<Material> material;
-    std::map<PrimitiveAttribute, Ref<BufferGL>> attributes;
+    std::shared_ptr<Buffer> indices;
+    std::shared_ptr<Material> material;
+    std::map<PrimitiveAttribute, std::shared_ptr<Buffer>> attributes;
     std::vector<PrimitiveTarget> targets;
 
-private:
-    bool _verifyLoc(int loc, const std::string &name);
+protected:
+    Primitive(){};
+    virtual ~Primitive(){};
 
-    GLwrap::Program const *_inited_prog = nullptr;
-    Ref<GLwrap::Array> _vao = nullptr;
 };
 
 }

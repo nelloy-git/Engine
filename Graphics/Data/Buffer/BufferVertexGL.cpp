@@ -7,7 +7,7 @@ using namespace Graphics;
 BufferVertexGL::BufferVertexGL(ComponentType data_type, ComponentSize data_size, bool normalized, int count, size_t bytes) : 
     Buffer(data_type, data_size, normalized, count, bytes){
 
-    data = std::make_shared<GLwrap::Buffer>(GLwrap::BufferType::ARRAY, bytes);
+    data = std::make_shared<GLwrap::Buffer>(GLwrap::BufferType::Array, bytes);
 }
 
 BufferVertexGL::~BufferVertexGL(){

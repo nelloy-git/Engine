@@ -7,7 +7,7 @@
 
 namespace GLwrap {
 
-size_t getDataTypeSize(ComponentType type);
+size_t getDataTypeSize(ElementType type);
 
 class Shader {
 public:

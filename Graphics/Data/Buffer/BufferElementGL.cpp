@@ -7,7 +7,7 @@ using namespace Graphics;
 BufferElementGL::BufferElementGL(ComponentType data_type, ComponentSize data_size, bool normalized, int count, size_t bytes) : 
     Buffer(data_type, data_size, normalized, count, bytes){
 
-    data = std::make_shared<GLwrap::Buffer>(GLwrap::BufferType::ELEMENT_ARRAY, bytes);
+    data = std::make_shared<GLwrap::Buffer>(GLwrap::BufferType::IndexArray, bytes);
 }
 
 BufferElementGL::~BufferElementGL(){

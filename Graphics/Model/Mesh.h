@@ -12,8 +12,8 @@ public:
     Mesh();
     virtual ~Mesh();
 
-    void draw(const GLwrap::Program &prog);
-    void draw(const GLwrap::Program &prog) const;
+    void draw();
+    void draw() const;
     
     std::vector<std::shared_ptr<Primitive>> primitives;
 

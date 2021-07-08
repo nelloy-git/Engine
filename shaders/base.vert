@@ -2,10 +2,10 @@
 
 uniform mat4 model;
 
-layout (location = 0) in vec3 vertPos;
-layout (location = 1) in vec3 vertNorm;
-layout (location = 2) in vec2 vertUV;
-layout (location = 3) in vec4 vertTangent;
+layout in vec3 vertPos;
+layout in vec3 vertNorm;
+layout in vec2 vertUV;
+layout in vec4 vertTangent;
 
 out vec2 fragUV;
 

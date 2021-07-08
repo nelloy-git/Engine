@@ -100,16 +100,28 @@ PrimitiveDrawMode gltfConvert::getDrawMode(int gltfConvert_draw_mode){
     case TINYGLTF_MODE_TRIANGLES:
         return PrimitiveDrawMode::Triangles;
     case TINYGLTF_MODE_TRIANGLE_STRIP:
-        return PrimitiveDrawMode::TrianglesStrip;
+        return PrimitiveDrawMode::TriangleStrip;
     case TINYGLTF_MODE_TRIANGLE_FAN:
-        return PrimitiveDrawMode::TrianglesFan;
+        return PrimitiveDrawMode::TriangleFan;
     default:
         throw PrimitiveDrawMode::Unknown;
     }
 }
 
+PrimitiveAttribute gltfConvert::getAttribute(const std::string &gltf_attr){
+    
+}
+
 TextureFilter gltfConvert::getTextureFilter(int gltf_filter){
     
+}
+
+TextureWrap gltfConvert::getTextureWrap(int gltf_wrap){
+
+}
+
+TextureFormat gltfConvert::getTextureFormat(int gltf_format){
+
 }
 
 // GLwrap::Tex2Dformat gltfConvert::getImageFormat(int channels){

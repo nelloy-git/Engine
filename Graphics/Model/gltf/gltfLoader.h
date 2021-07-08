@@ -2,7 +2,9 @@
 
 #include <string>
 
+#include "Model/Creator.h"
 #include "Model/Model.h"
+#include "Model/Types.h"
 
 namespace tinygltf {
     class Accessor;
@@ -40,6 +42,9 @@ private:
 
     std::shared_ptr<Mesh> _loadMesh(const tinygltf::Mesh &mesh,
                                     const tinygltf::Model &model);
+
+    std::shared_ptr<Primitive> _loadPrimitive(const tinygltf::Primitive prim,
+                                              const tinygltf::Model &model);  
 
     
     // std::shared_ptr<Node> _loadNode(const tinygltf::Node &gltf_node,

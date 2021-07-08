@@ -7,8 +7,7 @@ enum class BufferType : unsigned int {
     Index,
     Other
 };
-constexpr inline const char *toString(BufferType type);
-constexpr inline unsigned int toUint(BufferType type);
+const char *toString(BufferType type);
 
 enum class BufferElemType : unsigned int {
     Byte = 0,
@@ -21,9 +20,8 @@ enum class BufferElemType : unsigned int {
     Double,
     Unknown
 };
-constexpr inline const char *toString(BufferElemType elem_type);
-constexpr inline unsigned int toUint(BufferElemType elem_type);
-constexpr inline unsigned int getSize(BufferElemType elem_type);
+const char *toString(BufferElemType elem_type);
+unsigned int getSize(BufferElemType elem_type);
 
 enum class BufferElemStruct : unsigned int {
     Scalar = 0,
@@ -35,8 +33,7 @@ enum class BufferElemStruct : unsigned int {
     Mat4,
     Unknown
 };
-constexpr inline const char *toString(BufferElemStruct elem_struct);
-constexpr inline unsigned int toUint(BufferElemStruct elem_struct);
+const char *toString(BufferElemStruct elem_struct);
 
 enum class PrimitiveDrawMode : unsigned int {
     Points = 0,
@@ -44,12 +41,11 @@ enum class PrimitiveDrawMode : unsigned int {
     LineLoop,
     LineStrip,
     Triangles,
-    TrianglesStrip,
-    TrianglesFan,
+    TriangleStrip,
+    TriangleFan,
     Unknown
 };
-constexpr inline const char *toString(PrimitiveDrawMode mode);
-constexpr inline unsigned int toUint(PrimitiveDrawMode mode);
+const char *toString(PrimitiveDrawMode mode);
 
 enum class PrimitiveAttribute : unsigned int {
     Position = 0,
@@ -64,8 +60,9 @@ enum class PrimitiveAttribute : unsigned int {
     Weights_1,
     Unknown
 };
-constexpr inline const char *toString(PrimitiveAttribute attr);
-constexpr inline unsigned int toUint(PrimitiveAttribute attr);
+const char *toString(PrimitiveAttribute attr);
+int getLocation(PrimitiveAttribute attr);
+int getMorphTargetLocation(int target, PrimitiveAttribute attr);
 
 enum class TextureFormat : unsigned int {
     RED,
@@ -74,8 +71,7 @@ enum class TextureFormat : unsigned int {
     RGBA,
     Unknown
 };
-constexpr inline const char *toString(TextureFormat fmt);
-constexpr inline unsigned int toUint(TextureFormat fmt);
+const char *toString(TextureFormat fmt);
 
 enum class TextureWrap : unsigned int {
     Repeat,
@@ -83,8 +79,7 @@ enum class TextureWrap : unsigned int {
     MirroredRepeat,
     Unknown
 };
-constexpr inline const char *toString(TextureWrap wrap);
-constexpr inline unsigned int toUint(TextureWrap wrap);
+const char *toString(TextureWrap wrap);
 
 enum class TextureFilter : unsigned int {
     Linear,
@@ -95,7 +90,6 @@ enum class TextureFilter : unsigned int {
     NearestMipmapNearest,
     Unknown
 };
-constexpr inline const char *toString(TextureFilter filter);
-constexpr inline unsigned int toUint(TextureFilter filter);
+const char *toString(TextureFilter filter);
 
 }

@@ -2,9 +2,6 @@
 
 #include "Model/gltf/gltf.h"
 
-#include "Model/Buffer/BufferCpu.h"
-#include "Model/Buffer/BufferGL.h"
-
 #include "Log.h"
 
 using namespace Graphics::Model;
@@ -83,18 +80,10 @@ std::shared_ptr<Buffer> gltfLoader::_loadBuffer(const tinygltf::Accessor &access
     size_t elem_size = static_cast<int>(data_size) * getSize(data_type);
     size_t stride = view.byteStride == 0 ? elem_size : view.byteStride;
 
-    std::shared_ptr<Buffer> buffer;
     auto type = gltfConvert::getBufferType(view.target);
-
-    if (type == BufferType::Other){
-        buffer = std::make_shared<BufferCpu>(data_type, data_size,
-                                             accessor.normalized, accessor.count,
-                                             accessor.count * elem_size);
-    } else {
-        buffer = std::make_shared<BufferGL>(type, data_type, data_size,
-                                            accessor.count, accessor.count * elem_size,
-                                            accessor.normalized);
-    }
+    auto buffer = Creator::newBuffer(type, data_type, data_size,
+                                     accessor.normalized, accessor.count,
+                                     accessor.count * elem_size);
 
     for (auto i = 0; i < accessor.count; i++){
         if (!buffer->write(&data.data.at(view.byteOffset + accessor.byteOffset + i * stride),
@@ -125,18 +114,11 @@ std::shared_ptr<Texture> gltfLoader::_loadTexture(const tinygltf::Texture &gltf_
     auto &sampler = model.samplers[gltf_tex.sampler];
     auto &image = model.images[gltf_tex.source];
 
-    std::vector<std::pair<GLwrap::Tex2DParamInt, GLuint>> sampler_params = {
-        {GLwrap::Tex2DParamInt::WRAP_S, gltfConvert::getImageWrap(sampler.wrapS)},
-        {GLwrap::Tex2DParamInt::WRAP_T, gltfConvert::getImageWrap(sampler.wrapT)},
-    };
-
-    auto tex = std::make_shared<GLwrap::Tex2D>();
-    tex->load(&image.image.at(0), image.width, image.height,
-              GLwrap::Tex2DinternalFormat::RGBA,
-              glTF::getImageFormat(image.component),
-              image.bits == 8 ? GLwrap::Tex2DpixelType::UNSIGNED_BYTE : GLwrap::Tex2DpixelType::UNSIGNED_SHORT,
-              sampler_params
-    );
+    auto tex = Creator::newTexture(image.width, image.height, image.component, image.bits);
+    tex->wrap_s = gltfConvert::getTextureWrap(sampler.wrapS);
+    tex->wrap_t = gltfConvert::getTextureWrap(sampler.wrapT);
+    tex->min_filter = gltfConvert::getTextureFilter(sampler.minFilter);
+    tex->mag_filter = gltfConvert::getTextureFilter(sampler.magFilter);
 
     return tex;
 }
@@ -146,79 +128,88 @@ std::shared_ptr<Mesh> gltfLoader::_loadMesh(const tinygltf::Mesh &mesh,
     auto res = std::make_shared<Mesh>();
 
     for (int i = 0; i < mesh.primitives.size(); i++){
-        auto &prim_data = mesh.primitives[i];
-        auto prim = std::make_shared<Primitive>();
+        auto prim = _loadPrimitive(mesh.primitives[i], model);
+        res->primitives.push_back(prim);
+    }
 
-        prim->mode = gltfConvert::getDrawMode(prim_data.mode);
-        if (prim->mode == PrimitiveDrawMode::Unknown){
-            LOG(ERR) << "prim->mode == PrimitiveDrawMode::Unknown";
-            continue;
-        }
+    return res;
+}
 
-        if (prim_data.indices > 0){
-            prim->indices = _result->buffers[prim_data.indices];
-            if (!prim->indices || prim->indices->type != BufferType::Index){
-                LOG(ERR) << "!prim->indices || prim->indices->type != BufferType::Index";
-                continue;
-            }
-        }
+std::shared_ptr<Primitive> gltfLoader::_loadPrimitive(const tinygltf::Primitive prim,
+                                                      const tinygltf::Model &model){
 
-        if (prim_data.material > 0){
-            prim->material = _result->materials[prim_data.material];
-            if (!prim->material){
-                LOG(ERR) << "!prim->material";
-                continue;
-            }
-        }
+    auto res = Creator::newPrimitive();
 
-        for (auto iter : prim_data.attributes){
-            auto attr = gltfConvert::getAttribute(iter.first);
-            if (attr == PrimitiveAttribute::Unknown){
-                LOG(ERR) << "attr == PrimitiveAttribute::Unknown";
-                continue;
-            }
+    res->mode = gltfConvert::getDrawMode(prim.mode);
+    if (res->mode == PrimitiveDrawMode::Unknown){
+        LOG(ERR) << "res->mode == PrimitiveDrawMode::Unknown";
+        return nullptr;
+    }
 
-            auto buff = _result->buffers[iter.second];
-            if (!buff || buff->type != BufferType::Vertex){
-                LOG(ERR) << "!buff || buff->type != BufferType::Vertex";
-                continue;
-            }
-
-            prim->attributes[attr] = buff;
-        }
-
-        for (int j = 0; j < prim_data.targets.size(); i++){
-            auto &list = prim_data.targets[i];
-
-            std::shared_ptr<BufferGL> pos;
-            std::shared_ptr<BufferGL> norm;
-            std::shared_ptr<BufferGL> tang;
-
-            for (auto &iter : list){
-                auto attr = gltfConvert::getAttribute(iter.first);
-                auto buff = _result->buffers[iter.second];
-                switch (attr){
-                    case PrimitiveAttribute::Position:
-                        pos = buff;
-                        break;
-
-                    case PrimitiveAttribute::Normal:
-                        norm = buff;
-                        break;
-
-                    case PrimitiveAttribute::Tangent:
-                        norm = buff;
-                        break;
-
-                    default:
-                        LOG(ERR) << "wrong target attribute.";
-                        continue;
-                }
-            }
-            
-            prim->targets.push_back({pos, norm, tang});
+    if (prim.indices > 0){
+        res->indices = _result->buffers[prim.indices];
+        if (!res->indices || res->indices->type != BufferType::Index){
+            LOG(ERR) << "!res->indices || res->indices->type != BufferType::Index";
+            return nullptr;
         }
     }
 
+    if (prim.material > 0){
+        res->material = _result->materials[prim.material];
+        if (!res->material){
+            LOG(ERR) << "!res->material";
+            return nullptr;
+        }
+    }
+
+    for (auto iter : prim.attributes){
+        auto attr = gltfConvert::getAttribute(iter.first);
+        if (attr == PrimitiveAttribute::Unknown){
+            LOG(ERR) << "attr == PrimitiveAttribute::Unknown";
+            continue;
+        }
+
+        auto buff = _result->buffers[iter.second];
+        if (!buff || buff->type != BufferType::Vertex){
+            LOG(ERR) << "!buff || buff->type != BufferType::Vertex";
+            continue;
+        }
+
+        res->attributes[attr] = buff;
+    }
+
+    for (int i = 0; i < prim.targets.size(); i++){
+        auto &list = prim.targets[i];
+
+        std::shared_ptr<Buffer> pos;
+        std::shared_ptr<Buffer> norm;
+        std::shared_ptr<Buffer> tang;
+
+        for (auto &iter : list){
+            auto attr = gltfConvert::getAttribute(iter.first);
+            auto buff = _result->buffers[iter.second];
+            switch (attr){
+                case PrimitiveAttribute::Position:
+                    pos = buff;
+                    break;
+
+                case PrimitiveAttribute::Normal:
+                    norm = buff;
+                    break;
+
+                case PrimitiveAttribute::Tangent:
+                    norm = buff;
+                    break;
+
+                default:
+                    LOG(ERR) << "wrong target attribute.";
+                    continue;
+            }
+        }
+            
+        res->targets.push_back({pos, norm, tang});
+    }
+
+    res->update();
     return res;
 }

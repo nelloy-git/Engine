@@ -4,9 +4,9 @@
 
 using namespace Graphics::Model;
 
-BufferCpu::BufferCpu(BufferType type, BufferElemType data_type, BufferElemStruct data_size,
+BufferCpu::BufferCpu(BufferElemType data_type, BufferElemStruct data_size,
                      unsigned int count, unsigned int bytes, bool normalized) : 
-    Buffer(type, data_type, data_size, normalized, count, bytes){
+    Buffer(BufferType::Other, data_type, data_size, normalized, count, bytes){
     
     data = std::make_shared<std::vector<char>>(bytes);
 }

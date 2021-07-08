@@ -81,7 +81,7 @@ void Array::drawArrays(DrawMode mode, GLuint first, GLuint count){
     glBindVertexArray(0);
 }
 
-void Array::drawElements(DrawMode mode, ComponentType type, GLuint vertex_count, GLuint64 byte_offset) {
+void Array::drawElements(DrawMode mode, ElementType type, GLuint vertex_count, GLuint64 byte_offset) {
     glBindVertexArray(_id);
     glDrawElements(static_cast<GLenum>(mode), vertex_count,
                    static_cast<GLenum>(type), (void*)byte_offset);

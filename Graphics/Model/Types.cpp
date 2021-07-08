@@ -1,10 +1,8 @@
 #include "Model/Types.h"
 
-#include "GLwrap/Types.h"
-
 using namespace Graphics;
 
-constexpr inline const char *Model::toString(Model::BufferType type){
+const char *Model::toString(Model::BufferType type){
     switch (type){
         case Model::BufferType::Vertex:
             return "BufferType::Vertex";
@@ -15,150 +13,207 @@ constexpr inline const char *Model::toString(Model::BufferType type){
     }
 }
 
-constexpr inline unsigned int Model::toUint(Model::BufferType type){
-    return static_cast<unsigned int>(type);
+const char *Model::toString(Model::BufferElemType elem_type){
+    switch (elem_type){
+        case Model::BufferElemType::Byte:
+            return "BufferElemType::Byte";
+        case Model::BufferElemType::UByte:
+            return "BufferElemType::UByte";
+        case Model::BufferElemType::Short:
+            return "BufferElemType::Short";
+        case Model::BufferElemType::UShort:
+            return "BufferElemType::UShort";
+        case Model::BufferElemType::Int:
+            return "BufferElemType::Int";
+        case Model::BufferElemType::UInt:
+            return "BufferElemType::UInt";
+        case Model::BufferElemType::Float:
+            return "BufferElemType::Float";
+        case Model::BufferElemType::Double:
+            return "BufferElemType::Double";
+        default:
+            return "BufferElemType::Unknown";
+    }
 }
 
-constexpr inline const char *Model::toString(Model::BufferElemType elem_type){
-    constexpr const char *map[] = {
-        "Byte",
-        "UByte",
-        "Short",
-        "UShort",
-        "Int",
-        "UInt",
-        "Float",
-        "Double",
-        "Unknown"
-    };
-
-    return map[Model::toUint(elem_type)];
+unsigned int Model::getSize(BufferElemType elem_type){
+    switch (elem_type){
+        case Model::BufferElemType::Byte:
+            return sizeof(char);
+        case Model::BufferElemType::UByte:
+            return sizeof(unsigned char);
+        case Model::BufferElemType::Short:
+            return sizeof(short);
+        case Model::BufferElemType::UShort:
+            return sizeof(unsigned short);
+        case Model::BufferElemType::Int:
+            return sizeof(int);
+        case Model::BufferElemType::UInt:
+            return sizeof(unsigned int);
+        case Model::BufferElemType::Float:
+            return sizeof(float);
+        case Model::BufferElemType::Double:
+            return sizeof(double);
+        default:
+            return 0;
+    }
 }
 
-constexpr inline unsigned int Model::toUint(Model::BufferElemType elem_type){
-    return static_cast<unsigned int>(elem_type);
+const char *Model::toString(Model::BufferElemStruct elem_struct){
+    switch (elem_struct){
+        case Model::BufferElemStruct::Scalar:
+            return "BufferElemStruct::Scalar";
+        case Model::BufferElemStruct::Vec2:
+            return "BufferElemStruct::Vec2";
+        case Model::BufferElemStruct::Vec3:
+            return "BufferElemStruct::Vec3";
+        case Model::BufferElemStruct::Vec4:
+            return "BufferElemStruct::Vec4";
+        case Model::BufferElemStruct::Mat2:
+            return "BufferElemStruct::Mat2";
+        case Model::BufferElemStruct::Mat3:
+            return "BufferElemStruct::Mat3";
+        case Model::BufferElemStruct::Mat4:
+            return "BufferElemStruct::Mat4";
+        default:
+            return "BufferElemStruct::Unknown";
+    }
 }
 
-constexpr inline unsigned int Model::getSize(BufferElemType elem_type){
-    constexpr unsigned int map[] = {
-        sizeof(GLbyte),
-        sizeof(GLubyte),
-        sizeof(GLshort),
-        sizeof(GLushort),
-        sizeof(GLint),
-        sizeof(GLuint),
-        sizeof(GLfloat),
-        sizeof(GLdouble),
-    };
-
-    return map[Model::toUint(elem_type)];
+const char *Model::toString(Model::PrimitiveDrawMode mode){
+    switch (mode){
+        case Model::PrimitiveDrawMode::Points:
+            return "PrimitiveDrawMode::Points";
+        case Model::PrimitiveDrawMode::Line:
+            return "PrimitiveDrawMode::Line";
+        case Model::PrimitiveDrawMode::LineLoop:
+            return "PrimitiveDrawMode::LineLoop";
+        case Model::PrimitiveDrawMode::LineStrip:
+            return "PrimitiveDrawMode::LineStrip";
+        case Model::PrimitiveDrawMode::Triangles:
+            return "PrimitiveDrawMode::Triangles";
+        case Model::PrimitiveDrawMode::TriangleStrip:
+            return "PrimitiveDrawMode::TrianglesStrip";
+        case Model::PrimitiveDrawMode::TriangleFan:
+            return "PrimitiveDrawMode::TrianglesFan";
+        default:
+            return "PrimitiveDrawMode::Unknown";
+    }
 }
 
-constexpr inline const char *Model::toString(Model::BufferElemStruct elem_struct){
-    constexpr const char *map[] = {
-        "Scalar",
-        "Vec2",
-        "Vec3",
-        "Vec4",
-        "Mat2",
-        "Mat3",
-        "Mat4",
-        "Unknown"
-    };
-
-    return map[Model::toUint(elem_struct)];
+const char *Model::toString(Model::PrimitiveAttribute attr){
+    switch (attr){
+        case Model::PrimitiveAttribute::Position:
+            return "PrimitiveAttribute::Position";
+        case Model::PrimitiveAttribute::Normal:
+            return "PrimitiveAttribute::Normal";
+        case Model::PrimitiveAttribute::Tangent:
+            return "PrimitiveAttribute::Tangent";
+        case Model::PrimitiveAttribute::TexCoord_0:
+            return "PrimitiveAttribute::TexCoord_0";
+        case Model::PrimitiveAttribute::TexCoord_1:
+            return "PrimitiveAttribute::TexCoord_1";
+        case Model::PrimitiveAttribute::Color_0:
+            return "PrimitiveAttribute::Color_0";
+        case Model::PrimitiveAttribute::Joints_0:
+            return "PrimitiveAttribute::Joints_0";
+        case Model::PrimitiveAttribute::Joints_1:
+            return "PrimitiveAttribute::Joints_1";
+        case Model::PrimitiveAttribute::Weights_0:
+            return "PrimitiveAttribute::Weights_0";
+        case Model::PrimitiveAttribute::Weights_1:
+            return "PrimitiveAttribute::Weights_1";
+        default:
+            return "PrimitiveAttribute::Unknown";
+    }
 }
 
-constexpr inline unsigned int Model::toUint(Model::BufferElemStruct elem_struct){
-    return static_cast<unsigned int>(elem_struct);
+int Model::getLocation(Model::PrimitiveAttribute attr){
+    switch (attr){
+        case Model::PrimitiveAttribute::Position:
+            return 0;
+        case Model::PrimitiveAttribute::Normal:
+            return 1;
+        case Model::PrimitiveAttribute::Tangent:
+            return 2;
+        case Model::PrimitiveAttribute::TexCoord_0:
+            return 3;
+        case Model::PrimitiveAttribute::TexCoord_1:
+            return 4;
+        case Model::PrimitiveAttribute::Color_0:
+            return 5;
+        case Model::PrimitiveAttribute::Joints_0:
+            return 6;
+        case Model::PrimitiveAttribute::Joints_1:
+            return 7;
+        case Model::PrimitiveAttribute::Weights_0:
+            return 8;
+        case Model::PrimitiveAttribute::Weights_1:
+            return 9;
+        default:
+            return -1;
+    }
+};
+
+int Model::getMorphTargetLocation(int target, PrimitiveAttribute attr){
+    int base = 10 + 3 * target;
+
+    // Based on getLocation.
+    switch (attr){
+        case Model::PrimitiveAttribute::Position:
+            return base;
+        case Model::PrimitiveAttribute::Normal:
+            return base + 1;
+        case Model::PrimitiveAttribute::Tangent:
+            return base + 2;
+        default:
+            return -1;
+    }
 }
 
-constexpr inline const char *Model::toString(Model::PrimitiveDrawMode mode){
-    constexpr const char *map[] = {
-        "Points",
-        "Line",
-        "LineLoop",
-        "LineStrip",
-        "Triangles",
-        "TrianglesStrip",
-        "TrianglesFan",
-        "Unknown"
-    };
-
-    return map[Model::toUint(mode)];
+const char *Model::toString(Model::TextureFormat fmt){
+    switch (fmt){
+        case Model::TextureFormat::RED:
+            return "TextureFormat::RED";
+        case Model::TextureFormat::RG:
+            return "TextureFormat::RG";
+        case Model::TextureFormat::RGB:
+            return "TextureFormat::RGB";
+        case Model::TextureFormat::RGBA:
+            return "TextureFormat::RGBA";
+        default:
+            return "TextureFormat::Unknown";
+    }
 }
 
-constexpr inline unsigned int Model::toUint(Model::PrimitiveDrawMode mode){
-    return static_cast<unsigned int>(mode);
+const char *Model::toString(Model::TextureWrap wrap){
+    switch (wrap){
+        case Model::TextureWrap::Repeat:
+            return "TextureWrap::Repeat";
+        case Model::TextureWrap::ClampToEdge:
+            return "TextureWrap::ClampToEdge";
+        case Model::TextureWrap::MirroredRepeat:
+            return "TextureWrap::MirroredRepeat";
+        default:
+            return "TextureWrap::Unknown";
+    }
 }
 
-constexpr inline const char *Model::toString(Model::PrimitiveAttribute attr){
-    constexpr const char* map[] = {
-        "vPos",
-        "vNorm",
-        "vTang",
-        "vTex0",
-        "vTex1",
-        "vCol",
-        "vJoint0",
-        "vJoint1",
-        "vWeight0",
-        "vWeight1",
-        "Unknown"
-    };
-    
-    return map[toUint(attr)];
-}
-
-constexpr inline unsigned int Model::toUint(Model::PrimitiveAttribute attr){
-    return static_cast<unsigned int>(attr);
-}
-
-constexpr inline const char *Model::toString(TextureFormat fmt){
-    constexpr const char *map[] = {
-        "RED",
-        "RG",
-        "RGB",
-        "RGBA",
-        "Unknown"
-    };
-
-    return map[toUint(fmt)];
-}
-
-constexpr inline unsigned int Model::toUint(TextureFormat fmt){
-    return static_cast<unsigned int>(fmt);
-}
-
-constexpr inline const char *Model::toString(TextureWrap wrap){
-    constexpr const char *map[] = {
-        "Repeat",
-        "ClampToEdge",
-        "MirroredRepeat",
-        "Unknown"
-    };
-
-    return map[toUint(wrap)];
-}
-
-constexpr inline unsigned int Model::toUint(TextureWrap wrap){
-    return static_cast<unsigned int>(wrap);
-}
-
-constexpr inline const char *Model::toString(TextureFilter filter){
-    constexpr const char *map[] = {
-        "Linear",
-        "LinearMipmapLinear",
-        "LinearMipmapNearest",
-        "Nearest",
-        "NearestMipmapLinear",
-        "NearestMipmapNearest",
-        "Unknown"
-    };
-
-    return map[toUint(filter)];
-}
-
-constexpr inline unsigned int Model::toUint(TextureFilter filter){
-    return static_cast<unsigned int>(filter);
+const char *Model::toString(Model::TextureFilter filter){
+    switch (filter){
+        case Model::TextureFilter::Linear:
+            return "TextureFilter::Linear";
+        case Model::TextureFilter::LinearMipmapLinear:
+            return "TextureFilter::LinearMipmapLinear";
+        case Model::TextureFilter::LinearMipmapNearest:
+            return "TextureFilter::LinearMipmapNearest";
+        case Model::TextureFilter::Nearest:
+            return "TextureFilter::Nearest";
+        case Model::TextureFilter::NearestMipmapLinear:
+            return "TextureFilter::NearestMipmapLinear";
+        case Model::TextureFilter::NearestMipmapNearest:
+            return "TextureFilter::NearestMipmapNearest";
+        default:
+            return "TextureFilter::Unknown";
+    }
 }

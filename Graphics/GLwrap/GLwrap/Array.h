@@ -34,8 +34,8 @@ public:
     void drawArrays(DrawMode mode, GLuint first, GLuint count);
     void drawArrays(DrawMode mode, GLuint first, GLuint count) const;
 
-    void drawElements(DrawMode mode, ComponentType type, GLuint vertex_count, GLuint64 byte_offset);
-    void drawElements(DrawMode mode, ComponentType type, GLuint vertex_count, GLuint64 byte_offset) const;
+    void drawElements(DrawMode mode, ElementType type, GLuint vertex_count, GLuint64 byte_offset);
+    void drawElements(DrawMode mode, ElementType type, GLuint vertex_count, GLuint64 byte_offset) const;
 
 private:
     GLuint _id = 0;

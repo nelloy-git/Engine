@@ -18,7 +18,7 @@
 #include "Context/Timer.h"
 #include "Context/Window.h"
 
-#include "Data/Model/gltfModel.h"
+#include "Model/Creator.h"
 
 #include "Drawing/Camera.h"
 #include "Drawing/Drawer.h"
@@ -33,10 +33,10 @@ std::shared_ptr<GLwrap::Program> initProgram(const std::string &vsh, const std::
     std::shared_ptr<GLwrap::Program> progr;
 
     auto vshader = GLwrap::Shader::fromFile(
-        GLwrap::ShaderType::VERTEX, vsh);
+        GLwrap::ShaderType::Vertex, vsh);
 
     auto fshader = GLwrap::Shader::fromFile(
-        GLwrap::ShaderType::FRAGMENT, fsh);
+        GLwrap::ShaderType::Fragment, fsh);
 
     if (!vshader || !fshader){
         return nullptr;
@@ -67,7 +67,7 @@ int main(int argc, const char** argv){
     });
 
     // std::shared_ptr<Model> model3d = std::make_shared<gltfModel>("../test/triang/triang.gltf");
-    std::shared_ptr<Model> model3d = std::make_shared<gltfModel>("../test/book/scene.gltf");
+    std::shared_ptr<Model::Model> model3d = Model::Creator::newModel("../test/triang/triang.gltf");
 
     std::shared_ptr<GLwrap::Program> progr = initProgram("../shaders/base.vert", "../shaders/base.frag");
     if (!progr){return -1;}
@@ -129,7 +129,7 @@ int main(int argc, const char** argv){
         }
 
         angle += dt * rot_vel;
-        model3d->nodes[11]->rotation = glm::angleAxis(angle, glm::vec3(1, 0, 0));
+        // model3d->nodes[11]->rotation = glm::angleAxis(angle, glm::vec3(1, 0, 0));
         // model3d->nodes[0]
 
         // model3d->nodes[11]->translation += (float)(0.1 * cam_vel * dt) * glm::vec3(1, 0, 0);
@@ -144,20 +144,20 @@ int main(int argc, const char** argv){
             // rot_vel = -rot_vel;
 
             std::cout << cam->pos[0] << "; " << cam->pos[1] << "; " << cam->pos[2] << std::endl;
-            std::cout << "Model:" << std::endl;
-            std::cout << "[" << model3d->nodes[0]->translation[0]
-                      << ", " << model3d->nodes[0]->translation[1]
-                      << ", " << model3d->nodes[0]->translation[2]
-                      << "]" << std::endl;
-            std::cout << "[" << model3d->nodes[0]->rotation[0] << ", "
-                      << model3d->nodes[0]->rotation[1] << ", "
-                      << model3d->nodes[0]->rotation[2] << ", "
-                      << model3d->nodes[0]->rotation[3] << "]" << std::endl;
-            std::cout << "[" << model3d->nodes[0]->scale[0]
-                      << ", " << model3d->nodes[0]->scale[1]
-                      << ", " << model3d->nodes[0]->scale[2]
-                      << "]" << std::endl;
-            std::cout << std::endl << std::endl;
+            // std::cout << "Model:" << std::endl;
+            // std::cout << "[" << model3d->nodes[0]->translation[0]
+            //           << ", " << model3d->nodes[0]->translation[1]
+            //           << ", " << model3d->nodes[0]->translation[2]
+            //           << "]" << std::endl;
+            // std::cout << "[" << model3d->nodes[0]->rotation[0] << ", "
+            //           << model3d->nodes[0]->rotation[1] << ", "
+            //           << model3d->nodes[0]->rotation[2] << ", "
+            //           << model3d->nodes[0]->rotation[3] << "]" << std::endl;
+            // std::cout << "[" << model3d->nodes[0]->scale[0]
+            //           << ", " << model3d->nodes[0]->scale[1]
+            //           << ", " << model3d->nodes[0]->scale[2]
+            //           << "]" << std::endl;
+            // std::cout << std::endl << std::endl;
             last = 0;
         }
     }
