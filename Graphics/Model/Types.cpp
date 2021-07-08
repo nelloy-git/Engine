@@ -5,13 +5,14 @@
 using namespace Graphics;
 
 constexpr inline const char *Model::toString(Model::BufferType type){
-    constexpr const char *map[] = {
-        "Vertex",
-        "Index",
-        "Other"
-    };
-
-    return map[Model::toUint(type)];
+    switch (type){
+        case Model::BufferType::Vertex:
+            return "BufferType::Vertex";
+        case Model::BufferType::Index:
+            return "BufferType::Index";
+        default:
+            return "BufferType::Other";
+    }
 }
 
 constexpr inline unsigned int Model::toUint(Model::BufferType type){

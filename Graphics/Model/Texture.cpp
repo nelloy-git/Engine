@@ -7,10 +7,6 @@
 using namespace Graphics::Model;
 
 constexpr inline GLwrap::Tex2Dformat toGL(TextureFormat fmt){
-    const std::unordered_map<TextureFormat, GLwrap::Tex2Dformat> umap = {
-        {TextureFormat::RED, GLwrap::Tex2Dformat::RED}
-    };
-
     constexpr GLwrap::Tex2Dformat map[] = {
         GLwrap::Tex2Dformat::RED,
         GLwrap::Tex2Dformat::RG,

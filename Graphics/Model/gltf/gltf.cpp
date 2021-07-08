@@ -108,6 +108,10 @@ PrimitiveDrawMode gltfConvert::getDrawMode(int gltfConvert_draw_mode){
     }
 }
 
+TextureFilter gltfConvert::getTextureFilter(int gltf_filter){
+    
+}
+
 // GLwrap::Tex2Dformat gltfConvert::getImageFormat(int channels){
 //     switch (channels){
 //     case 1:
