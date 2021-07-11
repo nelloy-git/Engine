@@ -7,7 +7,7 @@ Tex2D::Tex2D(GLsizei width, GLsizei height, Tex2DInternalFormat format,
     width(width),
     height(height),
     format(format),
-    usage(usage),
+    pixel_format(pixel_format),
     pixel_type(pixel_type),
     wrap_s(this, &Tex2D::_getWrapS, &Tex2D::_setWrapS),
     wrap_t(this, &Tex2D::_getWrapT, &Tex2D::_setWrapT),
@@ -23,7 +23,7 @@ Tex2D::Tex2D(GLsizei width, GLsizei height, Tex2DInternalFormat format,
 
     glBindTexture(GL_TEXTURE_2D, _id);
     glTexImage2D(GL_TEXTURE_2D, 0, static_cast<GLenum>(format),
-                 width, height, 0, static_cast<GLenum>(usage),
+                 width, height, 0, static_cast<GLenum>(pixel_format),
                  static_cast<GLenum>(pixel_type), nullptr);
     glBindTexture(GL_TEXTURE_2D, 0);
 }

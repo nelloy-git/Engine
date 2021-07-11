@@ -74,10 +74,10 @@ enum class Tex2DFilter : GLint {
 };
 
 enum class Tex2DInternalFormat : GLenum {
-    CHANNELS_1 = 1,
-    CHANNELS_2 = 2,
-    CHANNELS_3 = 3,
-    CHANNELS_4 = 4,
+    RED = GL_RED,
+    RG = GL_RG,
+    RGB = GL_RGB,
+    RGBA = GL_RGBA,
 
     ALPHA = GL_ALPHA,
     ALPHA4 = GL_ALPHA4,
@@ -112,14 +112,12 @@ enum class Tex2DInternalFormat : GLenum {
     INTENSITY12 = GL_INTENSITY12,
     INTENSITY16 = GL_INTENSITY16,
     R3_G3_B2 = GL_R3_G3_B2,
-    RGB = GL_RGB,
     RGB4 = GL_RGB4,
     RGB5 = GL_RGB5,
     RGB8 = GL_RGB8,
     RGB10 = GL_RGB10,
     RGB12 = GL_RGB12,
     RGB16 = GL_RGB16,
-    RGBA = GL_RGBA,
     RGBA2 = GL_RGBA2,
     RGBA4 = GL_RGBA4,
     RGB5_A1 = GL_RGB5_A1,

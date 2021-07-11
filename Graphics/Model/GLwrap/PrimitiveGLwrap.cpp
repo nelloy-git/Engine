@@ -61,7 +61,7 @@ void PrimitiveGLwrap::update(){
 
             auto buffer = std::dynamic_pointer_cast<BufferGLwrap>(buff_list[j]);
             if (!buffer){
-                LOG(ERR) << "got non GLwrap buffer.";
+                LOG(ERR) << "got non GLwrap buffer. Attribute: " << name;
                 continue;
             }
 
@@ -97,8 +97,11 @@ bool PrimitiveGLwrap::draw(){
         material->apply();
     }
 
+    // LOG(MSG) << typeid(*indices).name() << ": " << indices->count;
     if (indices){
         vao->drawElements(toGLwrap(mode), toGLwrap(indices->data_type), indices->count, 0);
+    } else if (attributes.find(PrimitiveAttribute::Position) != attributes.end()) {
+        vao->drawArrays(toGLwrap(mode), 0, attributes[PrimitiveAttribute::Position]->count);
     }
 
     return true;

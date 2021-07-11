@@ -49,8 +49,6 @@ std::shared_ptr<GLwrap::Program> initProgram(const std::string &vsh, const std::
     return std::make_shared<GLwrap::Program>(shader_list);
 }
 
-
-
 int main(int argc, const char** argv){
     int width = 640;
     int height = 480;

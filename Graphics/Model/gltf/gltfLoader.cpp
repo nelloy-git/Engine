@@ -82,12 +82,12 @@ std::shared_ptr<Buffer> gltfLoader::_loadBuffer(const tinygltf::Accessor &access
 
     auto type = gltfConvert::getBufferType(view.target);
 
-    LOG(MSG) << "Type: " << toString(type) << "\n"
-             << "ElemType: " << toString(data_type) << "\n"
-             << "ElemStruct: " << toString(data_struct) << "\n"
-             << "ElemSize: " << elem_size << "\n"
-             << "Count: " << accessor.count << "\n"
-             << "Size: " << accessor.count * elem_size;
+    // LOG(MSG) << "Type: " << toString(type) << "\n"
+    //          << "ElemType: " << toString(data_type) << "\n"
+    //          << "ElemStruct: " << toString(data_struct) << "\n"
+    //          << "ElemSize: " << elem_size << "\n"
+    //          << "Count: " << accessor.count << "\n"
+    //          << "Size: " << accessor.count * elem_size;
 
     auto buffer = Creator::newBuffer(type, data_type, data_struct,
                                      accessor.count,
@@ -124,6 +124,7 @@ std::shared_ptr<Texture> gltfLoader::_loadTexture(const tinygltf::Texture &gltf_
     auto &image = model.images[gltf_tex.source];
 
     auto tex = Creator::newTexture(image.width, image.height, image.component, image.bits);
+    tex->write(&image.image.at(0), 0, 0, image.width, image.height);
     tex->wrap_s = gltfConvert::getTextureWrap(sampler.wrapS);
     tex->wrap_t = gltfConvert::getTextureWrap(sampler.wrapT);
     tex->min_filter = gltfConvert::getTextureFilter(sampler.minFilter);
@@ -207,7 +208,7 @@ std::shared_ptr<Primitive> gltfLoader::_loadPrimitive(const tinygltf::Primitive 
                     break;
 
                 case PrimitiveAttribute::Tangent:
-                    norm = buff;
+                    tang = buff;
                     break;
 
                 default:

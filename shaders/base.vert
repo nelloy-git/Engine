@@ -2,10 +2,10 @@
 
 uniform mat4 model;
 
-in vec3 Position;
-in vec3 Normal;
-in vec3 Tangent;
-in vec2 TexCoord_0;
+layout (location=0) in vec3 Position;
+layout (location=1) in vec3 Normal;
+layout (location=2) in vec3 Tangent;
+layout (location=3) in vec2 TexCoord_0;
 
 out vec2 fragUV;
 

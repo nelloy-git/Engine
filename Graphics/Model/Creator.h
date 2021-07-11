@@ -10,8 +10,11 @@ namespace Graphics::Model::Creator {
 std::shared_ptr<Model> newModel(const std::string &path);
 
 std::shared_ptr<Buffer> newBuffer(BufferType type,
-                                     BufferElemType elem_type, BufferElemStruct elem_struct,
-                                     int count, int bytes, bool normalized);
+                                  BufferElemType elem_type,
+                                  BufferElemStruct elem_struct,
+                                  int count,
+                                  int bytes,
+                                  bool normalized);
 
 std::shared_ptr<Primitive> newPrimitive();
 

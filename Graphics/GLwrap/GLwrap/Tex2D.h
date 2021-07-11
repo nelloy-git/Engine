@@ -28,7 +28,7 @@ public:
     const GLsizei width;
     const GLsizei height;
     const Tex2DInternalFormat format; 
-    const Tex2DPixelFormat usage;
+    const Tex2DPixelFormat pixel_format;
     const Tex2DPixelType pixel_type;
 
     Property<Tex2DWrap, Tex2D> wrap_s;

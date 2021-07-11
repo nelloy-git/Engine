@@ -79,6 +79,10 @@ bool Drawer::draw(const Model::Model &model,
     auto rotated = glm::mat4_cast(rotation) * scaled;
     const glm::mat4 model_mat = cam_mat * glm::translate(rotated, translation);
 
+    if (!_shader->setUniformMat4f("model", glm::value_ptr(model_mat))){
+        LOG(ERR) << "\"model\" not found.";
+    };
+
     for (auto mesh : model.meshes){
         mesh->draw();
     }

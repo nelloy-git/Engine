@@ -2,6 +2,8 @@
 
 #include "Model/GLwrap/TypesGLwrap.h"
 
+#include "Log.h"
+
 using namespace Graphics::Model;
 
 TextureGLwrap::TextureGLwrap(int width, int height, int channels, int bpp) : 
@@ -11,15 +13,15 @@ TextureGLwrap::TextureGLwrap(int width, int height, int channels, int bpp) :
     GLwrap::Tex2DPixelFormat pixel_fmt;
     switch (channels){
         case 1:
-            internal_fmt = GLwrap::Tex2DInternalFormat::CHANNELS_1;
+            internal_fmt = GLwrap::Tex2DInternalFormat::RED;
             pixel_fmt = GLwrap::Tex2DPixelFormat::RED;
             break;
         case 2:
-            internal_fmt = GLwrap::Tex2DInternalFormat::CHANNELS_2;
+            internal_fmt = GLwrap::Tex2DInternalFormat::RG;
             pixel_fmt = GLwrap::Tex2DPixelFormat::RG;
             break;
         case 3:
-            internal_fmt = GLwrap::Tex2DInternalFormat::RGBA;
+            internal_fmt = GLwrap::Tex2DInternalFormat::RGB;
             pixel_fmt = GLwrap::Tex2DPixelFormat::RGB;
             break;
         default:
