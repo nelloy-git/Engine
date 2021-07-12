@@ -18,7 +18,7 @@
 #include "Context/Timer.h"
 #include "Context/Window.h"
 
-#include "Model/Creator.h"
+#include "Draw/Loader/Loader.h"
 
 #include "Drawing/Camera.h"
 #include "Drawing/Drawer.h"
@@ -65,7 +65,11 @@ int main(int argc, const char** argv){
     });
 
     // std::shared_ptr<Model::Model> model3d = Model::Creator::newModel("../test/triang/triang.gltf");
-    std::shared_ptr<Model::Model> model3d = Model::Creator::newModel("../test/book/scene.gltf");
+    // std::shared_ptr<Draw::Model> model3d = Draw::Creator::newModel("../test/book/scene.gltf");
+    // std::shared_ptr<Model::Model> model3d = Model::Creator::newModel("../test/ninja/scene.gltf");
+
+    auto loader = Draw::Loader(Draw::Loader::Input::gltf, Draw::Loader::Output::GLwrap);
+    auto model3d = loader.load("../test/book/scene.gltf"); 
 
     std::shared_ptr<GLwrap::Program> progr = initProgram("../shaders/base.vert", "../shaders/base.frag");
     if (!progr){return -1;}

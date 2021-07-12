@@ -26,35 +26,39 @@ GLuint Buffer::id(){
     return _id;
 }
 
-bool Buffer::write(const void *data, int offset, size_t size){
-    if (size == 0){
-        size = this->size;
+bool Buffer::write(const void *data, size_t data_offset, size_t data_size){
+    if (data_size == 0){
+        data_size = size;
     }
     
-    if (offset + size > this->size){
-        LOG(WRN) << "Data is outside of buffer size.\n"
-                 << "Buffer size: " << this->size << "\n"
-                 << "Data size: " << size;
+    if (data_offset + data_size > size){
+        LOG(WRN) << "Write outside of buffer ("
+                 << "offset: " << data_offset << ", "
+                 << "data size: " << data_size << ", "
+                 << "buffer size: " << size << ").";
         return false;
     }
 
     glBindBuffer(static_cast<GLenum>(type), _id);
-    glBufferSubData(static_cast<GLenum>(type), offset, size, data);
+    glBufferSubData(static_cast<GLenum>(type), data_offset, data_size, data);
     glBindBuffer(static_cast<GLenum>(type), 0);
     return true;
 }
 
-bool Buffer::read(void *data, int offset, size_t size){
-    if (size == 0){
-        size = this->size;
+bool Buffer::read(void *data, size_t data_offset, size_t data_size){
+    if (data_size == 0){
+        data_size = size;
     }
     
-    if (offset + size > this->size){
-        LOG(WRN) << "Data is outside of buffer size.";
+    if (data_offset + data_size > size){
+        LOG(WRN) << "Read outside of buffer ("
+                 << "offset: " << data_offset << ", "
+                 << "data size: " << data_size << ", "
+                 << "buffer size: " << size << ").";
         return false;
     }
 
-    glGetBufferSubData(_id, offset, size, data);
+    glGetNamedBufferSubData(_id, data_offset, data_size, data);
     return true;
 }
 

@@ -65,7 +65,7 @@ bool Drawer::clear(const glm::vec4 &color){
     return true;
 }
 
-bool Drawer::draw(const Model::Model &model,
+bool Drawer::draw(const Draw::Model &model,
                   const glm::vec3 &translation,
                   const glm::quat &rotation,
                   const glm::vec3 &scale){
@@ -112,7 +112,7 @@ bool Drawer::draw(const Model::Model &model,
     return true;
 }
 
-bool Drawer::draw(const Model::Primitive &primitive, const glm::mat4 &pos){
+bool Drawer::draw(const Draw::Primitive &primitive, const glm::mat4 &pos){
     if (!_active || _camera == nullptr || _shader == nullptr){
         return false;
     }

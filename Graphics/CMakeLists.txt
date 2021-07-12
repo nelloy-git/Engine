@@ -3,7 +3,7 @@ cmake_minimum_required(VERSION 3.1...3.17 FATAL_ERROR)
 project(Graphics LANGUAGES C CXX)
 
 add_subdirectory(./GLwrap)
-add_subdirectory(./Model)
+add_subdirectory(./Draw)
 
 include_directories(.)
 include_directories(./GLwrap)
