@@ -20,7 +20,7 @@ namespace Graphics::Draw {
 
 class Model {
 public:
-    Model(){};
+    Model();
     virtual ~Model() = 0;
 
     // std::vector<std::shared_ptr<Scene>> scenes;

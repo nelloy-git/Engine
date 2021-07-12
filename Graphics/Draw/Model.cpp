@@ -2,4 +2,8 @@
 
 using namespace Graphics::Draw;
 
-Model::~Model(){};
+Model::Model(){
+}
+
+Model::~Model(){
+};
