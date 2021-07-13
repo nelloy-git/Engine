@@ -1,15 +1,12 @@
 #include "GLwrap/Types.h"
 
-#include "glad/gl.h"
+#include "MagicEnum.h"
 
-// unsigned int GLwrap::DRAWMODE_POINTS = GL_POINTS;
+using namespace GLwrap;
 
-// enum class GLwrap::DrawMode : unsigned int {
-//     POINTS = GL_POINTS,
-//     LINE = GL_LINE,
-//     LINE_LOOP = GL_LINE_LOOP,
-//     LINE_STRIP = GL_LINE_STRIP,
-//     TRIANGLES = GL_TRIANGLES,
-//     TRIANGLE_STRIP = GL_TRIANGLE_STRIP,
-//     TRIANGLE_FAN = GL_TRIANGLE_FAN
-// };
+constexpr char *toString(DrawMode mode){
+    constexpr auto type_name = magic_enum::enum_type_name<DrawMode>();
+    auto name = magic_enum::enum_name(mode);
+    
+    return 
+}

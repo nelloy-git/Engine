@@ -22,13 +22,13 @@ public:
     void bind() const;
     void unbind() const;
 
-    GLuint id();
+    const GLuint id;
     const size_t size;
     const BufferType type;
     const BufferUsage usage;
 
 private:
-    GLuint _id;
+    static GLuint _newId();
 };
 
 }

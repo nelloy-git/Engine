@@ -7,23 +7,18 @@
 using namespace GLwrap;
 
 Buffer::Buffer(BufferType type, size_t size, BufferUsage usage) : 
+    id(_newId()),
     type(type),
     size(size),
     usage(usage){
 
-    glGenBuffers(1, &_id);
-
-    glBindBuffer(static_cast<GLenum>(type), _id);
+    glBindBuffer(static_cast<GLenum>(type), id);
     glBufferData(static_cast<GLenum>(type), size, nullptr, static_cast<GLenum>(usage));
     glBindBuffer(static_cast<GLenum>(type), 0);
 }
 
 Buffer::~Buffer(){
-    glDeleteBuffers(1, &_id);
-}
-
-GLuint Buffer::id(){
-    return _id;
+    glDeleteBuffers(1, &id);
 }
 
 bool Buffer::write(const void *data, size_t data_offset, size_t data_size){
@@ -39,7 +34,7 @@ bool Buffer::write(const void *data, size_t data_offset, size_t data_size){
         return false;
     }
 
-    glBindBuffer(static_cast<GLenum>(type), _id);
+    glBindBuffer(static_cast<GLenum>(type), id);
     glBufferSubData(static_cast<GLenum>(type), data_offset, data_size, data);
     glBindBuffer(static_cast<GLenum>(type), 0);
     return true;
@@ -58,14 +53,20 @@ bool Buffer::read(void *data, size_t data_offset, size_t data_size){
         return false;
     }
 
-    glGetNamedBufferSubData(_id, data_offset, data_size, data);
+    glGetNamedBufferSubData(id, data_offset, data_size, data);
     return true;
 }
 
 void Buffer::bind() const {
-    glBindBuffer(static_cast<GLenum>(type), _id);
+    glBindBuffer(static_cast<GLenum>(type), id);
 }
 
 void Buffer::unbind() const {
     glBindBuffer(static_cast<GLenum>(type), 0);
+}
+
+GLuint Buffer::_newId(){
+    GLuint id;
+    glGenBuffers(1, &id);
+    return id;
 }

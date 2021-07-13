@@ -2,8 +2,6 @@
 
 #include <string>
 
-#include "tiny_gltf.h"
-
 #include "Draw/Types.h"
 
 namespace Graphics::Draw::gltfConvert {

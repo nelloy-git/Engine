@@ -2,6 +2,8 @@
 
 #include <type_traits>
 
+#include "3rdparty/tinygltf/tiny_gltf.h"
+
 #include "Draw/Loader/fromGltf/gltf.h"
 
 #include "Log.h"
@@ -15,55 +17,37 @@ LoaderGltf::LoaderGltf() :
 LoaderGltf::~LoaderGltf(){
 }
 
-void LoaderGltf::load(std::shared_ptr<Model> dst, const std::string &path, const DataIniter &initer) const {
-    return const_cast<LoaderGltf *>(this)->load(dst, path, initer);
-}
-
-void LoaderGltf::load(std::shared_ptr<Model> dst, const std::string &path, const DataIniter &initer) {
-    auto gltf_data = _loadGltfModel(path);
+void LoaderGltf::load(std::shared_ptr<Model> dst, const std::string &path, const DataIniter &initer){
+    auto gltf_model = _loadGltfModel(path);
     _result = dst;
     _initer = &initer;
 
-    for (int i = 0; i < gltf_data->accessors.size(); i++){
-        auto &accessor = gltf_data->accessors[i];
-        int err_count = _errors.size();
-        auto gltf_buff = _loadBuffer(accessor, *gltf_data);
-        _result->buffers.push_back(gltf_buff);
+    _result->buffers = _iterate(gltf_model->accessors, *gltf_model, &LoaderGltf::_loadBuffer);
+    _result->textures = _iterate(gltf_model->textures, *gltf_model, &LoaderGltf::_loadTexture);
+    _result->materials = _iterate(gltf_model->materials, *gltf_model, &LoaderGltf::_loadMaterial);
+    _result->meshes = _iterate(gltf_model->meshes, *gltf_model, &LoaderGltf::_loadMesh);
+    _result->nodes = _iterate(gltf_model->nodes, *gltf_model, &LoaderGltf::_loadNode);
+    _linkNodes(*gltf_model);
+    _result->scenes = _iterate(gltf_model->scenes, *gltf_model, &LoaderGltf::_loadScene);
 
-        for (int j = err_count; j < _errors.size(); j++){
-            _errors[j] = "Buffer[" + std::to_string(j) + "]: " + _errors[j];
+    for (int i = 0; i < gltf_model->nodes.size(); i++){
+        auto &gltf_node = gltf_model->nodes[i];
+        auto node = _result->nodes[i];
+
+        if (node->children.size() > 0){
+            continue;
         }
-    }
 
-    for (int i = 0; i < gltf_data->textures.size(); i++){
-        auto &texture = gltf_data->textures[i];
-        int err_count = _errors.size();
-        _result->textures.push_back(_loadTexture(texture, *gltf_data));
+        for (int j = 0; j < gltf_node.children.size(); j++){
+            auto child = _result->nodes[gltf_node.children[j]];
+            node->children.push_back(child);
 
-        for (int j = err_count; j < _errors.size(); j++){
-            _errors[j] = "Texture[" + std::to_string(j) + "]: " + _errors[j];
-        }
-    }
+            if (child->parent){
+                _errors.push_back("Node[" + std::to_string(j) + "] can have only one parent.");
+                continue;
+            }
 
-    for (int i = 0; i < gltf_data->materials.size(); i++){
-        auto gltf_material = gltf_data->materials[i];
-        int err_count = _errors.size();
-        _result->materials.push_back(_loadMaterial(gltf_material, *gltf_data));
-
-        for (int j = err_count; j < _errors.size(); j++){
-            _errors[j] = "Material[" + std::to_string(j) + "]: " + _errors[j];
-        }
-    }
-
-    for (int i = 0; i < gltf_data->meshes.size(); i++){
-        auto &gltf_mesh = gltf_data->meshes[i];
-        int err_count = _errors.size();
-
-        auto mesh = _loadMesh(gltf_mesh, *gltf_data);
-        _result->meshes.push_back(mesh);
-
-        for (int j = err_count; j < _errors.size(); j++){
-            _errors[j] = "Mesh[" + std::to_string(j) + "]: " + _errors[j];
+            child->parent = node;
         }
     }
 
@@ -110,13 +94,13 @@ std::shared_ptr<Buffer> LoaderGltf::_loadBuffer(const tinygltf::Accessor &access
 
     auto elem_type = gltfConvert::getBufferElemType(accessor.componentType);
     if (elem_type == BufferElemType::Unknown){
-        _errors.push_back("got unknown buffer element type (" + std::string(toString(elem_type)) + ").");
+        _errors.push_back("got unknown buffer element type (" + toString(elem_type) + ").");
         return nullptr;
     }
 
     auto elem_struct = gltfConvert::getBufferElemStruct(accessor.type);
     if (elem_struct == BufferElemStruct::Unknown){
-        _errors.push_back("got unknown buffer element struct (" + std::string(toString(elem_struct)) + ").");
+        _errors.push_back("got unknown buffer element struct (" + toString(elem_struct) + ").");
         return nullptr;
     }
 
@@ -181,51 +165,42 @@ std::shared_ptr<Texture> LoaderGltf::_loadTexture(const tinygltf::Texture &gltf_
     return tex;
 }
 
-std::shared_ptr<Mesh> LoaderGltf::_loadMesh(const tinygltf::Mesh &mesh,
-                                            const tinygltf::Model &model){
-    auto res = std::make_shared<Mesh>();
+std::shared_ptr<Mesh> LoaderGltf::_loadMesh(const tinygltf::Mesh &gltf_mesh,
+                                            const tinygltf::Model &gltf_model){
+    auto mesh = std::make_shared<Mesh>();
+    mesh->primitives = _iterate(gltf_mesh.primitives, gltf_model, &LoaderGltf::_loadPrimitive);
 
-    for (int i = 0; i < mesh.primitives.size(); i++){
-        int err_count = _errors.size();
-        auto prim = _loadPrimitive(mesh.primitives[i], model);
-        res->primitives.push_back(prim);
-
-        for (int j = err_count; j < _errors.size(); j++){
-            _errors[j] = "Primitive[" + std::to_string(j) + "]: " + _errors[j];
-        }
-    }
-
-    return res;
+    return mesh;
 }
 
-std::shared_ptr<Primitive> LoaderGltf::_loadPrimitive(const tinygltf::Primitive prim,
-                                                      const tinygltf::Model &model){
+std::shared_ptr<Primitive> LoaderGltf::_loadPrimitive(const tinygltf::Primitive &gltf_prim,
+                                                      const tinygltf::Model &gltf_model){
 
     auto res = _initer->newPrimitive();
 
-    res->mode = gltfConvert::getDrawMode(prim.mode);
+    res->mode = gltfConvert::getDrawMode(gltf_prim.mode);
     if (res->mode == PrimitiveDrawMode::Unknown){
-        _errors.push_back("got unknown primitive draw mode (" + std::to_string(prim.mode) + ").");
+        _errors.push_back("got unknown primitive draw mode (" + std::to_string(gltf_prim.mode) + ").");
         return nullptr;
     }
 
-    if (prim.indices >= 0){
-        res->indices = _result->buffers[prim.indices];
+    if (gltf_prim.indices >= 0){
+        res->indices = _result->buffers[gltf_prim.indices];
         if (!res->indices || res->indices->type != BufferType::Index){
-            _errors.push_back("invalid index array type (buffer[" + std::to_string(prim.indices) + "]).");
+            _errors.push_back("invalid index array type (buffer[" + std::to_string(gltf_prim.indices) + "]).");
             return nullptr;
         }
     }
 
-    if (prim.material >= 0){
-        res->material = _result->materials[prim.material];
+    if (gltf_prim.material >= 0){
+        res->material = _result->materials[gltf_prim.material];
         if (!res->material){
-            _errors.push_back("material is not initialized (material[" + std::to_string(prim.material) + "]).");
+            _errors.push_back("material is not initialized (material[" + std::to_string(gltf_prim.material) + "]).");
             return nullptr;
         }
     }
 
-    for (auto iter : prim.attributes){
+    for (auto iter : gltf_prim.attributes){
         auto attr = gltfConvert::getAttribute(iter.first);
         if (attr == PrimitiveAttribute::Unknown){
             _errors.push_back("got unknown attribute name (" + iter.first + ").");
@@ -241,8 +216,8 @@ std::shared_ptr<Primitive> LoaderGltf::_loadPrimitive(const tinygltf::Primitive 
         res->attributes[attr] = buff;
     }
 
-    for (int i = 0; i < prim.targets.size(); i++){
-        auto &list = prim.targets[i];
+    for (int i = 0; i < gltf_prim.targets.size(); i++){
+        auto &list = gltf_prim.targets[i];
 
         std::shared_ptr<Buffer> pos;
         std::shared_ptr<Buffer> norm;
@@ -275,4 +250,92 @@ std::shared_ptr<Primitive> LoaderGltf::_loadPrimitive(const tinygltf::Primitive 
 
     res->update();
     return res;
+}
+
+std::shared_ptr<Node> LoaderGltf::_loadNode(const tinygltf::Node &gltf_node,
+                                            const tinygltf::Model &gltf_model){
+    std::shared_ptr<Node> node;
+
+    if (gltf_node.matrix.size() != 0){
+        if (gltf_node.matrix.size() == 16){
+            glm::mat4 mat;
+            for (int i = 0; i < 4; i++){
+                for (int j = 0; j < 4; j++){
+                    mat[i][j] = gltf_node.matrix[i * 4 + j];
+                }
+            }
+            node = _initer->newNode(mat);
+        } else {
+            _errors.push_back("wrong matrix size.");
+        }
+    } else {
+        glm::vec3 scale(1.f);
+        if (gltf_node.scale.size() == 3){
+            scale = {
+                gltf_node.scale[0],
+                gltf_node.scale[1],
+                gltf_node.scale[2]
+            };
+        }
+
+        glm::quat rot = {1.f, 0.f, 0.f, 0.f};
+        if (gltf_node.rotation.size() == 4){
+            rot = {
+                (float)gltf_node.rotation[3], 
+                (float)gltf_node.rotation[0], 
+                (float)gltf_node.rotation[1], 
+                (float)gltf_node.rotation[2]
+            };
+        }
+
+        glm::vec3 trans(0.f);
+        if (gltf_node.translation.size() == 3){
+            trans = {
+                gltf_node.translation[0],
+                gltf_node.translation[1],
+                gltf_node.translation[2]};
+        }
+
+        node = _initer->newNode(trans, rot, scale);
+    }
+
+    if (gltf_node.mesh >= 0){
+        node->mesh = _result->meshes[gltf_node.mesh];
+    }
+    return node;
+}
+
+void LoaderGltf::_linkNodes(const tinygltf::Model &gltf_model){
+    for (int i = 0; i < gltf_model.nodes.size(); i++){
+        auto &gltf_node = gltf_model.nodes[i];
+        auto node = _result->nodes[i];
+
+        if (node->children.size() > 0){
+            continue;
+        }
+
+        for (int j = 0; j < gltf_node.children.size(); j++){
+            auto child = _result->nodes[gltf_node.children[j]];
+            node->children.push_back(child);
+
+            if (child->parent){
+                _errors.push_back("Node[" + std::to_string(j) + "] can have only one parent.");
+                continue;
+            }
+
+            child->parent = node;
+        }
+    }
+}
+
+std::shared_ptr<Scene> LoaderGltf::_loadScene(const tinygltf::Scene &gltf_scene,
+                                              const tinygltf::Model &gltf_model){
+    auto scene = _initer->newScene();
+
+    for (int i = 0; i < gltf_scene.nodes.size(); i++){
+        int node_pos = gltf_scene.nodes[i];
+        scene->nodes.push_back(_result->nodes[node_pos]);
+    }
+
+    return scene;
 }

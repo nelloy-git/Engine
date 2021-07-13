@@ -64,6 +64,8 @@ int main(int argc, const char** argv){
         running = false;
     });
 
+    std::cout << Draw::toString<Draw::Node>() << std::endl;
+
     // std::shared_ptr<Model::Model> model3d = Model::Creator::newModel("../test/triang/triang.gltf");
     // std::shared_ptr<Draw::Model> model3d = Draw::Creator::newModel("../test/book/scene.gltf");
     // std::shared_ptr<Model::Model> model3d = Model::Creator::newModel("../test/ninja/scene.gltf");

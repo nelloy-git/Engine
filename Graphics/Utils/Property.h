@@ -8,7 +8,7 @@ public:
 
     Property(Owner *owner,
              GetterType getter,
-             SetterType setter = nullptr) :
+             SetterType setter) :
         _owner(owner),
         _getter(getter), 
         _setter(setter){

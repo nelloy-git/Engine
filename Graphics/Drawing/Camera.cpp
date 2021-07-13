@@ -12,7 +12,8 @@ inline float halfPI(){
 Camera::Camera() :
     pos(this, &Camera::_getPos, &Camera::_setPos),
     direction(this, &Camera::_getDirection, &Camera::_setDirection),
-    right(this, &Camera::right_old),
+    right(this, &Camera::_getRight, nullptr),
+    up(this, &Camera::_getUp, nullptr),
     yaw(this, &Camera::_getYaw, &Camera::_setYaw),
     pitch(this, &Camera::_getPitch, &Camera::_setPitch),
 
@@ -53,14 +54,6 @@ const glm::mat4 &Camera::matrix(){
     return _matrix;
 }
 
-const glm::vec3 &Camera::right_old(){
-    if (_view_changed){
-        _update();
-        _view_changed = false;
-    }
-    return _right;
-}
-
 const glm::vec3 &Camera::_getPos(){
     return _pos;
 }
@@ -82,6 +75,22 @@ void Camera::_setDirection(const glm::vec3 &v){
     _yaw = acos(_direction.x) / cos(_pitch);
 
     _view_changed = true;
+}
+
+const glm::vec3 &Camera::_getRight(){
+    if (_view_changed){
+        _update();
+        _view_changed = false;
+    }
+    return _right;
+}
+
+const glm::vec3 &Camera::_getUp(){
+    if (_view_changed){
+        _update();
+        _view_changed = false;
+    }
+    return _up;
 }
 
 const float &Camera::_getYaw(){

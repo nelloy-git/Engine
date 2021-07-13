@@ -23,7 +23,7 @@ public:
 
     static GLint max_layouts();
 
-    GLuint id();
+    const GLuint id;
 
     void bind();
     void unbind();
@@ -38,7 +38,7 @@ public:
     void drawElements(DrawMode mode, ElementType type, GLuint vertex_count, GLuint64 byte_offset) const;
 
 private:
-    GLuint _id = 0;
+    static GLuint _newId();
 };
 
 }

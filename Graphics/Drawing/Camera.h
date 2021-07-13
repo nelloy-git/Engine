@@ -12,11 +12,11 @@ public:
     virtual ~Camera();
 
     const glm::mat4 &matrix();
-    const glm::vec3 &right_old();
 
     Property<glm::vec3, Camera> pos;
     Property<glm::vec3, Camera> direction;
     const Property<glm::vec3, Camera> right;
+    const Property<glm::vec3, Camera> up;
     Property<float, Camera> yaw;
     Property<float, Camera> pitch;
 
@@ -45,7 +45,11 @@ private:
     const glm::vec3 &_getDirection();
     void _setDirection(const glm::vec3 &v);
     glm::vec3 _direction = {1, 0, 0};
+
+    const glm::vec3 &_getRight();
     glm::vec3 _right = {0, 0, 1};
+
+    const glm::vec3 &_getUp();
     glm::vec3 _up = {0, 1, 0};
 
     const float &_getYaw();

@@ -3,12 +3,12 @@
 #include <string>
 
 #include "Draw/Buffer.h"
-#include "Draw/Mesh.h"
 #include "Draw/Material.h"
+#include "Draw/Mesh.h"
+#include "Draw/Node.h"
+#include "Draw/Scene.h"
 #include "Draw/Texture.h"
 // #include "Draw/Mesh.h"
-// #include "Draw/Node.h"
-// #include "Draw/Scene.h"
 
 // #include "GLwrap/Buffer.h"
 
@@ -23,8 +23,8 @@ public:
     Model();
     virtual ~Model() = 0;
 
-    // std::vector<std::shared_ptr<Scene>> scenes;
-    // std::vector<std::shared_ptr<Node>> nodes;
+    std::vector<std::shared_ptr<Scene>> scenes;
+    std::vector<std::shared_ptr<Node>> nodes;
     std::vector<std::shared_ptr<Mesh>> meshes;
     std::vector<std::shared_ptr<Buffer>> buffers;
     std::vector<std::shared_ptr<Material>> materials;

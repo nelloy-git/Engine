@@ -1,5 +1,7 @@
 #pragma once
 
+#include "magic_enum.h"
+
 namespace Graphics::Draw {
 
 enum class BufferType : unsigned int {
@@ -7,7 +9,6 @@ enum class BufferType : unsigned int {
     Index,
     Other
 };
-const char *toString(BufferType type);
 
 enum class BufferElemType : unsigned int {
     Byte = 0,
@@ -20,7 +21,6 @@ enum class BufferElemType : unsigned int {
     Double,
     Unknown
 };
-const char *toString(BufferElemType elem_type);
 unsigned int getSize(BufferElemType elem_type);
 
 enum class BufferElemStruct : unsigned int {
@@ -33,7 +33,6 @@ enum class BufferElemStruct : unsigned int {
     Mat4,
     Unknown
 };
-const char *toString(BufferElemStruct elem_struct);
 unsigned int getSize(BufferElemStruct elem_struct);
 
 enum class PrimitiveDrawMode : unsigned int {
@@ -46,7 +45,6 @@ enum class PrimitiveDrawMode : unsigned int {
     TriangleFan,
     Unknown
 };
-const char *toString(PrimitiveDrawMode mode);
 
 enum class PrimitiveAttribute : unsigned int {
     Position = 0,
@@ -61,7 +59,6 @@ enum class PrimitiveAttribute : unsigned int {
     Weights_1,
     Unknown
 };
-const char *toString(PrimitiveAttribute attr);
 int getLocation(PrimitiveAttribute attr);
 int getMorphTargetLocation(int target, PrimitiveAttribute attr);
 
@@ -72,7 +69,6 @@ enum class TextureFormat : unsigned int {
     RGBA,
     Unknown
 };
-const char *toString(TextureFormat fmt);
 
 enum class TextureWrap : unsigned int {
     Repeat,
@@ -80,7 +76,6 @@ enum class TextureWrap : unsigned int {
     MirroredRepeat,
     Unknown
 };
-const char *toString(TextureWrap wrap);
 
 enum class TextureFilter : unsigned int {
     Linear,
@@ -91,6 +86,38 @@ enum class TextureFilter : unsigned int {
     NearestMipmapNearest,
     Unknown
 };
-const char *toString(TextureFilter filter);
+
+template<typename T>
+constexpr std::string toString(){
+    char const* p = __PRETTY_FUNCTION__;
+    while (*p++ != '=');
+    for (; *p == ' '; ++p);
+    char const* p2 = p;
+    int count = 1;
+    for (;;++p2)
+    {
+        switch (*p2)
+        {
+        case '[':
+            ++count;
+            break;
+        case ';':
+        case ']':
+            --count;
+            if (!count)
+                return {p, std::size_t(p2 - p)};
+        }
+    }
+    return {};
+}
+
+template<typename T>
+std::string toString(T enum_value){
+    static_assert(std::is_enum_v<T> && std::is_same_v<T, std::decay_t<T>>, "Enum type is required.");
+
+    constexpr auto type_name = magic_enum::enum_type_name<T>();
+    auto enum_name = magic_enum::enum_name(enum_value);
+    return std::string(type_name) + std::string("::") + std::string(enum_name);
+}
 
 }

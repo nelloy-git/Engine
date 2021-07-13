@@ -17,7 +17,6 @@ add_library (${PROJECT_NAME} STATIC
     ./GLwrap/Program.cpp
     ./GLwrap/Shader.cpp
     ./GLwrap/Tex2D.cpp
-    ./GLwrap/Types.cpp
     
     ./Context/Keyboard.cpp
     ./Context/Mouse.cpp

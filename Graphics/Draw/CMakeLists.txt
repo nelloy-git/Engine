@@ -27,6 +27,8 @@ add_library (${PROJECT_NAME} STATIC
     ./Material.cpp
     ./Mesh.cpp
     ./Model.cpp
+    ./Node.cpp
+    ./Scene.cpp
     ./Types.cpp
 )
 

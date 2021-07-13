@@ -1,5 +1,9 @@
 #pragma once
 
+#include <string_view>
+
+#include <magic_enum.h>
+
 #include "glad/gl.h"
 
 namespace GLwrap {
@@ -50,13 +54,6 @@ enum class ElementType : GLenum {
     Float = GL_FLOAT,
     Double = GL_DOUBLE,
 };
-
-// enum class Tex2DParamInt : GLenum {
-//     WRAP_S = GL_TEXTURE_WRAP_S,
-//     WRAP_T = GL_TEXTURE_WRAP_T,
-//     MIN_FILTER = GL_TEXTURE_MIN_FILTER,
-//     MAG_FILTER = GL_TEXTURE_MAG_FILTER,
-// };
 
 enum class Tex2DWrap : GLint {
     Repeat = GL_REPEAT,
@@ -172,5 +169,14 @@ enum class Tex2DPixelType : GLenum {
     UNSIGNED_INT_10_10_10_2 = GL_UNSIGNED_INT_10_10_10_2,
     UNSIGNED_INT_2_10_10_10_REV = GL_UNSIGNED_INT_2_10_10_10_REV
 };
+
+template<typename T>
+std::string toString(T enum_value){
+    static_assert(std::is_enum_v<T> && std::is_same_v<T, std::decay_t<T>>, "Enum type is required.");
+
+    constexpr auto type_name = magic_enum::enum_type_name<T>();
+    auto enum_name = magic_enum::enum_name(enum_value);
+    return std::string(type_name) + std::string("::") + std::string(enum_name);
+}
 
 }

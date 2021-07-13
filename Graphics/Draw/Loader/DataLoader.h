@@ -15,9 +15,6 @@ public:
     virtual void load(std::shared_ptr<Model> dst,
                       const std::string &path,
                       const DataIniter &initer) = 0;
-    virtual void load(std::shared_ptr<Model> dst,
-                      const std::string &path,
-                      const DataIniter &initer) const = 0;
 };
 
 }

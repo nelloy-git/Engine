@@ -19,9 +19,10 @@ GLint Array::max_layouts(){
 }
 
 Array::Array(const Buffer &indices, 
-             const std::unordered_map<int, BufferPair> &layouts){
-    glGenVertexArrays(1, &_id);
-    glBindVertexArray(_id);
+             const std::unordered_map<int, BufferPair> &layouts) :
+    id(_newId()){
+
+    glBindVertexArray(id);
 
     for (auto iter : layouts){
         auto loc = iter.first;
@@ -38,9 +39,9 @@ Array::Array(const Buffer &indices,
     glBindVertexArray(0);
 }
 
-Array::Array(const std::unordered_map<int, BufferPair> &layouts){
-    glGenVertexArrays(1, &_id);
-    glBindVertexArray(_id);
+Array::Array(const std::unordered_map<int, BufferPair> &layouts) :
+    id(_newId()){
+    glBindVertexArray(id);
 
     for (auto iter : layouts){
         auto loc = iter.first;
@@ -56,11 +57,11 @@ Array::Array(const std::unordered_map<int, BufferPair> &layouts){
 }
 
 Array::~Array(){
-    glDeleteVertexArrays(1, &_id);
+    glDeleteVertexArrays(1, &id);
 }
 
 void Array::bind(){
-    glBindVertexArray(_id);
+    glBindVertexArray(id);
 }
 
 void Array::unbind(){
@@ -68,7 +69,7 @@ void Array::unbind(){
 }
 
 void Array::bind() const {
-    glBindVertexArray(_id);
+    glBindVertexArray(id);
 }
 
 void Array::unbind() const {
@@ -76,14 +77,20 @@ void Array::unbind() const {
 }
 
 void Array::drawArrays(DrawMode mode, GLuint first, GLuint count){
-    glBindVertexArray(_id);
+    glBindVertexArray(id);
     glDrawArrays(static_cast<GLenum>(mode), first, count);
     glBindVertexArray(0);
 }
 
 void Array::drawElements(DrawMode mode, ElementType type, GLuint vertex_count, GLuint64 byte_offset) {
-    glBindVertexArray(_id);
+    glBindVertexArray(id);
     glDrawElements(static_cast<GLenum>(mode), vertex_count,
                    static_cast<GLenum>(type), (void*)byte_offset);
     glBindVertexArray(0);
+}
+
+GLuint Array::_newId(){
+    GLuint id;
+    glGenVertexArrays(1, &id);
+    return id;
 }
