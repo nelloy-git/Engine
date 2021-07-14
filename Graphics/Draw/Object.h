@@ -21,8 +21,25 @@ public:
     Property<glm::quat, Object> rotation;
     Property<glm::vec3, Object> scale;
 
-private:
+    Property<std::shared_ptr<Model>, Object> model;
+    // Property
 
+private:
+    bool _matrix_need_update = false;
+    glm::mat4 _matrix;
+    const glm::mat4 &_getMatrix();
+
+    glm::vec3 _trans;
+    const glm::vec3 &_getTranslation();
+    void _setTranslation(const glm::vec3 &translation);
+
+    glm::quat _rot;
+    const glm::quat &_getRotation();
+    void _setRotation(const glm::quat &rotation);
+
+    glm::vec3 _scale;
+    const glm::vec3 &_getScale();
+    void _setScale(const glm::vec3 &scale);
 };
 
 }

@@ -73,6 +73,10 @@ int Draw::getLocation(Draw::PrimitiveAttribute attr){
     }
 };
 
+std::string Draw::getMorphTargetName(int target, PrimitiveAttribute attr){
+    return "Target" + std::to_string(target) + "_" + toString(attr);
+}
+
 int Draw::getMorphTargetLocation(int target, PrimitiveAttribute attr){
     int base = 10 + 3 * target;
 

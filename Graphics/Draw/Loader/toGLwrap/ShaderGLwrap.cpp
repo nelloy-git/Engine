@@ -1,6 +1,6 @@
 #include "Draw/Loader/toGLwrap/ShaderGLwrap.h"
 
-#include "magic_enum.h"
+#include "Log.h"
 
 #include "GLwrap/Program.h"
 #include "GLwrap/Shader.h"
@@ -20,19 +20,38 @@ ShaderGLwrap::~ShaderGLwrap(){
 }
 
 bool ShaderGLwrap::verify() const {
-    auto attr_count = magic_enum::enum_count<PrimitiveAttribute>();
-
     bool verified = true;
-    std::vector<std::string> errors;
+    auto log = LOG(MSG);
 
+    constexpr auto attr_count = enumCount<PrimitiveAttribute>();
+    log << "Attributes:\n";
     for (int i = 0; i < attr_count; ++i){
         auto attr = magic_enum::enum_value<PrimitiveAttribute>(i);
         auto attr_name = toString(attr);
+        auto attr_loc = getLocation(attr);
 
-        auto loc = program->getAttribLoc(attr_name);
-        if (loc != getLocation(attr)){
-            errors.push_back("Shader attribute \"" + attr_name + "\" not found.");
-            verified = false;
+        bool valid = attr_loc == program->getAttribLoc(attr_name);
+        log << "\t\"" << attr_name << "\" "
+            << (valid ? "found" : "NOT FOUND") << "\n";
+        verified &= valid;
+    }
+
+    constexpr PrimitiveAttribute targets[] = {
+        PrimitiveAttribute::Position,
+        PrimitiveAttribute::Normal,
+        PrimitiveAttribute::Tangent
+    };
+
+    log << "Morph targets:\n";
+    for (int i = 0; i < 4; ++i){
+        for (auto targ : targets){
+            auto targ_name = getMorphTargetName(i, targ);
+            auto targ_loc = getMorphTargetLocation(i, targ);
+
+            bool valid = targ_loc == program->getAttribLoc(targ_name);
+            log << "\t\"" << targ_name << "\" "
+                << (valid ? "found" : "NOT FOUND") << "\n";
+            verified &= valid;
         }
     }
 

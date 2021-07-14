@@ -39,7 +39,6 @@ void PrimitiveGLwrap::update(){
 
     for (int i = 0; i < targets.size(); i++){
         auto targ = targets[i];
-        std::string prefix("Target" + std::to_string(i) + "_");
 
         PrimitiveAttribute attr_list[] = {
             PrimitiveAttribute::Position,
@@ -55,7 +54,7 @@ void PrimitiveGLwrap::update(){
 
         for (int j = 0; j < 3; j++){
             auto attr = attr_list[j];
-            auto name = prefix + toString(attr);
+            auto name = getMorphTargetName(i, attr);
             auto loc = getMorphTargetLocation(i, attr);
 
             auto buffer = std::dynamic_pointer_cast<BufferGLwrap>(buff_list[j]);

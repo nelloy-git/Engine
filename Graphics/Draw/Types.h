@@ -10,6 +10,7 @@ enum class BufferType{
     Other
 };
 
+// Unknown must be last one.
 enum class BufferElemType{
     Byte,
     UByte,
@@ -23,6 +24,7 @@ enum class BufferElemType{
 };
 unsigned int getSize(BufferElemType elem_type);
 
+// Unknown must be last one.
 enum class BufferElemStruct{
     Scalar,
     Vec2,
@@ -35,6 +37,7 @@ enum class BufferElemStruct{
 };
 unsigned int getSize(BufferElemStruct elem_struct);
 
+// Unknown must be last one.
 enum class PrimitiveDrawMode{
     Points,
     Line,
@@ -46,6 +49,7 @@ enum class PrimitiveDrawMode{
     Unknown
 };
 
+// Unknown must be last one.
 enum class PrimitiveAttribute{
     Position,
     Normal,
@@ -60,8 +64,10 @@ enum class PrimitiveAttribute{
     Unknown
 };
 int getLocation(PrimitiveAttribute attr);
+std::string getMorphTargetName(int target, PrimitiveAttribute attr);
 int getMorphTargetLocation(int target, PrimitiveAttribute attr);
 
+// Unknown must be last one.
 enum class TextureFormat{
     RED,
     RG,
@@ -70,6 +76,7 @@ enum class TextureFormat{
     Unknown
 };
 
+// Unknown must be last one.
 enum class TextureWrap{
     Repeat,
     ClampToEdge,
@@ -77,6 +84,7 @@ enum class TextureWrap{
     Unknown
 };
 
+// Unknown must be last one.
 enum class TextureFilter{
     Linear,
     LinearMipmapLinear,
@@ -127,13 +135,8 @@ std::string toString(T enum_value, bool full = false){
 }
 
 template<typename T>
-constexpr auto count(){
-
-    return magic_enum::enum_count<T>();
-}
-
-constexpr auto test(){
-    constexpr auto a = magic_enum::enum_values<PrimitiveAttribute>();
+constexpr int enumCount(){
+    return static_cast<int>(T::Unknown);
 }
 
 }
