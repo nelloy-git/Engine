@@ -14,7 +14,7 @@ public:
 
     std::vector<std::shared_ptr<Node>> nodes;
 
-private:
+protected:
 };
 
 }

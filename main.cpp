@@ -71,7 +71,8 @@ int main(int argc, const char** argv){
     // std::shared_ptr<Model::Model> model3d = Model::Creator::newModel("../test/ninja/scene.gltf");
 
     auto loader = Draw::Loader(Draw::Loader::Input::gltf, Draw::Loader::Output::GLwrap);
-    auto model3d = loader.load("../test/book/scene.gltf"); 
+    auto model3d = loader.loadModel("../test/book/scene.gltf"); 
+    auto shader = loader.loadShader({"../shaders/base.vert", "../shaders/base.frag"});
 
     std::shared_ptr<GLwrap::Program> progr = initProgram("../shaders/base.vert", "../shaders/base.frag");
     if (!progr){return -1;}

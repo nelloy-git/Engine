@@ -18,6 +18,7 @@ public:
                                           const glm::quat &rotation,
                                           const glm::vec3 &scale) const override;
     virtual std::shared_ptr<Scene> newScene() const override;
+    virtual std::shared_ptr<Shader> newShader(const std::vector<std::string> &sources) const override;
     virtual std::shared_ptr<Model> newModel() const override;
     virtual std::shared_ptr<Buffer> newBuffer(BufferType type,
                                       BufferElemType elem_type,

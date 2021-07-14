@@ -4,14 +4,14 @@
 
 namespace Graphics::Draw {
 
-enum class BufferType : unsigned int {
-    Vertex = 0,
+enum class BufferType{
+    Vertex,
     Index,
     Other
 };
 
-enum class BufferElemType : unsigned int {
-    Byte = 0,
+enum class BufferElemType{
+    Byte,
     UByte,
     Short,
     UShort,
@@ -23,8 +23,8 @@ enum class BufferElemType : unsigned int {
 };
 unsigned int getSize(BufferElemType elem_type);
 
-enum class BufferElemStruct : unsigned int {
-    Scalar = 0,
+enum class BufferElemStruct{
+    Scalar,
     Vec2,
     Vec3,
     Vec4,
@@ -35,8 +35,8 @@ enum class BufferElemStruct : unsigned int {
 };
 unsigned int getSize(BufferElemStruct elem_struct);
 
-enum class PrimitiveDrawMode : unsigned int {
-    Points = 0,
+enum class PrimitiveDrawMode{
+    Points,
     Line,
     LineLoop,
     LineStrip,
@@ -46,8 +46,8 @@ enum class PrimitiveDrawMode : unsigned int {
     Unknown
 };
 
-enum class PrimitiveAttribute : unsigned int {
-    Position = 0,
+enum class PrimitiveAttribute{
+    Position,
     Normal,
     Tangent,
     TexCoord_0,
@@ -62,7 +62,7 @@ enum class PrimitiveAttribute : unsigned int {
 int getLocation(PrimitiveAttribute attr);
 int getMorphTargetLocation(int target, PrimitiveAttribute attr);
 
-enum class TextureFormat : unsigned int {
+enum class TextureFormat{
     RED,
     RG,
     RGB,
@@ -70,14 +70,14 @@ enum class TextureFormat : unsigned int {
     Unknown
 };
 
-enum class TextureWrap : unsigned int {
+enum class TextureWrap{
     Repeat,
     ClampToEdge,
     MirroredRepeat,
     Unknown
 };
 
-enum class TextureFilter : unsigned int {
+enum class TextureFilter{
     Linear,
     LinearMipmapLinear,
     LinearMipmapNearest,
@@ -112,12 +112,28 @@ constexpr std::string toString(){
 }
 
 template<typename T>
-std::string toString(T enum_value){
+std::string toString(T enum_value, bool full = false){
     static_assert(std::is_enum_v<T> && std::is_same_v<T, std::decay_t<T>>, "Enum type is required.");
 
-    constexpr auto type_name = magic_enum::enum_type_name<T>();
+    std::string str;
+    if (full){
+        constexpr auto type_name = magic_enum::enum_type_name<T>();
+        str = std::string(type_name) + "::";
+    }
     auto enum_name = magic_enum::enum_name(enum_value);
-    return std::string(type_name) + std::string("::") + std::string(enum_name);
+    str += std::string(enum_name);
+
+    return str;
+}
+
+template<typename T>
+constexpr auto count(){
+
+    return magic_enum::enum_count<T>();
+}
+
+constexpr auto test(){
+    constexpr auto a = magic_enum::enum_values<PrimitiveAttribute>();
 }
 
 }

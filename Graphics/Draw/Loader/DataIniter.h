@@ -6,6 +6,7 @@
 #include "Draw/Model.h"
 #include "Draw/Node.h"
 #include "Draw/Scene.h"
+#include "Draw/Shader.h"
 #include "Draw/Primitive.h"
 #include "Draw/Texture.h"
 
@@ -21,6 +22,7 @@ public:
                                           const glm::quat &rotation,
                                           const glm::vec3 &scale) const = 0;
     virtual std::shared_ptr<Scene> newScene() const = 0;
+    virtual std::shared_ptr<Shader> newShader(const std::vector<std::string> &sources) const = 0;
     virtual std::shared_ptr<Model> newModel() const = 0;
     virtual std::shared_ptr<Buffer> newBuffer(BufferType type,
                                               BufferElemType elem_type, BufferElemStruct elem_struct,

@@ -20,6 +20,7 @@ add_library (${PROJECT_NAME} STATIC
     ./Loader/toGLwrap/IniterGLwrap.cpp
     ./Loader/toGLwrap/ModelGLwrap.cpp
     ./Loader/toGLwrap/PrimitiveGLwrap.cpp
+    ./Loader/toGLwrap/ShaderGLwrap.cpp
     ./Loader/toGLwrap/TextureGLwrap.cpp
     ./Loader/toGLwrap/TypesGLwrap.cpp
 

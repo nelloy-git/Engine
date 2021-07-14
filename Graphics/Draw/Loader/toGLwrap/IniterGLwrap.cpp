@@ -5,6 +5,7 @@
 #include "Draw/Loader/toGLwrap/BufferGLwrap.h"
 #include "Draw/Loader/toGLwrap/ModelGLwrap.h"
 #include "Draw/Loader/toGLwrap/PrimitiveGLwrap.h"
+#include "Draw/Loader/toGLwrap/ShaderGLwrap.h"
 #include "Draw/Loader/toGLwrap/TextureGLwrap.h"
 
 using namespace Graphics::Draw;
@@ -28,6 +29,10 @@ std::shared_ptr<Node> IniterGLwrap::newNode(const glm::vec3 &translation,
 
 std::shared_ptr<Scene> IniterGLwrap::newScene() const {
     return std::make_shared<Scene>();
+}
+
+std::shared_ptr<Shader> IniterGLwrap::newShader(const std::vector<std::string> &sources) const {
+    return std::make_shared<ShaderGLwrap>(sources[0], sources[1]);
 }
 
 std::shared_ptr<Model> IniterGLwrap::newModel() const {
