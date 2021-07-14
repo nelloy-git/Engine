@@ -19,45 +19,69 @@ ShaderGLwrap::ShaderGLwrap(const std::string &vertex_source,
 ShaderGLwrap::~ShaderGLwrap(){
 }
 
-bool ShaderGLwrap::verify() const {
+bool ShaderGLwrap::verify(){
     bool verified = true;
+
+    verified == verified && _verifyAttributes();
+    verified == verified && _verifyMorphs();
+    verified == verified && _verifyUniforms();
+
     auto log = LOG(MSG);
+    for (int i = 0; i < _messages.size(); ++i){
+        log << _messages[i];
+    }
+
+    return verified;
+}
+
+void ShaderGLwrap::draw(const Object &obj){
+
+}
+
+bool ShaderGLwrap::_verifyAttributes(){
+    bool ok = true;
 
     constexpr auto attr_count = enumCount<PrimitiveAttribute>();
-    log << "Attributes:\n";
+    _messages.push_back("Attributes:\n");
     for (int i = 0; i < attr_count; ++i){
         auto attr = magic_enum::enum_value<PrimitiveAttribute>(i);
         auto attr_name = toString(attr);
         auto attr_loc = getLocation(attr);
 
         bool valid = attr_loc == program->getAttribLoc(attr_name);
-        log << "\t\"" << attr_name << "\" "
-            << (valid ? "found" : "NOT FOUND") << "\n";
-        verified &= valid;
+        _messages.push_back("\t\"" + attr_name + "\" "
+                            + (valid ? "found" : "NOT FOUND"));
+        ok &= valid;
     }
 
+    return ok;
+}
+
+bool ShaderGLwrap::_verifyMorphs(){
     constexpr PrimitiveAttribute targets[] = {
         PrimitiveAttribute::Position,
         PrimitiveAttribute::Normal,
         PrimitiveAttribute::Tangent
     };
 
-    log << "Morph targets:\n";
+    bool ok = true;
+    _messages.push_back("Morph targets:\n");
     for (int i = 0; i < 4; ++i){
         for (auto targ : targets){
             auto targ_name = getMorphTargetName(i, targ);
             auto targ_loc = getMorphTargetLocation(i, targ);
 
             bool valid = targ_loc == program->getAttribLoc(targ_name);
-            log << "\t\"" << targ_name << "\" "
-                << (valid ? "found" : "NOT FOUND") << "\n";
-            verified &= valid;
+            _messages.push_back("\t\"" + targ_name + "\" "
+                                + (valid ? "found" : "NOT FOUND"));
+            ok &= valid;
         }
     }
 
-    return verified;
+    return ok;
 }
 
-void ShaderGLwrap::draw(const Object &obj) const {
-
+bool ShaderGLwrap::_verifyUniforms(){
+    bool ok = true;
+    return ok;
 }

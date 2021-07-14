@@ -22,7 +22,7 @@ public:
     Property<glm::vec3, Object> scale;
 
     Property<std::shared_ptr<Model>, Object> model;
-    // Property
+    const glm::mat4 &getMatrix(const Node& node);
 
 private:
     bool _matrix_need_update = false;
@@ -40,6 +40,13 @@ private:
     glm::vec3 _scale;
     const glm::vec3 &_getScale();
     void _setScale(const glm::vec3 &scale);
+
+    std::shared_ptr<Model> _model;
+    const std::shared_ptr<Model> &_getModel();
+    void _setModel(const std::shared_ptr<Model> &model);
+
+    const glm::mat4 _default_mat;
+    std::map<const Node&, glm::mat4> _matrices;
 };
 
 }
