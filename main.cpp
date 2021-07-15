@@ -75,9 +75,9 @@ int main(int argc, const char** argv){
     auto shader = loader.loadShader({"../shaders/base.vert", "../shaders/base.frag"});
     auto object = std::make_shared<Draw::Object>();
     object->model = model3d;
-    object->translation = glm::vec3(0.f);
-    object->rotation = glm::angleAxis((float)(3 * 3.1415 / 2), glm::vec3(0, 1, 0));
-    object->scale = glm::vec3(0.1, 0.1, 0.1);
+    object->transform.translation = glm::vec3(0.f);
+    object->transform.rotation = glm::angleAxis((float)(3 * 3.1415 / 2), glm::vec3(0, 1, 0));
+    object->transform.scale = glm::vec3(0.1, 0.1, 0.1);
     object->update();
 
     std::shared_ptr<GLwrap::Program> progr = initProgram("../shaders/base.vert", "../shaders/base.frag");
@@ -140,7 +140,7 @@ int main(int argc, const char** argv){
         }
 
         angle += dt * rot_vel;
-        object->rotation = glm::angleAxis((float)(angle), glm::vec3(0, 1, 0));
+        object->transform.rotation = glm::angleAxis((float)(angle), glm::vec3(0, 1, 0));
         object->update();
         // model3d->nodes[11]->rotation = glm::angleAxis(angle, glm::vec3(1, 0, 0));
         // model3d->nodes[0]

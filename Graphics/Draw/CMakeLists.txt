@@ -24,6 +24,8 @@ add_library (${PROJECT_NAME} STATIC
     ./Loader/toGLwrap/TextureGLwrap.cpp
     ./Loader/toGLwrap/TypesGLwrap.cpp
 
+    ./Utils/Transform.cpp
+
     ./BufferCpu.cpp
     ./Material.cpp
     ./Mesh.cpp
