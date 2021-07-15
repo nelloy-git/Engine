@@ -73,6 +73,12 @@ int main(int argc, const char** argv){
     auto loader = Draw::Loader(Draw::Loader::Input::gltf, Draw::Loader::Output::GLwrap);
     auto model3d = loader.loadModel("../test/book/scene.gltf"); 
     auto shader = loader.loadShader({"../shaders/base.vert", "../shaders/base.frag"});
+    auto object = std::make_shared<Draw::Object>();
+    object->model = model3d;
+    object->translation = glm::vec3(0.f);
+    object->rotation = glm::angleAxis((float)(3 * 3.1415 / 2), glm::vec3(0, 1, 0));
+    object->scale = glm::vec3(0.1, 0.1, 0.1);
+    object->update();
 
     std::shared_ptr<GLwrap::Program> progr = initProgram("../shaders/base.vert", "../shaders/base.frag");
     if (!progr){return -1;}
@@ -134,13 +140,17 @@ int main(int argc, const char** argv){
         }
 
         angle += dt * rot_vel;
+        object->rotation = glm::angleAxis((float)(angle), glm::vec3(0, 1, 0));
+        object->update();
         // model3d->nodes[11]->rotation = glm::angleAxis(angle, glm::vec3(1, 0, 0));
         // model3d->nodes[0]
 
         // model3d->nodes[11]->translation += (float)(0.1 * cam_vel * dt) * glm::vec3(1, 0, 0);
 
         drawer->clear(back_color);
-        drawer->draw(*model3d, model_translation, model_rotation, model_scale);
+        // drawer->draw(*model3d, model_translation, model_rotation, model_scale);
+
+        shader->draw(*object, cam->matrix());
         
         window->swapBuffers();
         glfwPollEvents();

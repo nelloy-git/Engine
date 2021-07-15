@@ -95,6 +95,12 @@ enum class TextureFilter{
     Unknown
 };
 
+enum class TextureUsage {
+    Texture0,
+    Texture1
+};
+int getLocation(TextureUsage usage);
+
 template<typename T>
 constexpr std::string toString(){
     char const* p = __PRETTY_FUNCTION__;

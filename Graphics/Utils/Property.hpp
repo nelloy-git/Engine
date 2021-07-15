@@ -16,6 +16,14 @@ public:
 
     ~Property(){};
 
+    inline const T &get() const {
+        return (_owner->*_getter)();
+    }
+
+    inline void set(const T &val){
+        (_owner->*_setter)(val);
+    }
+
     inline Property<T, Owner> &operator=(const T& other){
         (_owner->*_setter)(other);
         return *this;

@@ -92,3 +92,7 @@ int Draw::getMorphTargetLocation(int target, PrimitiveAttribute attr){
             return -1;
     }
 }
+
+int Draw::getLocation(TextureUsage usage){
+    return static_cast<int>(usage);
+}

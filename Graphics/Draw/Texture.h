@@ -2,7 +2,7 @@
 
 #include <memory>
 
-#include "Property.h"
+#include "Property.hpp"
 
 #include "Draw/Types.h"
 

@@ -3,7 +3,7 @@
 #include <iostream>
 #include <string>
 
-#include "Property.h"
+#include "Property.hpp"
 
 class Example {
 public:

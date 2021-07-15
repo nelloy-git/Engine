@@ -10,7 +10,7 @@
 #include "Context/Mouse.h"
 
 #include "Event.h"
-#include "Property.h"
+#include "Property.hpp"
 
 class GLFWwindow;
 

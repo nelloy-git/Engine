@@ -7,7 +7,7 @@
 #include "glm/gtc/quaternion.hpp"
 
 #include "Data/Mesh.h"
-#include "Property.h"
+#include "Property.hpp"
 
 namespace Graphics {
 

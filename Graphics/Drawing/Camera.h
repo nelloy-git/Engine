@@ -2,7 +2,7 @@
 
 #include "glm/glm.hpp"
 
-#include "Property.h"
+#include "Property.hpp"
 
 namespace Graphics {
 

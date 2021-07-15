@@ -3,7 +3,7 @@
 #include <string>
 #include <vector>
 
-#include "Draw/Object.h"
+#include "Draw/Object.hpp"
 
 namespace Graphics::Draw{
 
@@ -13,7 +13,7 @@ public:
     virtual ~Shader(){};
 
     virtual bool verify() = 0;
-    virtual void draw(const Object &obj) = 0;
+    virtual void draw(const Object &obj, const glm::mat4 &camera_mat) = 0;
 };
 
 }

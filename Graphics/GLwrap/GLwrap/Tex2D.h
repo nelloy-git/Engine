@@ -5,7 +5,7 @@
 
 #include "glad/gl.h"
 
-#include "Property.h"
+#include "Property.hpp"
 #include "GLwrap/Types.h"
 
 namespace GLwrap {

@@ -23,21 +23,29 @@ void Program::use() const{
     glUseProgram(id);
 }
 
-GLuint Program::getAttribLoc(const std::string &name) const {
-    return glGetAttribLocation(id, name.c_str());
+GLuint Program::getAttribLoc(const std::string &name){
+    auto iter = _attributes.find(name);
+    if (iter == _attributes.end()){
+        _attributes[name] = glGetAttribLocation(id, name.c_str());
+        iter = _attributes.find(name);
+    }
+
+    return iter->second;
 }
 
-bool getUniformLoc(GLuint progid, const std::string &name, GLuint *loc){
-    *loc = glGetUniformLocation(progid, name.c_str());
-    if (loc < 0){
-        return false;
+GLuint Program::getUniformLoc(const std::string &name){
+    auto iter = _uniforms.find(name);
+    if (iter == _uniforms.end()){
+        _uniforms[name] = glGetUniformLocation(id, name.c_str());
+        iter = _uniforms.find(name);
     }
-    return true;
+
+    return iter->second;
 }
 
 bool Program::setUniformVec4f(const std::string &name, const float vec[4]){
-    GLuint loc;
-    if (!getUniformLoc(id, name, &loc)){
+    GLuint loc = getUniformLoc(name);
+    if (loc < 0){
         return false;
     }
     glUniform4fv(loc, 1, vec);
@@ -45,8 +53,8 @@ bool Program::setUniformVec4f(const std::string &name, const float vec[4]){
 }
 
 bool Program::setUniformMat4f(const std::string &name, const float mat[16]){
-    GLuint loc;
-    if (!getUniformLoc(id, name, &loc)){
+    GLuint loc = getUniformLoc(name);
+    if (loc < 0){
         return false;
     }
     glUniformMatrix4fv(loc, 1, GL_FALSE, mat);

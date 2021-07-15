@@ -7,7 +7,7 @@
 #include "glm/gtc/quaternion.hpp"
 
 #include "Draw/Mesh.h"
-#include "Property.h"
+#include "Property.hpp"
 
 namespace Graphics::Draw {
 
