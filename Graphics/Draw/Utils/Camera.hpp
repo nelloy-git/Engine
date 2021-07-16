@@ -4,15 +4,14 @@
 
 #include "Property.hpp"
 
-namespace Graphics {
+namespace Graphics::Draw {
 
 class Camera {
 public:
     Camera();
     virtual ~Camera();
 
-    const glm::mat4 &matrix();
-
+    const Property<glm::mat4, Camera> matrix;
     Property<glm::vec3, Camera> pos;
     Property<glm::vec3, Camera> direction;
     const Property<glm::vec3, Camera> right;
@@ -37,6 +36,7 @@ private:
     bool _projection_changed = true;
 
     glm::mat4 _matrix = glm::mat4(1.0f);
+    const glm::mat4 &_getMatrix();
 
     const glm::vec3 &_getPos();
     void _setPos(const glm::vec3 &v);

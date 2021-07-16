@@ -33,6 +33,7 @@ void LoaderGltf::load(std::shared_ptr<Model> dst, const std::string &path, const
     for (int i = 0; i < gltf_model->nodes.size(); i++){
         auto &gltf_node = gltf_model->nodes[i];
         auto node = _result->nodes[i];
+        node->index = i;
 
         if (node->children.size() > 0){
             continue;
@@ -245,10 +246,10 @@ std::shared_ptr<Primitive> LoaderGltf::_loadPrimitive(const tinygltf::Primitive 
             }
         }
             
-        res->targets.push_back({pos, norm, tang});
+        res->morph_targets.push_back({pos, norm, tang});
     }
 
-    res->update();
+    res->init();
     return res;
 }
 

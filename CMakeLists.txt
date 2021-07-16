@@ -26,9 +26,12 @@ include_directories(
     ./Graphics/3rdparty/tinygltf
 )
 
+find_package(OpenMP REQUIRED)
+
 add_executable(${PROJECT_NAME} main.cpp)
 target_link_libraries(${PROJECT_NAME}
     Graphics
+    OpenMP::OpenMP_CXX
 )
 
 set_property (TARGET ${PROJECT_NAME}

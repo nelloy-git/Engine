@@ -3,7 +3,7 @@
 #include <memory>
 #include <vector>
 
-#include "Draw/Buffer.h"
+#include "Draw/ModelData/Buffer.h"
 
 namespace Graphics::Draw {
 

@@ -28,6 +28,7 @@ public:
 
     virtual ~Node();
 
+    int index;
     std::shared_ptr<Mesh> mesh = nullptr;
     std::shared_ptr<Node> parent = nullptr;
     std::vector<std::shared_ptr<Node>> children;

@@ -18,7 +18,7 @@ public:
     ~BufferAccessor();
 
     // Enable accessor for binded buffer.
-    void enable(GLuint location);
+    void enable(GLuint location) const;
 
     const ElementStruct component_size;
     const ElementType component_type;

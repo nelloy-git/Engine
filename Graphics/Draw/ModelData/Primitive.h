@@ -18,15 +18,12 @@ struct PrimitiveMorhpTarget {
 
 class Primitive {
 public:
-
-    virtual bool draw() = 0;
     virtual bool draw() const = 0;
-
     virtual void init() = 0;
 
     PrimitiveDrawMode mode;
-    std::shared_ptr<Buffer> indices;
-    std::shared_ptr<Material> material;
+    std::shared_ptr<Buffer> indices = nullptr;
+    std::shared_ptr<Material> material = nullptr;
     std::map<PrimitiveAttribute, std::shared_ptr<Buffer>> attributes;
     std::vector<PrimitiveMorhpTarget> morph_targets;
 

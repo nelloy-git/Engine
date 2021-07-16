@@ -14,8 +14,8 @@ include_directories(./3rdparty/glm)
 
 add_library (${PROJECT_NAME} STATIC
 
-    ./Drawing/Camera.cpp
-    ./Drawing/Drawer.cpp
+    #./Drawing/Camera.cpp
+    #./Drawing/Drawer.cpp
 
     ./Utils/Log.cpp
 )

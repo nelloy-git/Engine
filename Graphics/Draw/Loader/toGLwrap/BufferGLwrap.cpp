@@ -1,4 +1,4 @@
-#include "Draw/Loader/toGLwrap/BufferGLwrap.h"
+#include "Draw/ModelData/GLwrap/BufferGL.h"
 
 #include "Draw/Loader/toGLwrap/TypesGLwrap.h"
 

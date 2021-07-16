@@ -2,7 +2,7 @@
 
 #include <string>
 
-#include "Draw/Buffer.h"
+#include "Draw/ModelData/Buffer.h"
 #include "Draw/Material.h"
 #include "Draw/Mesh.h"
 #include "Draw/Node.h"

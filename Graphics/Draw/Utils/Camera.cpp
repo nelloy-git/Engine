@@ -1,15 +1,16 @@
-#include "Drawing/Camera.h"
+#include "Draw/Utils/Camera.hpp"
 
 #include "glm/gtc/matrix_transform.hpp"
 #include "glm/gtc/type_ptr.hpp"
 
-using namespace Graphics;
+using namespace Graphics::Draw;
 
 inline float halfPI(){
     return 3.14159265359 / 2;
 }
 
 Camera::Camera() :
+    matrix(this, &Camera::_getMatrix, nullptr),
     pos(this, &Camera::_getPos, &Camera::_setPos),
     direction(this, &Camera::_getDirection, &Camera::_setDirection),
     right(this, &Camera::_getRight, nullptr),
@@ -45,7 +46,7 @@ void Camera::_update(){
     _matrix = _projection * _view;
 }
 
-const glm::mat4 &Camera::matrix(){
+const glm::mat4 &Camera::_getMatrix(){
     if (_view_changed || _projection_changed){
         _update();
         _view_changed = false;

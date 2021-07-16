@@ -13,7 +13,7 @@ public:
     virtual ~Shader(){};
 
     virtual bool verify() = 0;
-    virtual void draw(const Object &obj, const glm::mat4 &camera_mat) = 0;
+    virtual void draw(const Object &obj) = 0;
 };
 
 }

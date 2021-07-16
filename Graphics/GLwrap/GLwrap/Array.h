@@ -13,8 +13,8 @@ namespace GLwrap {
 
 class Array {
 public:
-    using BufferPair = std::pair<std::shared_ptr<GLwrap::Buffer>,
-                                 std::shared_ptr<GLwrap::BufferAccessor>>;
+    using BufferPair = std::pair<const GLwrap::Buffer*,
+                                 const GLwrap::BufferAccessor*>;
 
     Array(const Buffer &indices, 
           const std::unordered_map<int, BufferPair> &layouts);

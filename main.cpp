@@ -18,36 +18,17 @@
 #include "Context/Timer.h"
 #include "Context/Window.h"
 
+#include "Draw/Utils/Camera.hpp"
 #include "Draw/Loader/Loader.h"
 
-#include "Drawing/Camera.h"
-#include "Drawing/Drawer.h"
+// #include "Drawing/Camera.h"
+// #include "Drawing/Drawer.h"
 
 #include "Log.h"
 
 using namespace Graphics;
 
 const float cam_vel = 5;
-
-std::shared_ptr<GLwrap::Program> initProgram(const std::string &vsh, const std::string &fsh){
-    std::shared_ptr<GLwrap::Program> progr;
-
-    auto vshader = GLwrap::Shader::fromFile(
-        GLwrap::ShaderType::Vertex, vsh);
-
-    auto fshader = GLwrap::Shader::fromFile(
-        GLwrap::ShaderType::Fragment, fsh);
-
-    if (!vshader || !fshader){
-        return nullptr;
-    }
-    
-    std::vector<std::shared_ptr<GLwrap::Shader>> shader_list;
-    shader_list.push_back(vshader);
-    shader_list.push_back(fshader);
-
-    return std::make_shared<GLwrap::Program>(shader_list);
-}
 
 int main(int argc, const char** argv){
     int width = 640;
@@ -73,45 +54,31 @@ int main(int argc, const char** argv){
     auto loader = Draw::Loader(Draw::Loader::Input::gltf, Draw::Loader::Output::GLwrap);
     auto model3d = loader.loadModel("../test/book/scene.gltf"); 
     auto shader = loader.loadShader({"../shaders/base.vert", "../shaders/base.frag"});
-    auto object = std::make_shared<Draw::Object>();
-    object->model = model3d;
-    object->translation = glm::vec3(0.f);
-    object->rotation = glm::angleAxis((float)(3 * 3.1415 / 2), glm::vec3(0, 1, 0));
-    object->scale = glm::vec3(0.1, 0.1, 0.1);
-    object->update();
 
-    std::shared_ptr<GLwrap::Program> progr = initProgram("../shaders/base.vert", "../shaders/base.frag");
-    if (!progr){return -1;}
-
-    auto timer = std::make_shared<GLwrap::Timer>();
-    timer->start();
-
-    auto cam = std::make_shared<Graphics::Camera>();
+    auto cam = std::make_shared<Graphics::Draw::Camera>();
     cam->width = width;
     cam->height = height;
     cam->pos = glm::vec3(-0.3, 0, 0);
 
-    auto drawer = std::make_shared<Graphics::Drawer>(glm::vec2(0, 0), glm::vec2(width, height));
-    drawer->setCamera(cam);
-    drawer->setShader(progr);
-    drawer->setActive(true);
+
+    std::vector<std::shared_ptr<Draw::Object>> objects;
+    for (int i = 0; i < 1000; ++i){
+        auto object = std::make_shared<Draw::Object>();
+        objects.push_back(object);
+        object->model = model3d;
+        object->camera = cam;
+        object->transform.translation = glm::vec3((float)i, 0.f, 0.f);
+        object->transform.rotation = glm::angleAxis((float)(3 * 3.1415 / 2), glm::vec3(0, 1, 0));
+        object->transform.scale = glm::vec3(0.1, 0.1, 0.1);
+    }
+
+    auto timer = std::make_shared<GLwrap::Timer>();
+    timer->start();
 
     glm::vec4 back_color(0.2f, 0.3f, 0.3f, 1.0f);
     glm::vec3 model_translation(0.f);
     glm::quat model_rotation = glm::angleAxis((float)(3 * 3.1415 / 2), glm::vec3(0, 1, 0));
     glm::vec3 model_scale = glm::vec3(0.1, 0.1, 0.1);
-
-    float mx = width / 2;
-    float my = height / 2;
-    float mdx = 0;
-    float mdy = 0;
-
-    window->mouse.onMove.add([&mx, &my, &mdx, &mdy](double x, double y){
-        mdx = x - mx;
-        mdy = y - my;
-        mx = x;
-        my = y;
-    });
 
     float last = 0;
     float rot_vel = (float)(3.14 / 8);
@@ -139,18 +106,23 @@ int main(int argc, const char** argv){
             cam->pos -= cam->right * dist;
         }
 
+        glClearColor(back_color.x, back_color.y, back_color.z, back_color.w);
+        glClear(GL_DEPTH_BUFFER_BIT | GL_COLOR_BUFFER_BIT);
+
+        auto clear_time = timer->elapsed();
+
         angle += dt * rot_vel;
-        object->rotation = glm::angleAxis((float)(angle), glm::vec3(0, 1, 0));
-        object->update();
-        // model3d->nodes[11]->rotation = glm::angleAxis(angle, glm::vec3(1, 0, 0));
-        // model3d->nodes[0]
+        // #pragma omp parallel for num_threads(4)
+        for (int i = 0; i < objects.size(); ++i){
+            objects[i]->transform.rotation = glm::angleAxis((float)(angle), glm::vec3(0, 1, 0));
+            objects[i]->update();
+        }
+        auto update_time = timer->elapsed() - clear_time;
 
-        // model3d->nodes[11]->translation += (float)(0.1 * cam_vel * dt) * glm::vec3(1, 0, 0);
-
-        drawer->clear(back_color);
-        // drawer->draw(*model3d, model_translation, model_rotation, model_scale);
-
-        shader->draw(*object, cam->matrix());
+        for (int i = 0; i < objects.size(); ++i){
+            shader->draw(*objects[i]);
+        }
+        auto draw_time = timer->elapsed() - update_time;
         
         window->swapBuffers();
         glfwPollEvents();
@@ -158,6 +130,10 @@ int main(int argc, const char** argv){
         if (last > 1){
             // rot_vel = -rot_vel;
 
+            std::cout << "Loop time: " << dt << std::endl;
+            std::cout << "Clear time: " << clear_time << std::endl;
+            std::cout << "Update time: " << update_time << std::endl;
+            std::cout << "Draw time: " << draw_time << std::endl;
             std::cout << cam->pos[0] << "; " << cam->pos[1] << "; " << cam->pos[2] << std::endl;
             // std::cout << "Model:" << std::endl;
             // std::cout << "[" << model3d->nodes[0]->translation[0]

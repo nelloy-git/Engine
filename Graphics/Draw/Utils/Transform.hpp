@@ -10,6 +10,7 @@ namespace Graphics::Draw {
 class Transform {
 public:
     Transform();
+    Transform(const glm::mat4 &mat);
     virtual ~Transform();
 
     const Property<glm::mat4, Transform> matrix;

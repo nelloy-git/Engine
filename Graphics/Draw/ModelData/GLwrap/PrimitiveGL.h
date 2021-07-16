@@ -7,26 +7,22 @@
 
 #include "GLwrap/Array.h"
 
-#include "Draw/Primitive.h"
+#include "Draw/ModelData/Primitive.h"
 
 namespace Graphics::Draw {
 
-class PrimitiveGLwrap : public Primitive {
+class PrimitiveGL : public Primitive {
 public:
-    PrimitiveGLwrap();
-    virtual ~PrimitiveGLwrap();
+    PrimitiveGL();
+    virtual ~PrimitiveGL();
 
-    bool draw() override;
     bool draw() const override;
-
     void init() override;
 
     std::shared_ptr<GLwrap::Array> vao;
 
 protected:
     bool _inited = false;
-    bool _init();
-
     bool _verifyLoc(int loc, const std::string &name);
 };
 

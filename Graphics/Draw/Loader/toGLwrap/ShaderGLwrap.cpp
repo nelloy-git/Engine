@@ -16,6 +16,7 @@ ShaderGLwrap::ShaderGLwrap(const std::string &vertex_source,
     auto vert = std::make_shared<GLwrap::Shader>(GLwrap::ShaderType::Vertex, vertex_source);
     auto frag = std::make_shared<GLwrap::Shader>(GLwrap::ShaderType::Fragment, fragment_source);
     program = std::make_shared<GLwrap::Program>(std::vector({vert, frag}));
+    program->use();
 }
 
 ShaderGLwrap::~ShaderGLwrap(){
@@ -36,29 +37,39 @@ bool ShaderGLwrap::verify(){
     return verified;
 }
 
-void ShaderGLwrap::draw(const Object &obj, const glm::mat4 &camera_mat){
+void ShaderGLwrap::draw(const Object &obj){
+    // program->use();
+
     std::shared_ptr<Model> model = obj.model;
     if (!model){return;}
 
     auto scene = model->scenes[obj.active_scene];
+    if (!scene){return;}
+
     for (int i = 0; i < scene->nodes.size(); ++i){
-        auto node = scene->nodes[i];
-        auto &pose_mat = obj.getMatrix(*node);
-        auto parent_mat = camera_mat * pose_mat;
-        _drawNode(*scene->nodes[i], obj, camera_mat);
+        _drawNode(*scene->nodes[i], obj);
     }
 }
 
-void ShaderGLwrap::_drawNode(const Node &node, const Object &obj, const glm::mat4 &parent_mat){
-    auto &mat = obj.getMatrix(node);
-    program->setUniformMat4f("model", glm::value_ptr(parent_mat * mat));
+void ShaderGLwrap::_drawNode(const Node &node, const Object &obj){
+    const glm::mat4 &mat = obj.getMatrix(node.index);
 
-    if (node.mesh){
-        node.mesh->draw();
+    auto mesh = node.mesh;
+    if (mesh){
+        program->setUniformMat4f("model", glm::value_ptr(mat));
+        for (int i = 0; i < mesh->primitives.size(); ++i){
+            auto prim = mesh->primitives[i];
+            if (!prim){
+                continue;
+            }
+
+            program->setUniformVec4f("baseColor", prim->material->base_color);
+            prim->draw();
+        }
     }
 
     for (int i = 0; i < node.children.size(); ++i){
-        _drawNode(*node.children[i], obj, parent_mat);
+        _drawNode(*node.children[i], obj);
     }
 }
 

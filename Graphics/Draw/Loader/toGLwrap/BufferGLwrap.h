@@ -5,7 +5,7 @@
 #include "GLwrap/Buffer.h"
 #include "GLwrap/BufferAccessor.h"
 
-#include "Draw/Buffer.h"
+#include "Draw/ModelData/Buffer.h"
 
 namespace Graphics::Draw {
 

@@ -11,18 +11,24 @@ include_directories(../3rdparty/tinygltf)
 include_directories(../3rdparty/glm)
 
 add_library (${PROJECT_NAME} STATIC
+    ../Utils/Log.cpp
+    ./Utils/Transform.cpp
+    ./Utils/Camera.cpp
+
     ./Loader/Loader.cpp
 
     ./Loader/fromGltf/gltf.cpp
     ./Loader/fromGltf/LoaderGltf.cpp
 
-    ./Loader/toGLwrap/BufferGLwrap.cpp
+    # ./Loader/toGLwrap/BufferGLwrap.cpp
     ./Loader/toGLwrap/IniterGLwrap.cpp
     ./Loader/toGLwrap/ModelGLwrap.cpp
     ./Loader/toGLwrap/PrimitiveGLwrap.cpp
     ./Loader/toGLwrap/ShaderGLwrap.cpp
     ./Loader/toGLwrap/TextureGLwrap.cpp
     ./Loader/toGLwrap/TypesGLwrap.cpp
+
+    ./ModelData/GLwrap/BufferGL.cpp
 
     ./BufferCpu.cpp
     ./Material.cpp

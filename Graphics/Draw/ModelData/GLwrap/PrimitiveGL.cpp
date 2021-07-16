@@ -1,4 +1,4 @@
-#include "Draw/Loader/toGLwrap/PrimitiveGLwrap.h"
+#include "Draw/ModelData/GLwrap/PrimitiveGL.h"
 
 #include "GLwrap/Array.h"
 #include "GLwrap/Program.h"
@@ -6,19 +6,19 @@
 #include "Draw/Types.h"
 
 #include "Draw/ModelData/GLwrap/BufferGL.h"
-#include "Draw/Loader/toGLwrap/TypesGLwrap.h"
+#include "Draw/ModelData/GLwrap/TypesGL.h"
 
 #include "Log.h"
 
 using namespace Graphics::Draw;
 
-PrimitiveGLwrap::PrimitiveGLwrap(){
+PrimitiveGL::PrimitiveGL(){
 }
 
-PrimitiveGLwrap::~PrimitiveGLwrap(){
+PrimitiveGL::~PrimitiveGL(){
 }
 
-void PrimitiveGLwrap::init(){
+void PrimitiveGL::init(){
 
     std::unordered_map<int, GLwrap::Array::BufferPair> gl_layouts;
 
@@ -87,37 +87,13 @@ void PrimitiveGLwrap::init(){
         vao = std::make_shared<GLwrap::Array>(gl_layouts);
     }
     
+    _inited = true;
 }
 
-bool PrimitiveGLwrap::draw(){
-    if (!vao){
-        LOG(WRN) << "was not inited.";
+bool PrimitiveGL::draw() const {
+    if (!_inited){
+        LOG(WRN) << "must init first.";
         return false;
-    }
-
-    if (material){
-        material->apply();
-    }
-
-    // LOG(MSG) << typeid(*indices).name() << ": " << indices->count;
-    if (indices){
-        vao->drawElements(toGLwrap(mode), toGLwrap(indices->data_type), indices->count, 0);
-    } else if (attributes.find(PrimitiveAttribute::Position) != attributes.end()) {
-        vao->drawArrays(toGLwrap(mode), 0, attributes[PrimitiveAttribute::Position]->count);
-    }
-
-    return true;
-}
-
-bool PrimitiveGLwrap::draw() const {
-    if (!vao){
-        LOG(WRN) << "was not inited.";
-        return false;
-    }
-
-    if (material){
-        material->apply();
-        std::cout << "No material" << "\n";
     }
 
     if (indices){
@@ -127,7 +103,7 @@ bool PrimitiveGLwrap::draw() const {
     return true;
 }
 
-bool PrimitiveGLwrap::_verifyLoc(int loc, const std::string &name){
+bool PrimitiveGL::_verifyLoc(int loc, const std::string &name){
     if (loc < 0){
         LOG(WRN) << "gl program does not have attribute " << name << ". Attribute ignored.";
         return false;

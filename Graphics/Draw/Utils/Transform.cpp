@@ -13,6 +13,17 @@ Transform::Transform() :
     _scale(1.f){
 }
 
+Transform::Transform(const glm::mat4 &mat) :
+    matrix(this, &Transform::_getMatrix, nullptr),
+    translation(this, &Transform::_getTranslation, &Transform::_setTranslation),
+    rotation(this, &Transform::_getRotation, &Transform::_setRotation),
+    scale(this, &Transform::_getScale, &Transform::_setScale),
+    _matrix(mat),
+    _trans(0.f),
+    _rot(glm::angleAxis(0.f, glm::vec3(0.f, 0.f, 1.f))),
+    _scale(1.f){
+}
+
 Transform::~Transform(){
 }
 

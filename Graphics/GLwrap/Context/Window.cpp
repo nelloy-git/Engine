@@ -70,7 +70,7 @@ bool Window::setActive(bool f){
         if (f){
             glfwMakeContextCurrent(_glfw_window);
             gladLoadGL(glfwGetProcAddress);
-            // glfwSwapInterval(0);
+            glfwSwapInterval(0);
             _window_thread[this] = std::this_thread::get_id();
         }
         return true;

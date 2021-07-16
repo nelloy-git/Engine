@@ -16,7 +16,7 @@ BufferAccessor::~BufferAccessor(){
     
 }
 
-void BufferAccessor::enable(GLuint location){
+void BufferAccessor::enable(GLuint location) const {
     glEnableVertexAttribArray(location);
     glVertexAttribPointer(location,
                           static_cast<GLuint>(component_size),

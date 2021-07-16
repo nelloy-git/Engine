@@ -13,6 +13,15 @@ Program::Program(const std::vector<std::shared_ptr<Shader>>& attach) :
         glAttachShader(id, shader->id());
     }
     glLinkProgram(id);
+
+    auto res = GL_FALSE;
+    glGetProgramiv(id, GL_LINK_STATUS, &res);
+    if (res == GL_FALSE){
+        char msg[4096];
+        GLsizei msglen;
+        glGetProgramInfoLog(id, 4096, &msglen, msg);
+        throw std::invalid_argument(msg);
+    }
 }
 
 Program::~Program(){
@@ -49,6 +58,9 @@ bool Program::setUniformVec4f(const std::string &name, const float vec[4]){
         return false;
     }
     glUniform4fv(loc, 1, vec);
+
+    
+
     return true;
 }
 
