@@ -7,7 +7,7 @@
 
 #include "GLwrap/Array.h"
 
-#include "Draw/ModelData/Primitive.h"
+#include "Draw/ModelData/IFaces/Primitive.hpp"
 
 namespace Graphics::Draw {
 
@@ -16,13 +16,12 @@ public:
     PrimitiveGL();
     virtual ~PrimitiveGL();
 
-    bool draw() const override;
-    void init() override;
+    bool init() override;
+    bool draw() const;
 
     std::shared_ptr<GLwrap::Array> vao;
 
 protected:
-    bool _inited = false;
     bool _verifyLoc(int loc, const std::string &name);
 };
 

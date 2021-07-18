@@ -19,7 +19,9 @@
 #include "Context/Window.h"
 
 #include "Draw/Utils/Camera.hpp"
-#include "Draw/Loader/Loader.h"
+#include "Draw/ModelData/tinygltf/ModelLoaderGltf.hpp"
+#include "Draw/ModelData/GLwrap/ModelGL.hpp"
+#include "Draw/ShaderGL.hpp"
 
 // #include "Drawing/Camera.h"
 // #include "Drawing/Drawer.h"
@@ -51,9 +53,13 @@ int main(int argc, const char** argv){
     // std::shared_ptr<Draw::Model> model3d = Draw::Creator::newModel("../test/book/scene.gltf");
     // std::shared_ptr<Model::Model> model3d = Model::Creator::newModel("../test/ninja/scene.gltf");
 
-    auto loader = Draw::Loader(Draw::Loader::Input::gltf, Draw::Loader::Output::GLwrap);
-    auto model3d = loader.loadModel("../test/book/scene.gltf"); 
-    auto shader = loader.loadShader({"../shaders/base.vert", "../shaders/base.frag"});
+    auto model_loader = std::make_shared<Draw::ModelLoaderGltf>();
+    auto model_3d = std::make_shared<Draw::ModelGL>();
+    auto shader = Draw::ShaderGL::fromFiles("../shaders/base.vert", "../shaders/base.frag");
+    shader->verify();
+
+    std::vector<std::string> errors;
+    model_loader->load(*model_3d, "../test/book/scene.gltf", errors);
 
     auto cam = std::make_shared<Graphics::Draw::Camera>();
     cam->width = width;
@@ -62,10 +68,10 @@ int main(int argc, const char** argv){
 
 
     std::vector<std::shared_ptr<Draw::Object>> objects;
-    for (int i = 0; i < 1000; ++i){
+    for (int i = 0; i < 500; ++i){
         auto object = std::make_shared<Draw::Object>();
         objects.push_back(object);
-        object->model = model3d;
+        object->model = model_3d;
         object->camera = cam;
         object->transform.translation = glm::vec3((float)i, 0.f, 0.f);
         object->transform.rotation = glm::angleAxis((float)(3 * 3.1415 / 2), glm::vec3(0, 1, 0));
@@ -112,7 +118,7 @@ int main(int argc, const char** argv){
         auto clear_time = timer->elapsed();
 
         angle += dt * rot_vel;
-        // #pragma omp parallel for num_threads(4)
+        #pragma omp parallel for num_threads(4)
         for (int i = 0; i < objects.size(); ++i){
             objects[i]->transform.rotation = glm::angleAxis((float)(angle), glm::vec3(0, 1, 0));
             objects[i]->update();

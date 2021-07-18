@@ -2,11 +2,12 @@
 
 #include <optional>
 #include <map>
+#include <memory>
 #include <unordered_map>
 #include <vector>
 
-#include "Draw/ModelData/Buffer.h"
-#include "Draw/Material.h"
+#include "Draw/ModelData/IFaces/Buffer.hpp"
+#include "Draw/ModelData/IFaces/Material.hpp"
 
 namespace Graphics::Draw {
 
@@ -18,8 +19,10 @@ struct PrimitiveMorhpTarget {
 
 class Primitive {
 public:
-    virtual bool draw() const = 0;
-    virtual void init() = 0;
+    Primitive() = default;
+    virtual ~Primitive() = default;
+
+    virtual bool init() = 0;
 
     PrimitiveDrawMode mode;
     std::shared_ptr<Buffer> indices = nullptr;
@@ -28,8 +31,7 @@ public:
     std::vector<PrimitiveMorhpTarget> morph_targets;
 
 protected:
-    Primitive(){};
-    virtual ~Primitive(){};
+    bool _inited = false;
 
 };
 

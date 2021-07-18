@@ -1,4 +1,4 @@
-#include "Draw/ModelData/GLwrap/BufferGL.h"
+#include "Draw/ModelData/GLwrap/BufferGL.hpp"
 
 #include <cstring>
 
@@ -8,9 +8,10 @@
 
 using namespace Graphics::Draw;
 
-BufferGL::BufferGL(BufferType type, BufferElemType data_type, BufferElemStruct data_size,
+BufferGL::BufferGL(const Model &model, int index,
+                   BufferType type, BufferElemType data_type, BufferElemStruct data_size,
                    size_t elem_count, size_t bytes, bool normalized) : 
-    Buffer(type, data_type, data_size, elem_count, bytes, normalized){
+    Buffer(model, index, type, data_type, data_size, elem_count, bytes, normalized){
 
     if (type == BufferType::Other){
         data.emplace<CpuData>(bytes);

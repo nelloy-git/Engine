@@ -30,28 +30,6 @@ void LoaderGltf::load(std::shared_ptr<Model> dst, const std::string &path, const
     _linkNodes(*gltf_model);
     _result->scenes = _iterate(gltf_model->scenes, *gltf_model, &LoaderGltf::_loadScene);
 
-    for (int i = 0; i < gltf_model->nodes.size(); i++){
-        auto &gltf_node = gltf_model->nodes[i];
-        auto node = _result->nodes[i];
-        node->index = i;
-
-        if (node->children.size() > 0){
-            continue;
-        }
-
-        for (int j = 0; j < gltf_node.children.size(); j++){
-            auto child = _result->nodes[gltf_node.children[j]];
-            node->children.push_back(child);
-
-            if (child->parent){
-                _errors.push_back("Node[" + std::to_string(j) + "] can have only one parent.");
-                continue;
-            }
-
-            child->parent = node;
-        }
-    }
-
     if (_errors.size() > 0){
         auto log = LOG(WRN);
         log << "\n";

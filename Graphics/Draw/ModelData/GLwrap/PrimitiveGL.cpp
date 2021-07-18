@@ -1,11 +1,11 @@
-#include "Draw/ModelData/GLwrap/PrimitiveGL.h"
+#include "Draw/ModelData/GLwrap/PrimitiveGL.hpp"
 
 #include "GLwrap/Array.h"
 #include "GLwrap/Program.h"
 
 #include "Draw/Types.h"
 
-#include "Draw/ModelData/GLwrap/BufferGL.h"
+#include "Draw/ModelData/GLwrap/BufferGL.hpp"
 #include "Draw/ModelData/GLwrap/TypesGL.h"
 
 #include "Log.h"
@@ -18,7 +18,8 @@ PrimitiveGL::PrimitiveGL(){
 PrimitiveGL::~PrimitiveGL(){
 }
 
-void PrimitiveGL::init(){
+bool PrimitiveGL::init(){
+    _inited = false;
 
     std::unordered_map<int, GLwrap::Array::BufferPair> gl_layouts;
 
@@ -27,7 +28,7 @@ void PrimitiveGL::init(){
         auto buffer = std::dynamic_pointer_cast<BufferGL>(iter.second);
         if (!buffer){
             LOG(ERR) << "got non GLwrap buffer.";
-            continue;
+            return false;
         }
 
         auto loc = getLocation(iter.first);
@@ -62,7 +63,7 @@ void PrimitiveGL::init(){
             auto buffer = std::dynamic_pointer_cast<BufferGL>(buff_list[j]);
             if (!buffer){
                 LOG(ERR) << "got non GLwrap buffer. Attribute: " << name;
-                continue;
+                return false;
             }
 
             if (_verifyLoc(loc, name)){
@@ -78,7 +79,7 @@ void PrimitiveGL::init(){
         auto ind = std::dynamic_pointer_cast<BufferGL>(indices);
         if (!ind){
             LOG(ERR) << "got non GLwrap buffer.";
-            return;
+            return false;
         }
 
         const auto &data = std::get<BufferGL::GpuData>(ind->data);
@@ -88,6 +89,7 @@ void PrimitiveGL::init(){
     }
     
     _inited = true;
+    return true;
 }
 
 bool PrimitiveGL::draw() const {
@@ -98,6 +100,12 @@ bool PrimitiveGL::draw() const {
 
     if (indices){
         vao->drawElements(toGLwrap(mode), toGLwrap(indices->data_type), indices->count, 0);
+    } else {
+        auto vert = attributes.find(PrimitiveAttribute::Position);
+        if (vert == attributes.end()){
+            return false;
+        }
+        vao->drawArrays(toGLwrap(mode), 0, vert->second->count);
     }
 
     return true;

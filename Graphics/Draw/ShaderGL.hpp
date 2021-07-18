@@ -8,11 +8,14 @@ namespace GLwrap {
 
 namespace Graphics::Draw {
 
-class ShaderGLwrap : public Shader {
+class ShaderGL : public Shader {
 public:
-    ShaderGLwrap(const std::string &vertex_source,
-                 const std::string &fragment_source);
-    virtual ~ShaderGLwrap();
+    ShaderGL(const std::string &vertex_source,
+             const std::string &fragment_source);
+    virtual ~ShaderGL();
+
+    static std::shared_ptr<ShaderGL> fromFiles(const std::string &vertex_path,
+                                               const std::string &fragment_path);
 
     bool verify() override;
     void draw(const Object &obj) override;
@@ -25,8 +28,11 @@ private:
     bool _verifyUniforms();
 
     void _drawNode(const Node &node, const Object &obj);
+    void _applyMaterial(const Material &material);
 
     std::vector<std::string> _messages;
+
+    static std::string _readFile(const std::string &path);
 };
 
 }

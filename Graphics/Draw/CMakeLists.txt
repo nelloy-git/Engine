@@ -15,29 +15,24 @@ add_library (${PROJECT_NAME} STATIC
     ./Utils/Transform.cpp
     ./Utils/Camera.cpp
 
-    ./Loader/Loader.cpp
+    ./ModelData/IFaces/Buffer.cpp
+    ./ModelData/IFaces/Model.cpp
+    ./ModelData/IFaces/Node.cpp
 
-    ./Loader/fromGltf/gltf.cpp
-    ./Loader/fromGltf/LoaderGltf.cpp
-
-    # ./Loader/toGLwrap/BufferGLwrap.cpp
-    ./Loader/toGLwrap/IniterGLwrap.cpp
-    ./Loader/toGLwrap/ModelGLwrap.cpp
-    ./Loader/toGLwrap/PrimitiveGLwrap.cpp
-    ./Loader/toGLwrap/ShaderGLwrap.cpp
-    ./Loader/toGLwrap/TextureGLwrap.cpp
-    ./Loader/toGLwrap/TypesGLwrap.cpp
+    ./ModelData/tinygltf/TypesGltf.cpp
+    ./ModelData/tinygltf/ModelLoaderGltf.cpp
 
     ./ModelData/GLwrap/BufferGL.cpp
+    ./ModelData/GLwrap/MeshGL.cpp
+    ./ModelData/GLwrap/ModelGL.cpp
+    ./ModelData/GLwrap/PrimitiveGL.cpp
+    ./ModelData/GLwrap/TextureGL.cpp
+    ./ModelData/GLwrap/TypesGL.cpp
 
-    ./BufferCpu.cpp
-    ./Material.cpp
-    ./Mesh.cpp
-    ./Model.cpp
-    ./Node.cpp
     ./Object.cpp
-    ./Scene.cpp
+    ./ShaderGL.cpp
     ./Types.cpp
+
 )
 
 target_link_libraries(${PROJECT_NAME}

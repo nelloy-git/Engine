@@ -8,9 +8,13 @@
 
 namespace Graphics::Draw {
 
+class Model;
+
 class Texture {
 public:
-    virtual void enable(int index) = 0;
+    const Model &model;
+    const int index;
+
     virtual void write(const void *ptr, int x, int y, int width, int height) = 0;
 
     const int width;
@@ -25,7 +29,9 @@ public:
     Property<TextureFilter, Texture> mag_filter;
 
 protected:
-    Texture(int width, int height, int channels, int bpp) :
+    Texture(const Model &model, int index, int width, int height, int channels, int bpp) :
+        model(model),
+        index(index),
         width(width),
         height(height),
         channels(channels),

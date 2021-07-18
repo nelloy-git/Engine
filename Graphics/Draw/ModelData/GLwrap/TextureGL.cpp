@@ -1,11 +1,12 @@
-#include "Draw/ModelData/GLwrap/TextureGL.h"
+#include "Draw/ModelData/GLwrap/TextureGL.hpp"
 
 #include "Draw/ModelData/GLwrap/TypesGL.h"
 
 using namespace Graphics::Draw;
 
-TextureGL::TextureGL(int width, int height, int channels, int bpp) : 
-    Texture(width, height, channels, bpp){
+TextureGL::TextureGL(const Model &model, int index,
+                     int width, int height, int channels, int bpp) : 
+    Texture(model, index, width, height, channels, bpp){
 
     GLwrap::Tex2DInternalFormat internal_fmt;
     GLwrap::Tex2DPixelFormat pixel_fmt;
@@ -39,12 +40,12 @@ TextureGL::TextureGL(int width, int height, int channels, int bpp) :
 TextureGL::~TextureGL(){
 }
 
-void TextureGL::enable(int index){
-    data->setActive(index);
-}
-
 void TextureGL::write(const void *ptr, int x, int y, int width, int height){
     data->write(ptr, x, y, width, height);
+}
+
+void TextureGL::setActive(int layout){
+    data->setActive(layout);
 }
 
 const TextureWrap &TextureGL::_getWrapS(){

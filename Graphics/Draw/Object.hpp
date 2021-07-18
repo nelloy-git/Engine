@@ -8,7 +8,7 @@
 
 #include "Draw/Utils/Transform.hpp"
 #include "Draw/Utils/Camera.hpp"
-#include "Draw/Model.h"
+#include "Draw/ModelData/IFaces/Model.hpp"
 #include "Property.hpp"
 
 namespace Graphics::Draw {
@@ -19,8 +19,8 @@ public:
     virtual ~Object();
 
     void update();
-    // const glm::mat4 &getMatrix(const Node& node) const;
-    const glm::mat4 &getMatrix(int node_pos) const;
+    bool changed();
+    const glm::mat4 &getMatrix(const Node &node) const;
 
     Transform transform;
     Property<std::shared_ptr<Model>, Object> model;

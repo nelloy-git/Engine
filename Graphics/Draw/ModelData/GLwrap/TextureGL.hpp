@@ -2,17 +2,18 @@
 
 #include "GLwrap/Tex2D.h"
 
-#include "Draw/ModelData/Texture.h"
+#include "Draw/ModelData/IFaces/Texture.hpp"
 
 namespace Graphics::Draw {
 
 class TextureGL : public Texture {
 public:
-    TextureGL(int width, int height, int channels, int bpp);
+    TextureGL(const Model &model, int index, int width, int height, int channels, int bpp);
     virtual ~TextureGL();
 
-    void enable(int index) override;
     void write(const void *ptr, int x, int y, int width, int height);
+
+    void setActive(int layout);
 
     std::shared_ptr<GLwrap::Tex2D> data;
 

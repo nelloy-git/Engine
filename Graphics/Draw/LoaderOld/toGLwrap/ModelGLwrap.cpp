@@ -1,4 +1,4 @@
-#include "Draw/Loader/toGLwrap/ModelGLwrap.h"
+#include "Draw/ModelData/GLwrap/ModelGL.h"
 
 using namespace Graphics::Draw;
 
