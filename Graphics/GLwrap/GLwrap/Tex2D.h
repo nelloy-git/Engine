@@ -16,7 +16,6 @@ public:
           Tex2DPixelFormat usage, Tex2DPixelType pixel_type);
     virtual ~Tex2D();
 
-    GLuint id();
     void bind();
     void unbind();
     void setActive(GLuint index);
@@ -24,6 +23,8 @@ public:
     void write(const void *data,  
                GLsizei x, GLsizei y,
                GLsizei width, GLsizei height);
+
+    const GLuint id;
 
     const GLsizei width;
     const GLsizei height;
@@ -38,7 +39,7 @@ public:
     Property<Tex2DFilter, Tex2D> mag_filter;
     
 private:
-    GLuint _id;
+    static GLuint _newId();
 
     Tex2DWrap _wrap_s;
     const Tex2DWrap &_getWrapS();

@@ -94,6 +94,8 @@ void ShaderGL::_drawNode(const Node &node, const Object &obj){
     auto mesh = node.mesh;
     if (mesh){
         program->setUniformMat4f("model", glm::value_ptr(mat));
+        program->setUniform1vi("morph_weights_used", 1);
+
         for (int i = 0; i < mesh->primitives().size(); ++i){
             auto prim = mesh->primitives()[i];
             if (!prim){

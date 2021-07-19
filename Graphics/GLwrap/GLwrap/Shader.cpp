@@ -9,20 +9,20 @@
 
 using namespace GLwrap;
 
-Shader::Shader(ShaderType type, const std::string& code){
-    __id = glCreateShader(static_cast<GLenum>(type));
+Shader::Shader(ShaderType type, const std::string& code) :
+    id(glCreateShader(static_cast<GLenum>(type))){
 
     auto c_code = code.c_str();
 
-    glShaderSource(__id, 1, &c_code, nullptr);
-    glCompileShader(__id);
+    glShaderSource(id, 1, &c_code, nullptr);
+    glCompileShader(id);
 
     auto res = GL_FALSE;
-    glGetShaderiv(__id, GL_COMPILE_STATUS, &res);
+    glGetShaderiv(id, GL_COMPILE_STATUS, &res);
     if (res == GL_FALSE){
         char msg[4096];
         GLsizei msglen;
-        glGetShaderInfoLog(__id, 4096, &msglen, msg);
+        glGetShaderInfoLog(id, 4096, &msglen, msg);
         throw std::invalid_argument(msg);
     }
 }
@@ -62,11 +62,7 @@ std::shared_ptr<Shader> Shader::fromFile(ShaderType type, const std::string& pat
 }
 
 Shader::~Shader(){
-    glDeleteShader(__id);
-}
-
-GLuint Shader::id(){
-    return __id;
+    glDeleteShader(id);
 }
 
 size_t GLwrap::getDataTypeSize(ElementType type){

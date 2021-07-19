@@ -36,7 +36,14 @@ bool PrimitiveGL::init(){
             continue;
         }
 
-        const auto &data = std::get<BufferGL::GpuData>(buffer->data);
+        // const auto &data = std::get<BufferGL::GpuData>(buffer->data);
+
+        const auto &data = iter.first != PrimitiveAttribute::TexCoord_1 ?
+                                std::get<BufferGL::GpuData>(buffer->data)
+                                : std::get<BufferGL::GpuData>(std::dynamic_pointer_cast<BufferGL>(attributes[PrimitiveAttribute::TexCoord_0])->data);
+        
+
+
         gl_layouts[loc] = std::make_pair(data.gl_data.get(), data.gl_accessor.get());
     }
 

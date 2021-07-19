@@ -10,7 +10,7 @@ Program::Program(const std::vector<std::shared_ptr<Shader>>& attach) :
     id(glCreateProgram()){
 
     for (auto shader : attach){
-        glAttachShader(id, shader->id());
+        glAttachShader(id, shader->id);
     }
     glLinkProgram(id);
 
@@ -52,15 +52,30 @@ GLuint Program::getUniformLoc(const std::string &name){
     return iter->second;
 }
 
+bool Program::setUniform1vf(const std::string &name, const float val){
+    GLuint loc = getUniformLoc(name);
+    if (loc < 0){
+        return false;
+    }
+    glUniform1f(loc, val);
+    return true;
+}
+
+bool Program::setUniform1vi(const std::string &name, const int val){
+    GLuint loc = getUniformLoc(name);
+    if (loc < 0){
+        return false;
+    }
+    glUniform1i(loc, val);
+    return true;
+}
+
 bool Program::setUniformVec4f(const std::string &name, const float vec[4]){
     GLuint loc = getUniformLoc(name);
     if (loc < 0){
         return false;
     }
     glUniform4fv(loc, 1, vec);
-
-    
-
     return true;
 }
 

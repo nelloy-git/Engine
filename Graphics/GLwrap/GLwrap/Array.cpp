@@ -60,14 +60,6 @@ Array::~Array(){
     glDeleteVertexArrays(1, &id);
 }
 
-void Array::bind(){
-    glBindVertexArray(id);
-}
-
-void Array::unbind(){
-    glBindVertexArray(0);
-}
-
 void Array::bind() const {
     glBindVertexArray(id);
 }
@@ -76,13 +68,13 @@ void Array::unbind() const {
     glBindVertexArray(0);
 }
 
-void Array::drawArrays(DrawMode mode, GLuint first, GLuint count){
+void Array::drawArrays(DrawMode mode, GLuint first, GLuint count) const {
     glBindVertexArray(id);
     glDrawArrays(static_cast<GLenum>(mode), first, count);
     glBindVertexArray(0);
 }
 
-void Array::drawElements(DrawMode mode, ElementType type, GLuint vertex_count, GLuint64 byte_offset) {
+void Array::drawElements(DrawMode mode, ElementType type, GLuint vertex_count, GLuint64 byte_offset) const {
     glBindVertexArray(id);
     glDrawElements(static_cast<GLenum>(mode), vertex_count,
                    static_cast<GLenum>(type), (void*)byte_offset);

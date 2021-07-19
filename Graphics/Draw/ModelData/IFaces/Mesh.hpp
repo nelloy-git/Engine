@@ -14,14 +14,15 @@ public:
         index(index){};
     virtual ~Mesh(){};
 
-    const Model &model;
-    const int index;
-
     const std::vector<std::shared_ptr<Primitive>> &primitives(){
         return _primitives;
     };
 
     virtual std::shared_ptr<Primitive> addPrimitive() = 0;
+
+    const Model &model;
+    const int index;
+    std::vector<float> weights;
 
 protected:
     std::vector<std::shared_ptr<Primitive>> _primitives;

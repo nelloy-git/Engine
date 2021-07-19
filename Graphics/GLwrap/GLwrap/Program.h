@@ -19,7 +19,9 @@ public:
     GLuint getAttribLoc(const std::string &name);
     GLuint getUniformLoc(const std::string &name);
 
-    bool setUniformVec4f(const std::string &name, const float mat[4]);
+    bool setUniform1vi(const std::string &name, const int val);
+    bool setUniform1vf(const std::string &name, const float val);
+    bool setUniformVec4f(const std::string &name, const float vec[4]);
     bool setUniformMat4f(const std::string &name, const float mat[16]);
 
     const GLuint id;

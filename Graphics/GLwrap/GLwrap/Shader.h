@@ -15,10 +15,7 @@ public:
     static std::shared_ptr<Shader> fromFile(ShaderType type, const std::string& path);
     virtual ~Shader();
 
-    GLuint id();
-
-private:
-    GLuint __id;
+    const GLuint id;
 };
 
 }

@@ -3,7 +3,7 @@
 #include <type_traits>
 
 #include "tiny_gltf.h"
-#include "Draw/ModelData/tinygltf/TypesGLtf.h"
+#include "Draw/ModelData/tinygltf/TypesGltf.h"
 
 #include "Log.h"
 
@@ -150,6 +150,11 @@ ModelLoaderGltf::_loadMesh(const tinygltf::Mesh &gltf_mesh,
     auto mesh = model.addMesh();
     for (int i = 0; i < gltf_mesh.primitives.size(); ++i){
         _loadPrimitive(gltf_mesh.primitives[i], gltf_model, model, *mesh, errors);
+    }
+
+    auto &gltf_weights = gltf_mesh.weights;
+    for (int i = 0; i < gltf_weights.size(); ++i){
+        mesh->weights.push_back(gltf_weights[i]);
     }
 }
 

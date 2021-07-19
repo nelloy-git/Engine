@@ -40,7 +40,7 @@ bool Buffer::write(const void *data, size_t data_offset, size_t data_size){
     return true;
 }
 
-bool Buffer::read(void *data, size_t data_offset, size_t data_size){
+bool Buffer::read(void *data, size_t data_offset, size_t data_size) const {
     if (data_size == 0){
         data_size = size;
     }

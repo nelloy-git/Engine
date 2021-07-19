@@ -57,7 +57,7 @@ int Draw::getLocation(Draw::PrimitiveAttribute attr){
         case Draw::PrimitiveAttribute::TexCoord_0:
             return 3;
         case Draw::PrimitiveAttribute::TexCoord_1:
-            return 4;
+            return 3;
         case Draw::PrimitiveAttribute::Color_0:
             return 5;
         case Draw::PrimitiveAttribute::Joints_0:
