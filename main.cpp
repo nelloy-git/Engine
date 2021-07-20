@@ -68,7 +68,7 @@ int main(int argc, const char** argv){
 
 
     std::vector<std::shared_ptr<Draw::Object>> objects;
-    for (int i = 0; i < 1000; ++i){
+    for (int i = 0; i < 500; ++i){
         auto object = std::make_shared<Draw::Object>();
         objects.push_back(object);
         object->model = model_3d;

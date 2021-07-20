@@ -58,14 +58,12 @@ enum class PrimitiveAttribute{
     TexCoord_1,
     Color_0,
     Joints_0,
-    Joints_1,
     Weights_0,
-    Weights_1,
     Unknown
 };
 int getLocation(PrimitiveAttribute attr);
 std::string getMorphTargetName(int target, PrimitiveAttribute attr);
-int getMorphTargetLocation(int target, PrimitiveAttribute attr);
+int getMorphTargetLocation(int target, int total_targets, PrimitiveAttribute attr);
 
 // Unknown must be last one.
 enum class TextureFormat{

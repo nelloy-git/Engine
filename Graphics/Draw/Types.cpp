@@ -57,17 +57,13 @@ int Draw::getLocation(Draw::PrimitiveAttribute attr){
         case Draw::PrimitiveAttribute::TexCoord_0:
             return 3;
         case Draw::PrimitiveAttribute::TexCoord_1:
-            return 3;
+            return 4;
         case Draw::PrimitiveAttribute::Color_0:
             return 5;
         case Draw::PrimitiveAttribute::Joints_0:
             return 6;
-        case Draw::PrimitiveAttribute::Joints_1:
-            return 7;
         case Draw::PrimitiveAttribute::Weights_0:
-            return 8;
-        case Draw::PrimitiveAttribute::Weights_1:
-            return 9;
+            return 7;
         default:
             return -1;
     }
@@ -77,17 +73,17 @@ std::string Draw::getMorphTargetName(int target, PrimitiveAttribute attr){
     return "Target" + std::to_string(target) + "_" + toString(attr);
 }
 
-int Draw::getMorphTargetLocation(int target, PrimitiveAttribute attr){
-    int base = 10 + 3 * target;
+int Draw::getMorphTargetLocation(int target, int total_targets, PrimitiveAttribute attr){
+    int base = 8;
 
     // Based on getLocation.
     switch (attr){
         case Draw::PrimitiveAttribute::Position:
-            return base;
+            return base + target * 8 / total_targets;
         case Draw::PrimitiveAttribute::Normal:
-            return base + 1;
+            return base + target * 8 / total_targets + 1;
         case Draw::PrimitiveAttribute::Tangent:
-            return base + 2;
+            return base + target * 8 / total_targets + 2;
         default:
             return -1;
     }

@@ -65,7 +65,7 @@ bool PrimitiveGL::init(){
         for (int j = 0; j < 3; j++){
             auto attr = attr_list[j];
             auto name = getMorphTargetName(i, attr);
-            auto loc = getMorphTargetLocation(i, attr);
+            auto loc = getMorphTargetLocation(i, morph_targets.size(), attr);
 
             auto buffer = std::dynamic_pointer_cast<BufferGL>(buff_list[j]);
             if (!buffer){

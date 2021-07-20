@@ -98,12 +98,8 @@ PrimitiveAttribute gltfConvert::getAttribute(const std::string &gltf_attr){
         return PrimitiveAttribute::Color_0;
     } else if (gltf_attr == "JOINTS_0"){
         return PrimitiveAttribute::Joints_0;
-    } else if (gltf_attr == "JPINTS_1"){
-        return PrimitiveAttribute::Joints_1;
     } else if (gltf_attr == "WEIGHTS_0"){
         return PrimitiveAttribute::Weights_0;
-    } else if (gltf_attr == "WEIGHTS_1"){
-        return PrimitiveAttribute::Weights_1;
     } else {
         return PrimitiveAttribute::Unknown;
     }

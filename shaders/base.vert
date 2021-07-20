@@ -3,55 +3,58 @@
 
 uniform mat4 model;
 
-uniform float morph_weights[4];
-uniform int morph_weights_used;
 
 layout (location = 0) in vec3 Position;
 layout (location = 1) in vec3 Normal;
 layout (location = 2) in vec3 Tangent;
-layout (location = 3, component = 0) in vec2 TexCoord_0;
-layout (location = 3, component = 2) in vec2 TexCoord_1;
+layout (location = 3) in vec2 TexCoord_0;
+layout (location = 4) in vec2 TexCoord_1;
 layout (location = 5) in vec3 Color_0;
 layout (location = 6) in vec3 Joints_0;
-layout (location = 7) in vec3 Joints_1;
-layout (location = 8) in float Weights_0;
-layout (location = 9) in float Weights_1;
+layout (location = 7) in float Weights_0;
 
 // Morph target
-
-layout (location = 10) in vec3 Target0_Position;
-layout (location = 11) in vec2 Target0_Normal;
-layout (location = 12) in vec2 Target0_Tangent;
-layout (location = 13) in vec3 Target1_Position;
-layout (location = 14) in vec2 Target1_Normal;
-layout (location = 15) in vec2 Target1_Tangent;
-layout (location = 16) in vec3 Target2_Position;
-layout (location = 17) in vec2 Target2_Normal;
-layout (location = 18) in vec2 Target2_Tangent;
-layout (location = 19) in vec3 Target3_Position;
-layout (location = 20) in vec2 Target3_Normal;
-layout (location = 21) in vec2 Target3_Tangent;
+uniform int morph_targets;
+uniform int morph_attributes;
+uniform float morph_weights[8];
+layout (location = 8) in vec3 MorphData[8];
 
 out vec2 outTexCoord_0;
 out vec2 outTexCoord_1;
 
+void morph1Attrib(inout vec3 pos){
+    for (int i = 0; i < min(morph_targets, 8); ++i){
+        pos += morph_weights[i] * MorphData[i];
+    }
+}
+
+void morph2Attrib(inout vec3 pos, inout vec3 norm){
+    for (int i = 0; i < min(morph_targets, 4); ++i){
+        pos += morph_weights[i] * MorphData[i];
+        norm += morph_weights[i + 1] * MorphData[i + 1];
+    }
+}
+
+void morph3Attrib(inout vec3 pos, inout vec3 norm, inout vec3 tang){
+    for (int i = 0; i < min(morph_targets, 2); ++i){
+        pos += morph_weights[i] * MorphData[i];
+        norm += morph_weights[i + 1] * MorphData[i + 1];
+        tang += morph_weights[i + 2] * MorphData[i + 2];
+    }
+}
+
 void main(){
     vec3 morhed_position = Position;
-    if (morph_weights_used > 0){
-        morhed_position = morhed_position + morph_weights[0] * Target0_Position;
+    vec3 morhed_normal = Normal;
+    vec3 morhed_tangent = Tangent;
+
+    if (morph_attributes >= 3){
+        morph3Attrib(morhed_position, morhed_normal, morhed_tangent);
+    } else if (morph_attributes >= 2){
+        morph2Attrib(morhed_position, morhed_normal);
+    } else if (morph_attributes >= 1){
+        morph1Attrib(morhed_position);
     }
-
-    if (morph_weights_used > 1){
-        morhed_position = morhed_position + morph_weights[1] * Target1_Position;
-    }
-
-    // if (morph_weights_used > 2){
-    //     morhed_position = morhed_position + morph_weights[2] * Target2_Position;
-    // }
-
-    // if (morph_weights_used > 3){
-    //     morhed_position = morhed_position + morph_weights[3] * Target1_Position;
-    // }
 
     gl_Position = model * vec4(morhed_position, 1.0);
 

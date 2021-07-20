@@ -94,7 +94,10 @@ void ShaderGL::_drawNode(const Node &node, const Object &obj){
     auto mesh = node.mesh;
     if (mesh){
         program->setUniformMat4f("model", glm::value_ptr(mat));
-        program->setUniform1vi("morph_weights_used", 1);
+        program->setUniform1vi("morph_targets", mesh->weights.size());
+        for (int i = 0; i < mesh->weights.size(); ++i){
+            program->setUniform1vf("morph_weights[" + std::to_string(i) + "]", mesh->weights[i]);
+        }
 
         for (int i = 0; i < mesh->primitives().size(); ++i){
             auto prim = mesh->primitives()[i];
@@ -102,7 +105,15 @@ void ShaderGL::_drawNode(const Node &node, const Object &obj){
                 continue;
             }
 
+            int morph_attr_count = 0;
+            if (prim->morph_targets.size() > 0){
+                auto targ = prim->morph_targets[0];
+                if (targ.pos){++morph_attr_count;}
+                if (targ.norm){++morph_attr_count;}
+                if (targ.tang){++morph_attr_count;}
+            }
 
+            program->setUniform1vi("morph_attributes", morph_attr_count);
             auto prim_gl = std::dynamic_pointer_cast<PrimitiveGL>(prim);
             if (prim_gl){
                 _applyMaterial(*prim_gl->material);
@@ -149,18 +160,18 @@ bool ShaderGL::_verifyMorphs(){
     };
 
     bool ok = true;
-    _messages.push_back("Morph targets:");
-    for (int i = 0; i < 4; ++i){
-        for (auto targ : targets){
-            auto targ_name = getMorphTargetName(i, targ);
-            auto targ_loc = getMorphTargetLocation(i, targ);
+    // _messages.push_back("Morph targets:");
+    // for (int i = 0; i < 4; ++i){
+    //     for (auto targ : targets){
+    //         auto targ_name = getMorphTargetName(i, targ);
+    //         auto targ_loc = getMorphTargetLocation(i, targ);
 
-            bool valid = targ_loc == program->getAttribLoc(targ_name);
-            _messages.push_back("\t\"" + targ_name + "\" "
-                                + (valid ? "found" : "NOT FOUND"));
-            ok &= valid;
-        }
-    }
+    //         bool valid = targ_loc == program->getAttribLoc(targ_name);
+    //         _messages.push_back("\t\"" + targ_name + "\" "
+    //                             + (valid ? "found" : "NOT FOUND"));
+    //         ok &= valid;
+    //     }
+    // }
 
     return ok;
 }
