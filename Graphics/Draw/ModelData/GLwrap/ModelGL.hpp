@@ -9,6 +9,7 @@ public:
     ModelGL();
     virtual ~ModelGL() override;
 
+    virtual ref<Animation> addAnimation() override;
     virtual ref<Buffer> addBuffer(BufferType type,
                                   BufferElemType data_type,
                                   BufferElemStruct data_struct,

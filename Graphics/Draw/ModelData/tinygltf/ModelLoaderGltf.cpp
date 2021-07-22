@@ -334,3 +334,83 @@ ModelLoaderGltf::_loadScene(const tinygltf::Scene &gltf_scene,
         scene->nodes.push_back(model.nodes()[node_pos]);
     }
 }
+
+void
+ModelLoaderGltf::_loadAnimation(const tinygltf::Animation &gltf_anim,
+                                const tinygltf::Model &gltf_model,
+                                Model &model,
+                                std::vector<std::string> &errors) const{
+    auto anim = model.addAnimation();
+
+    for (int i = 0; i < gltf_anim.channels.size(); ++i){
+        auto &gltf_chan = gltf_anim.channels[i];
+        auto &gltf_targ = gltf_chan.target_path;
+
+        auto &time_buffer = model.buffers().at(gltf_anim.samplers[gltf_chan.sampler].input);
+        auto &data_buffer = model.buffers().at(gltf_anim.samplers[gltf_chan.sampler].output);
+        
+        
+        if (gltf_targ == "translation"){
+            auto anim_data = std::make_shared<AnimationDataTranslation>();
+            anim_data->time.reserve(time_buffer->count);
+            time_buffer->read(&anim_data->time[0], 0, time_buffer->count * sizeof(float));
+
+            anim_data->data.reserve(data_buffer->count);
+            float buf[3];
+            for (int j = 0; j < data_buffer->count; ++j){
+                data_buffer->read(buf, j * 3 * sizeof(float), 3 * sizeof(float));
+                anim_data->data[j] = glm::vec3(buf[0], buf[1], buf[3]);
+            }
+            data_buffer->read(&anim_data->data[0], 0, data_buffer->count * sizeof())
+
+        } else if (gltf_targ == "rotation"){
+
+        } else if (gltf_targ == "scale"){
+
+        } else if (gltf_targ == "weights") {
+
+        } else {
+            errors.push_back("unknown animation data type \"" + gltf_targ + "\"");
+            continue;
+        }
+    }
+}
+
+void 
+ModelLoaderGltf::_loadAnimationChannel(const tinygltf::AnimationChannel &gltf_chan,
+                                       const tinygltf::Animation &gltf_anim,
+                                       const tinygltf::Model &gltf_model,
+                                       const Model &model,
+                                       Animation &anim,
+                                       std::vector<std::string> &errors) const{
+    
+    auto &time_buffer = model.buffers().at(gltf_anim.samplers[gltf_chan.sampler].input);
+    auto &data_buffer = model.buffers().at(gltf_anim.samplers[gltf_chan.sampler].output);
+
+    std::shared_ptr<AnimationChannel> chan;
+    auto &gltf_targ = gltf_chan.target_path;
+    if (gltf_targ == "translation"){
+        auto trans_chan = std::make_shared<AnimationChannelTranslate>();
+        chan = trans_chan;
+
+        trans_chan->data.reserve(data_buffer->count);
+        float buf[3];
+        for (int j = 0; j < data_buffer->count; ++j){
+            data_buffer->read(buf, j * 3 * sizeof(float), 3 * sizeof(float));
+            trans_chan->data[j] = glm::vec3(buf[0], buf[1], buf[3]);
+        }
+
+        } else if (gltf_targ == "rotation"){
+
+        } else if (gltf_targ == "scale"){
+
+        } else if (gltf_targ == "weights") {
+
+        } else {
+            errors.push_back("unknown animation data type \"" + gltf_targ + "\"");
+            continue;
+        }
+    
+    chan->time.reserve(time_buffer->count);
+    time_buffer->read(&chan->time[0], 0, time_buffer->count * sizeof(float));
+}

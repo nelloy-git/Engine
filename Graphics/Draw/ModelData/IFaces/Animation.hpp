@@ -5,37 +5,21 @@
 #include "glm/glm.hpp"
 #include "glm/gtc/quaternion.hpp"
 
-#include "Draw/ModelData/IFaces/Node.hpp"
+#include "Draw/ModelData/IFaces/AnimationChannel.hpp"
 
 namespace Graphics::Draw {
 
-template<typename T>
-struct AnimationData {
-    std::vector<float> time;
-    std::vector<T> data;
-};
-
-using AnimationDataTranslation = AnimationData<glm::vec3>;
-
-
-struct AnimationDataRotation {
-    std::vector<float> time;
-    std::vector<glm::quat> rot;
-};
-
-struct AnimationDataScale {
-    std::vector<float> time;
-    std::vector<glm::vec3> scale;
-};
-
-struct AnimationDataWeight {
-    std::vector<float> time;
-    std::vector<glm::vec3> weight;
-};
+class Model;
 
 class Animation {
 public:
-    std::shared_ptr<Node> node;
+    const Model &model;
+    const int index;
+
+    std::vector<std::shared_ptr<AnimationChannelTranslate>> translations;
+    std::vector<std::shared_ptr<AnimationChannelRotate>> rotations;
+    std::vector<std::shared_ptr<AnimationChannelScale>> scales;
+    std::vector<std::shared_ptr<AnimationChannelWeight>> weights;
 };
 
 }

@@ -2,6 +2,7 @@
 
 #include <string>
 
+#include "Draw/ModelData/IFaces/Animation.hpp"
 #include "Draw/ModelData/IFaces/Buffer.hpp"
 #include "Draw/ModelData/IFaces/Material.hpp"
 #include "Draw/ModelData/IFaces/Mesh.hpp"
@@ -27,7 +28,9 @@ public:
     const std::vector<ref<Mesh>> &meshes() const;
     const std::vector<ref<Node>> &nodes() const;
     const std::vector<ref<Scene>> &scenes() const;
+    const std::vector<ref<Animation>> &animations() const;
 
+    virtual ref<Animation> addAnimation() = 0;
     virtual ref<Buffer> addBuffer(BufferType type,
                                   BufferElemType data_type,
                                   BufferElemStruct data_struct,
@@ -49,6 +52,7 @@ public:
     virtual ref<Scene> addScene() = 0;
 
 protected:
+    std::vector<ref<Animation>> _animations;
     std::vector<ref<Buffer>> _buffers;
     std::vector<ref<Texture>> _textures;
     std::vector<ref<Material>> _materials;

@@ -8,6 +8,8 @@
 
 namespace tinygltf {
     class Accessor;
+    class Animation;
+    class AnimationChannel;
     class Image;
     class Material;
     class Mesh;
@@ -73,6 +75,18 @@ private:
     void _linkNodes(const tinygltf::Model &gltf_model,
                     Model &model,
                     std::vector<std::string> &errors) const;
+
+    void _loadAnimation(const tinygltf::Animation &gltf_anim,
+                        const tinygltf::Model &gltf_model,
+                        Model &model,
+                        std::vector<std::string> &errors) const;
+
+    void _loadAnimationChannel(const tinygltf::AnimationChannel &gltf_chan,
+                               const tinygltf::Animation &gltf_anim,
+                               const tinygltf::Model &gltf_model,
+                               const Model &model,
+                               Animation &anim,
+                               std::vector<std::string> &errors) const;
 
     template<typename T>
     using GetterType = void (ModelLoaderGltf::*)(const T &,

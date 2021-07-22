@@ -93,6 +93,10 @@ enum class TextureFilter{
     Unknown
 };
 
+enum class Interpolation {
+    Linear,
+};
+
 enum class TextureUsage {
     Texture0,
     Texture1

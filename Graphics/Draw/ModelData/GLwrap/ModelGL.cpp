@@ -17,6 +17,10 @@ ModelGL::ModelGL() :
 ModelGL::~ModelGL(){
 }
 
+ref<Animation> ModelGL::addAnimation(){
+    return _addObj<Animation>(_animations);
+}
+
 ref<Buffer> ModelGL::addBuffer(BufferType type,
                                BufferElemType data_type,
                                BufferElemStruct data_struct,
