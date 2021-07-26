@@ -15,6 +15,7 @@ add_library (${PROJECT_NAME} STATIC
     ./Utils/Transform.cpp
     ./Utils/Camera.cpp
 
+    ./ModelData/IFaces/AnimationChannel.cpp
     ./ModelData/IFaces/Buffer.cpp
     ./ModelData/IFaces/Model.cpp
     ./ModelData/IFaces/Node.cpp

@@ -8,6 +8,10 @@ using ref = std::shared_ptr<T>;
 Model::~Model(){
 }
 
+const std::vector<ref<Animation>> &Model::animations() const {
+    return _animations;
+}
+
 const std::vector<ref<Buffer>> &Model::buffers() const {
     return _buffers;
 }

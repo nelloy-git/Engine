@@ -13,14 +13,11 @@ namespace Graphics::Draw {
 class AnimationChannel {
 public:
     AnimationChannel() = default;
-    virtual ~AnimationChannel() = 0;
+    virtual ~AnimationChannel() = default;
 
     std::shared_ptr<Node> node;
     std::vector<float> time;
 };
-
-AnimationChannel::~AnimationChannel(){
-}
 
 class AnimationChannelTranslate : public AnimationChannel {
 public:
@@ -55,7 +52,7 @@ public:
     virtual ~AnimationChannelWeight() = default;
 
     std::vector<float> get(float time, Interpolation method);
-    std::vector<std::vector> data;
+    std::vector<std::vector<float>> data;
 };
 
 }

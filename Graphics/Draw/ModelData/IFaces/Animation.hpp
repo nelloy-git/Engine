@@ -13,6 +13,12 @@ class Model;
 
 class Animation {
 public:
+    Animation(const Model &mode, int index) :
+        model(model),
+        index(index){}
+
+    virtual ~Animation(){}
+
     const Model &model;
     const int index;
 

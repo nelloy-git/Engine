@@ -22,13 +22,13 @@ public:
     template<typename T>
     using ref = std::shared_ptr<T>;
 
+    const std::vector<ref<Animation>> &animations() const;
     const std::vector<ref<Buffer>> &buffers() const;
     const std::vector<ref<Texture>> &textures() const;
     const std::vector<ref<Material>> &materials() const;
     const std::vector<ref<Mesh>> &meshes() const;
     const std::vector<ref<Node>> &nodes() const;
     const std::vector<ref<Scene>> &scenes() const;
-    const std::vector<ref<Animation>> &animations() const;
 
     virtual ref<Animation> addAnimation() = 0;
     virtual ref<Buffer> addBuffer(BufferType type,

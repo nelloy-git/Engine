@@ -11,29 +11,49 @@ class Transform {
 public:
     Transform();
     Transform(const glm::mat4 &mat);
+    Transform(const glm::vec3 &trans,
+              const glm::quat &rot,
+              const glm::vec3 &scale);
     virtual ~Transform();
 
-    const Property<glm::mat4, Transform> matrix;
-    Property<glm::vec3, Transform> translation;
-    Property<glm::quat, Transform> rotation;
-    Property<glm::vec3, Transform> scale;
+    // Apply translation, rotation and scale (M = T * R * S).
+    // Overrides current transform matrix if translation, rotation or scale were changed.
+    void applyTRS();
+
+    inline void setT(const glm::vec3 &trans){
+        _trans = trans;
+        _changed = true;
+    }
+
+    inline const glm::vec3 &getT(){
+        return _trans;
+    }
+
+    inline void setR(const glm::quat &rot){
+        _rot = rot;
+        _changed = true;
+    }
+
+    inline const glm::quat getR(){
+        return _rot;
+    }
+
+    inline void setS(const glm::vec3 &scale){
+        _scale = scale;
+        _changed = true;
+    }
+
+    inline const glm::vec3 getS(){
+        return _scale;
+    }
+    
+    glm::mat4 mat;
 
 private:
-    bool _need_update = false;
-    glm::mat4 _matrix;
-    const glm::mat4 &_getMatrix();
-
+    bool _changed;
     glm::vec3 _trans;
-    const glm::vec3 &_getTranslation();
-    void _setTranslation(const glm::vec3 &translation);
-
     glm::quat _rot;
-    const glm::quat &_getRotation();
-    void _setRotation(const glm::quat &rotation);
-
     glm::vec3 _scale;
-    const glm::vec3 &_getScale();
-    void _setScale(const glm::vec3 &scale);
 
 };
 

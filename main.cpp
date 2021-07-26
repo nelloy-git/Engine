@@ -68,14 +68,15 @@ int main(int argc, const char** argv){
 
 
     std::vector<std::shared_ptr<Draw::Object>> objects;
-    for (int i = 0; i < 500; ++i){
+    for (int i = 0; i < 1; ++i){
         auto object = std::make_shared<Draw::Object>();
         objects.push_back(object);
         object->model = model_3d;
         object->camera = cam;
-        object->transform.translation = glm::vec3((float)i, 0.f, 0.f);
-        object->transform.rotation = glm::angleAxis((float)(3 * 3.1415 / 2), glm::vec3(0, 1, 0));
-        object->transform.scale = glm::vec3(0.1, 0.1, 0.1);
+        object->active_animation = 0;
+        object->transform.setT(glm::vec3((float)i, 0.f, 0.f));
+        object->transform.setR(glm::angleAxis((float)(3 * 3.1415 / 2), glm::vec3(0, 1, 0)));
+        object->transform.setS(glm::vec3(0.1, 0.1, 0.1));
     }
 
     auto timer = std::make_shared<GLwrap::Timer>();
@@ -120,7 +121,8 @@ int main(int argc, const char** argv){
         angle += dt * rot_vel;
         #pragma omp parallel for num_threads(4)
         for (int i = 0; i < objects.size(); ++i){
-            objects[i]->transform.rotation = glm::angleAxis((float)(angle), glm::vec3(0, 1, 0));
+            objects[i]->time += dt;
+            // objects[i]->transform.rotation = glm::angleAxis((float)(angle), glm::vec3(0, 1, 0));
             objects[i]->update();
         }
         auto update_time = timer->elapsed() - clear_time;
