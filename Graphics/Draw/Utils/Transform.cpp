@@ -21,12 +21,20 @@ Transform::Transform(const glm::mat4 &mat) :
 Transform::Transform(const glm::vec3 &trans,
                      const glm::quat &rot,
                      const glm::vec3 &scale) :
-    _trans(0.f),
-    _rot(glm::angleAxis(0.f, glm::vec3(0.f, 0.f, 1.f))),
-    _scale(1.f),
+    _trans(trans),
+    _rot(rot),
+    _scale(scale),
     _changed(true),
     mat(1.f){
     applyTRS();
+}
+
+Transform::Transform(const Transform &other) :
+    _trans(other._trans),
+    _rot(other._rot),
+    _scale(other._scale),
+    _changed(other._changed),
+    mat(other.mat){
 }
 
 Transform::~Transform(){

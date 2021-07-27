@@ -22,9 +22,9 @@ BufferGL::BufferGL(const Model &model, int index,
                               });
     }
 
-    if (type == BufferType::Index){
-        std::cout << "Buffer vertices: " << elem_count << std::endl;
-    }
+    // if (type == BufferType::Index){
+    //     std::cout << "Buffer vertices: " << elem_count / 3 << std::endl;
+    // }
 }
 
 BufferGL::~BufferGL(){

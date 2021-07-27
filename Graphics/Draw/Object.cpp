@@ -6,76 +6,135 @@
 
 using namespace Graphics::Draw;
 
-Object::Object() :
-    model(this, &Object::_getModel, &Object::_setModel),
-    camera(this, &Object::_getCamera, &Object::_setCamera),
-    active_scene(this, &Object::_getActiveScene, &Object::_setActiveScene),
-    active_animation(this, &Object::_getActiveAnimation, &Object::_setActiveAnimation){
+Object::Object(){
 }
 
 Object::~Object(){
 }
 
-void Object::update(){
-    auto mdl = _model;
-    if (!mdl){
-        return;
+const Transform &Object::getNodeTransform(const Node &node) const {
+    int i = node.index;
+    if (i < 0 || i > _node_transforms.size()){
+        throw std::invalid_argument("node index is out of range.");
     }
-
-    if (_active_scene < 0 && _active_scene >= mdl->scenes().size()){
-        return;
-    }
-
-    auto scene = mdl->scenes()[active_scene];
-    if (!scene){
-        return;
-    }
-
-    glm::mat4 cam_mat(1.f);
-    if (_camera){
-        cam_mat = _camera->matrix;
-    }
-
-    _matrices.clear();
-    _matrices.reserve(mdl->nodes().size());
-
-    for (int i = 0; i < scene->nodes.size(); ++i){
-        _updateNodeMatrix(*scene->nodes[i], cam_mat * transform.mat);
-    }
-
-    // std::cout << "Animation: " << _active_animation << std::endl;
-    // std::cout << "Count: " << _model->animations().size() << std::endl;
-    if (_active_animation >= 0){
-        auto anim = _model->animations()[_active_animation];
-
-        // std::cout << "Translation count: " << anim->translations.size() << std::endl;
-        for (auto chan : anim->translations){
-            auto vec = chan->get(time, Interpolation::Linear);
-            // std::cout << "Vec3: [" << vec[0] << ", " << vec[1] << ", " << vec[2] << "]" << std::endl;
-            _matrices[chan->node->index] = glm::translate(_matrices[chan->node->index], chan->get(time, Interpolation::Linear));
-        }
-
-        // std::cout << "Rotation count: " << anim->rotations.size() << std::endl;
-        for (auto chan : anim->rotations){
-            _matrices[chan->node->index] *= glm::mat4_cast(chan->get(time, Interpolation::Linear));
-        }
-    }
+    return _node_transforms[i];
 }
 
-bool Object::changed(){
-    return _need_update;
+void Object::setModel(std::shared_ptr<Model> model){
+    _model = model;
+    _model_changed = true;
 }
 
-const glm::mat4 &Object::getMatrix(const Node &node) const {
-    if (node.index < 0 || node.index > _matrices.max_size()){
-        return transform.mat;
-    }
-    return _matrices[node.index];
-};
+std::shared_ptr<Model> Object::getModel() const {
+    return _model;
+}
 
-void Object::_updateNodeMatrix(Node &node, const glm::mat4 &parent_mat){
-    node.transform.applyTRS();
-    _matrices[node.index] = parent_mat * node.transform.mat;
+void Object::setCamera(std::shared_ptr<Camera> camera){
+    _camera = camera;
+    _camera_changed = true;
+}
+
+std::shared_ptr<Camera> Object::getCamera() const {
+    return _camera;
+}
+
+void Object::setScene(int index){
+    _scene_index = index;
+    if (index < 0 || (_model && index > _model->scenes().size())){
+        return;
+    }
+    _scene = _model->scenes()[index];
+}
+
+std::shared_ptr<Scene> Object::getScene() const {
+    return _scene;
+}
+
+void Object::setAnimation(float time, int index){
+    _anim_time = time;
+    _anim_index = index;
+    if (index < 0 || (_model && index > _model->animations().size())){
+        return;
+    }
+    _anim = _model->animations()[index];
+}
+
+std::pair<float, int> Object::getAnimation() const {
+    return std::make_pair(_anim_time, _anim_index);
+}
+
+bool Object::update(){
+    if (!_model){return false;}
+    if (!_camera){return false;}
+    if (!_scene){return false;}
+
+    transform.applyTRS();
+    _updateCamera();
+    _updateModel();
+    _updateScene();
+    _updateAnimation();
+
+    if (_node_transforms_changed){
+        auto parent_mat = _camera->matrix * transform.mat;
+        for (int i = 0; i < _scene->nodes.size(); ++i){
+            _updateNodeTransform(*_scene->nodes[i], parent_mat);
+        }
+    }
+
+
+    return true;
+}
+
+void Object::_updateCamera(){
+    if (!_camera_changed){return;}
+    _node_transforms_changed = true;
+}
+
+void Object::_updateModel(){
+    if (!_model_changed){return;}
+    _node_transforms_changed = true;
+
+    int s = _model->nodes().size();
+    _node_transforms = std::vector<Transform>(s);
+    setScene(_scene_index);
+}
+
+void Object::_updateScene(){
+    if (!_scene_changed){return;}
+    _node_transforms_changed = true;
+}
+
+void Object::_updateAnimation(){
+    if (!_anim_changed){return;}
+    _node_transforms_changed = true;
+}
+
+void Object::_updateNodeTransform(Node &node, const glm::mat4 &parent_mat){
+    Transform *res = &_node_transforms[node.index];
+    *res = node.transform;
+
+    if (_anim){
+        // for (int i = 0; i < _anim->translations.size(); ++i){
+        //     auto ptr = _anim->translations[i];
+        //     if (&node == ptr->node.get()){
+        //         res->setT(ptr->get(_anim_time, Interpolation::Linear));
+        //         break;
+        //     }
+        // }
+
+        // std::cout << _anim->rotations.size() << std::endl;
+        for (int i = 0; i < _anim->rotations.size(); ++i){
+            auto ptr = _anim->rotations[i];
+            if (&node == ptr->node.get()){
+                std::cout << _anim_time << std::endl;
+                res->setR(ptr->get(_anim_time, Interpolation::Linear));
+                break;
+            }
+        }
+    }
+
+    res->applyTRS();
+    res->mat = parent_mat * res->mat;
 
     for (int i = 0; i < node.children.size(); ++i){
         auto child = node.children[i];
@@ -83,50 +142,6 @@ void Object::_updateNodeMatrix(Node &node, const glm::mat4 &parent_mat){
             continue;
         }
         
-        _updateNodeMatrix(*child, _matrices[node.index]);
+        _updateNodeTransform(*child, res->mat);
     }
-}
-
-const std::shared_ptr<Model> &Object::_getModel(){
-    return _model;
-}
-
-void Object::_setModel(const std::shared_ptr<Model> &model){
-    _need_update = _model.get() != model.get();
-    _model = model;
-}
-
-const std::shared_ptr<Camera> &Object::_getCamera(){
-    return _camera;
-}
-
-void Object::_setCamera(const std::shared_ptr<Camera> &camera){
-    _need_update = _camera.get() != camera.get();
-    _camera = camera;
-}
-
-const int &Object::_getActiveScene(){
-    static int def = 0;
-    if (_active_scene < 0 || !_model || (_model && _active_scene > _model->scenes().size())){
-        return def;
-    }
-    return _active_scene;
-}
-
-void Object::_setActiveScene(const int &scene){
-    _need_update = _active_scene != scene;
-    _active_scene = scene;
-}
-
-const int &Object::_getActiveAnimation(){
-    static int def = -1;
-    if (_active_animation < 0 || !_model || (_model && _active_scene > _model->animations().size())){
-        return def;
-    }
-    return _active_animation;
-}
-
-void Object::_setActiveAnimation(const int &anim){
-    _need_update = _active_animation != anim;
-    _active_animation = anim;
 }

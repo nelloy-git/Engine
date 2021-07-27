@@ -34,15 +34,19 @@ glm::vec3 AnimationChannelTranslate::get(float t, Interpolation method){
 
 glm::quat AnimationChannelRotate::get(float t, Interpolation method){
     t = t - time[0];
-
-    
-    // std::cout << "Count: " << time.size() << std::endl;
-    // std::cout << "Min: " << time[0] << "\tMax: " << time[time.size()] << std::endl;
-    // std::cout << "Period: " << time[time.size()] - time[0] << std::endl;
-    t = std::fmod(t, time[time.size()] - time[0]);
+    t = std::fmod(t, time.back() - time[0]);
 
     auto low = std::lower_bound(time.begin(), time.end(), t);
     auto up = std::upper_bound(time.begin(), time.end(), t);
+
+    if (low < time.begin()){
+        return data[0];
+    }
+
+    if (up >= time.end()){
+        return data.back();
+    }
+
     auto t1 = *low;
     auto t2 = *up;
 

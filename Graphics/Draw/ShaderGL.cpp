@@ -77,10 +77,10 @@ bool ShaderGL::verify(){
 
 void ShaderGL::draw(const Object &obj){
 
-    std::shared_ptr<Model> model = obj.model;
+    std::shared_ptr<Model> model = obj.getModel();
     if (!model){return;}
 
-    auto scene = model->scenes()[obj.active_scene];
+    auto scene = obj.getScene();
     if (!scene){return;}
 
     for (int i = 0; i < scene->nodes.size(); ++i){
@@ -89,7 +89,7 @@ void ShaderGL::draw(const Object &obj){
 }
 
 void ShaderGL::_drawNode(const Node &node, const Object &obj){
-    const glm::mat4 &mat = obj.getMatrix(node);
+    const glm::mat4 &mat = obj.getNodeTransform(node).mat;
 
     auto mesh = node.mesh;
     if (mesh){

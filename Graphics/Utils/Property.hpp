@@ -1,7 +1,7 @@
 #pragma once
 
 template<typename T, typename Owner>
-class Property final {
+class Property {
 public:
     using SetterType = void (Owner::*)(const T&);
     using GetterType = const T& (Owner::*)();
@@ -29,10 +29,6 @@ public:
         return *this;
     };
 
-    inline operator const T&() {
-        return (_owner->*_getter)();
-    };
-
     inline operator const T&() const {
         return (_owner->*_getter)();
     };
@@ -45,11 +41,6 @@ public:
     template<typename V>
     inline const auto &operator[](const V &index) const {
         return (_owner->*_getter)()[index];
-    };
-
-    template<typename V>
-    inline auto operator+(const V &other){
-        return (_owner->*_getter)() + other;
     };
 
     template<typename V>
@@ -69,11 +60,6 @@ public:
     };
 
     template<typename V>
-    inline auto operator-(const V &other){
-        return (_owner->*_getter)() - other;
-    };
-
-    template<typename V>
     inline auto operator-(const V &other) const {
         return (_owner->*_getter)() - other;
     };
@@ -90,11 +76,6 @@ public:
     };
 
     template<typename V>
-    inline auto operator*(const V &other){
-        return (_owner->*_getter)() * other;
-    };
-
-    template<typename V>
     inline auto operator*(const V &other) const {
         return (_owner->*_getter)() * other;
     };
@@ -108,11 +89,6 @@ public:
     inline Property<T, Owner> &operator*=(const V& other){
         (_owner->*_setter)((_owner->*_getter)() * other);
         return *this;
-    };
-
-    template<typename V>
-    inline auto operator/(const V &other){
-        return (_owner->*_getter)() / other;
     };
 
     template<typename V>

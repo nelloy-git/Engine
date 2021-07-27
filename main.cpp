@@ -71,12 +71,14 @@ int main(int argc, const char** argv){
     for (int i = 0; i < 1; ++i){
         auto object = std::make_shared<Draw::Object>();
         objects.push_back(object);
-        object->model = model_3d;
-        object->camera = cam;
-        object->active_animation = 0;
+        object->setModel(model_3d);
+        object->setCamera(cam);
+        object->setScene(0);
+        // object->active_animation = 0;
         object->transform.setT(glm::vec3((float)i, 0.f, 0.f));
         object->transform.setR(glm::angleAxis((float)(3 * 3.1415 / 2), glm::vec3(0, 1, 0)));
         object->transform.setS(glm::vec3(0.1, 0.1, 0.1));
+        object->transform.applyTRS();
     }
 
     auto timer = std::make_shared<GLwrap::Timer>();
@@ -121,8 +123,9 @@ int main(int argc, const char** argv){
         angle += dt * rot_vel;
         #pragma omp parallel for num_threads(4)
         for (int i = 0; i < objects.size(); ++i){
-            objects[i]->time += dt;
-            // objects[i]->transform.rotation = glm::angleAxis((float)(angle), glm::vec3(0, 1, 0));
+            // objects[i]->time += dt;
+            // objects[i]->transform.setR(glm::angleAxis((float)(angle), glm::vec3(0, 1, 0)));
+            objects[i]->setAnimation(objects[i]->getAnimation().first + dt, 0);
             objects[i]->update();
         }
         auto update_time = timer->elapsed() - clear_time;

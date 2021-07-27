@@ -3,7 +3,6 @@
 
 uniform mat4 model;
 
-
 layout (location = 0) in vec3 Position;
 layout (location = 1) in vec3 Normal;
 layout (location = 2) in vec3 Tangent;
@@ -45,16 +44,16 @@ void morph3Attrib(inout vec3 pos, inout vec3 norm, inout vec3 tang){
 
 void main(){
     vec3 morhed_position = Position;
-    vec3 morhed_normal = Normal;
-    vec3 morhed_tangent = Tangent;
+    // vec3 morhed_normal = Normal;
+    // vec3 morhed_tangent = Tangent;
 
-    if (morph_attributes >= 3){
-        morph3Attrib(morhed_position, morhed_normal, morhed_tangent);
-    } else if (morph_attributes >= 2){
-        morph2Attrib(morhed_position, morhed_normal);
-    } else if (morph_attributes >= 1){
-        morph1Attrib(morhed_position);
-    }
+    // if (morph_attributes >= 3){
+    //     morph3Attrib(morhed_position, morhed_normal, morhed_tangent);
+    // } else if (morph_attributes >= 2){
+    //     morph2Attrib(morhed_position, morhed_normal);
+    // } else if (morph_attributes >= 1){
+    //     morph1Attrib(morhed_position);
+    // }
 
     gl_Position = model * vec4(morhed_position, 1.0);
 

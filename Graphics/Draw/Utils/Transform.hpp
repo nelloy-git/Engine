@@ -14,6 +14,7 @@ public:
     Transform(const glm::vec3 &trans,
               const glm::quat &rot,
               const glm::vec3 &scale);
+    Transform(const Transform &other);
     virtual ~Transform();
 
     // Apply translation, rotation and scale (M = T * R * S).
