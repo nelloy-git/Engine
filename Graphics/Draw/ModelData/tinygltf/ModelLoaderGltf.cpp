@@ -371,7 +371,7 @@ ModelLoaderGltf::_loadAnimationChannel(const tinygltf::AnimationChannel &gltf_ch
         float buf[3];
         for (int j = 0; j < data_buffer->count; ++j){
             data_buffer->read(buf, j * 3 * sizeof(float), 3 * sizeof(float));
-            std::cout << buf[0] << ", " << buf[1] << ", " << buf[2] << std::endl;
+            // std::cout << buf[0] << ", " << buf[1] << ", " << buf[2] << std::endl;
             trans_chan->data.push_back(glm::vec3(buf[0], buf[1], buf[2]));
         }
 
@@ -427,7 +427,7 @@ ModelLoaderGltf::_loadAnimationChannel(const tinygltf::AnimationChannel &gltf_ch
     for (int i = 0; i < time_buffer->count; ++i){
         time_buffer->read(&buf, i * sizeof(float), sizeof(float));
         if ((gltf_targ == "translation")){
-            std::cout << "Time: " << buf << std::endl;
+            // std::cout << "Time: " << buf << std::endl;
         }
         chan->time.push_back(buf);
     }

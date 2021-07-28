@@ -25,12 +25,10 @@ public:
 
     void swapBuffers();
 
-    Property<std::string, Window> propTitle;
-
-    bool active();
+    bool isActive();
     bool setActive(bool f);
 
-    const std::string &title();
+    const std::string &getTitle();
     void setTitle(const std::string &s);
 
     Event<> onClose;

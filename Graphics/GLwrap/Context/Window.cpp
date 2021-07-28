@@ -17,7 +17,6 @@ std::mutex Window::_lock;
 std::unordered_map<Window*, std::thread::id> Window::_window_thread;
 
 Window::Window(int width, int height, std::string title) :
-    propTitle(this, &Window::title, &Window::setTitle),
     _width(width),
     _height(height),
     _title(title){
@@ -47,7 +46,7 @@ void Window::swapBuffers(){
     glfwSwapBuffers(_glfw_window);
 }
 
-bool Window::active(){
+bool Window::isActive(){
     std::lock_guard<std::mutex> lg(_lock);
 
     auto winIdIt = _window_thread.find(this);
@@ -139,7 +138,7 @@ void Window::_initEvents(){
 
 }
 
-const std::string &Window::title(){
+const std::string &Window::getTitle(){
     return _title;
 }
 

@@ -13,16 +13,13 @@ Timer::~Timer(){
 
 void Timer::start(){
     _start = glfwGetTime();
+    _stop = -1;
 }
 
 void Timer::stop(){
-    _start = -1;
+    _stop = glfwGetTime();
 }
 
-double Timer::elapsed(){
-    return const_cast<const Timer*>(this)->elapsed();
-}
-
-double Timer::elapsed() const{
-    return _start > 0 ? glfwGetTime() - _start : -1;
+double Timer::elapsed() const {
+    return _stop > 0 ? _stop - _start : glfwGetTime() - _start;
 }

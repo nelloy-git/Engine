@@ -126,7 +126,7 @@ void Object::_updateNodeTransform(Node &node, const glm::mat4 &parent_mat){
         for (int i = 0; i < _anim->rotations.size(); ++i){
             auto ptr = _anim->rotations[i];
             if (&node == ptr->node.get()){
-                std::cout << _anim_time << std::endl;
+                // std::cout << _anim_time << std::endl;
                 res->setR(ptr->get(_anim_time, Interpolation::Linear));
                 break;
             }

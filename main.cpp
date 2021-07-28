@@ -60,6 +60,13 @@ int main(int argc, const char** argv){
 
     std::vector<std::string> errors;
     model_loader->load(*model_3d, "../test/book/scene.gltf", errors);
+    if (errors.size() > 0){
+        auto log = LOG(ERR);
+        log << "Errors loading " << "../test/book/scene.gltf";
+        for (auto &err : errors){
+            log << err << "\n";
+        }
+    }
 
     auto cam = std::make_shared<Graphics::Draw::Camera>();
     cam->width = width;
