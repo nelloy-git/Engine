@@ -383,7 +383,7 @@ ModelLoaderGltf::_loadAnimationChannel(const tinygltf::AnimationChannel &gltf_ch
         rot_chan->data.reserve(data_buffer->count);
         float buf[4];
         for (int j = 0; j < data_buffer->count; ++j){
-            data_buffer->read(buf, j * 3 * sizeof(float), 3 * sizeof(float));
+            data_buffer->read(buf, j * 4 * sizeof(float), 4 * sizeof(float));
             rot_chan->data.push_back({buf[0], buf[1], buf[2], buf[3]});
         }
 

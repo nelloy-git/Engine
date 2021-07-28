@@ -114,25 +114,24 @@ void Object::_updateNodeTransform(Node &node, const glm::mat4 &parent_mat){
     *res = node.transform;
 
     if (_anim){
-        // for (int i = 0; i < _anim->translations.size(); ++i){
-        //     auto ptr = _anim->translations[i];
-        //     if (&node == ptr->node.get()){
-        //         res->setT(ptr->get(_anim_time, Interpolation::Linear));
-        //         break;
-        //     }
-        // }
+        for (int i = 0; i < _anim->translations.size(); ++i){
+            auto ptr = _anim->translations[i];
+            if (&node == ptr->node.get()){
+                res->setT(ptr->get(_anim_time, Interpolation::Linear));
+                break;
+            }
+        }
 
         // std::cout << _anim->rotations.size() << std::endl;
         for (int i = 0; i < _anim->rotations.size(); ++i){
             auto ptr = _anim->rotations[i];
             if (&node == ptr->node.get()){
-                // std::cout << _anim_time << std::endl;
                 res->setR(ptr->get(_anim_time, Interpolation::Linear));
                 break;
             }
         }
-    }
-
+    }    
+    
     res->applyTRS();
     res->mat = parent_mat * res->mat;
 
