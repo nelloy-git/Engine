@@ -32,7 +32,10 @@ public:
               std::vector<std::string> &errors) const override;
 
 private:
-    std::shared_ptr<tinygltf::Model>
+    template<typename T>
+    using Ref = std::shared_ptr<T>;
+
+    Ref<tinygltf::Model>
     _loadGltfModel(const std::string &path,
                    std::vector<std::string> &errors) const;
 

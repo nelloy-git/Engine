@@ -9,6 +9,9 @@
 
 using namespace Graphics::Draw;
 
+template<typename T>
+using Ref = ModelLoaderGltf::Ref<T>;
+
 ModelLoaderGltf::ModelLoaderGltf() :
     ModelLoader(){
 }
@@ -357,78 +360,133 @@ ModelLoaderGltf::_loadAnimationChannel(const tinygltf::AnimationChannel &gltf_ch
                                        Animation &anim,
                                        std::vector<std::string> &errors) const{
     
-    auto &time_buffer = model.buffers().at(gltf_anim.samplers[gltf_chan.sampler].input);
-    auto &data_buffer = model.buffers().at(gltf_anim.samplers[gltf_chan.sampler].output);
+    auto target = model.nodes()[gltf_chan.target_node];
+    auto time_buffer = model.buffers().at(gltf_anim.samplers[gltf_chan.sampler].input);
+    auto data_buffer = model.buffers().at(gltf_anim.samplers[gltf_chan.sampler].output);
 
-    std::shared_ptr<AnimationChannel> chan;
     auto &gltf_targ = gltf_chan.target_path;
     if (gltf_targ == "translation"){
-        auto trans_chan = std::make_shared<AnimationChannelTranslate>();
-        anim.translations.push_back(trans_chan);
-        chan = trans_chan;
-
-        trans_chan->data.reserve(data_buffer->count);
-        float buf[3];
-        for (int j = 0; j < data_buffer->count; ++j){
-            data_buffer->read(buf, j * 3 * sizeof(float), 3 * sizeof(float));
-            // std::cout << buf[0] << ", " << buf[1] << ", " << buf[2] << std::endl;
-            trans_chan->data.push_back(glm::vec3(buf[0], buf[1], buf[2]));
-        }
+        auto chan = std::make_shared<AnimationChannelTranslate>(target, time_buffer, data_buffer);
+        anim.translations.push_back(chan);
 
     } else if (gltf_targ == "rotation"){
-        auto rot_chan = std::make_shared<AnimationChannelRotate>();
-        anim.rotations.push_back(rot_chan);
-        chan = rot_chan;
+        auto chan = std::make_shared<AnimationChannelRotate>(target, time_buffer, data_buffer);
+        chan->node = model.nodes()[gltf_chan.target_node];
+        anim.rotations.push_back(chan);
 
-        rot_chan->data.reserve(data_buffer->count);
-        float buf[4];
-        for (int j = 0; j < data_buffer->count; ++j){
-            data_buffer->read(buf, j * 4 * sizeof(float), 4 * sizeof(float));
-            rot_chan->data.push_back({buf[0], buf[1], buf[2], buf[3]});
-        }
+    // } else if (gltf_targ == "scale"){
+    //     auto scale_chan = std::make_shared<AnimationChannelScale>();
+    //     anim.scales.push_back(scale_chan);
+    //     chan = scale_chan;
 
-    } else if (gltf_targ == "scale"){
-        auto scale_chan = std::make_shared<AnimationChannelScale>();
-        anim.scales.push_back(scale_chan);
-        chan = scale_chan;
+    //     scale_chan->data.reserve(data_buffer->count);
+    //     float buf[3];
+    //     for (int j = 0; j < data_buffer->count; ++j){
+    //         data_buffer->read(buf, j * 3 * sizeof(float), 3 * sizeof(float));
+    //         scale_chan->data.emplace_back(buf[0], buf[1], buf[2]);
+    //     }
 
-        scale_chan->data.reserve(data_buffer->count);
-        float buf[3];
-        for (int j = 0; j < data_buffer->count; ++j){
-            data_buffer->read(buf, j * 3 * sizeof(float), 3 * sizeof(float));
-            scale_chan->data[j] = glm::vec3(buf[0], buf[1], buf[2]);
-        }
+    // } else if (gltf_targ == "weights") {
+    //     auto weight_chan = std::make_shared<AnimationChannelWeight>();
+    //     anim.weights.push_back(weight_chan);
+    //     chan = weight_chan;
 
-    } else if (gltf_targ == "weights") {
-        auto weight_chan = std::make_shared<AnimationChannelWeight>();
-        anim.weights.push_back(weight_chan);
-        chan = weight_chan;
+    //     weight_chan->data.reserve(data_buffer->count);
+    //     auto &gltf_mesh = gltf_model.meshes[gltf_model.nodes[gltf_chan.target_node].mesh];
 
-        weight_chan->data.reserve(data_buffer->count);
-        auto &gltf_mesh = gltf_model.meshes[gltf_model.nodes[gltf_chan.target_node].mesh];
-
-        auto weights_count = gltf_mesh.weights.size();
-        for (int j = 0; j < data_buffer->count; ++j){
-            weight_chan->data.push_back({});
-            for (int k = 0; k < weights_count; ++k){
-                float cur;
-                data_buffer->read(&cur, j * weights_count * sizeof(float), sizeof(float));
-                weight_chan->data[j].push_back(cur);
-            }
-        }
+    //     auto weights_count = gltf_mesh.weights.size();
+    //     for (int j = 0; j < data_buffer->count; ++j){
+    //         weight_chan->data.push_back({});
+    //         for (int k = 0; k < weights_count; ++k){
+    //             float cur;
+    //             data_buffer->read(&cur, j * weights_count * sizeof(float), sizeof(float));
+    //             weight_chan->data[j].push_back(cur);
+    //         }
+    //     }
 
     } else {
         errors.push_back("unknown animation data type \"" + gltf_targ + "\"");
         return;
     }
+
+}
+
+Ref<AnimationChannelTranslate>
+ModelLoaderGltf::_loadAnimationChannelTranslation(const Buffer &time_buffer,
+                                                  const Buffer &data_buffer,
+                                                  std::vector<std::string> &errors) const {
+
+    auto chan = std::make_shared<AnimationChannelTranslate>();
+
+    chan->time.reserve(time_buffer.count);
+    for (int i = 0; i < time_buffer.count; ++i){
+        float t;
+        time_buffer.read(&t, i * sizeof(float), sizeof(float));
+        chan->time.push_back(t);
+    }
     
-    chan->node = model.nodes()[gltf_chan.target_node];
-    float buf;
-    for (int i = 0; i < time_buffer->count; ++i){
-        time_buffer->read(&buf, i * sizeof(float), sizeof(float));
-        if ((gltf_targ == "translation")){
-            // std::cout << "Time: " << buf << std::endl;
-        }
-        chan->time.push_back(buf);
+    chan->data.reserve(data_buffer.count);
+    for (int i = 0; i < data_buffer.count; ++i){
+        chan->data.emplace_back(
+            _loadNormalizedBufferElement(data_buffer, 3 * i, errors),
+            _loadNormalizedBufferElement(data_buffer, 3 * i + 1, errors),
+            _loadNormalizedBufferElement(data_buffer, 3 * i + 2, errors)
+        );
+    }
+
+    return chan;
+}
+
+
+Ref<AnimationChannelRotate>
+ModelLoaderGltf::_loadAnimationChannelRotation(const Buffer &time_buffer,
+                                               const Buffer &data_buffer,
+                                               std::vector<std::string> &errors) const {
+
+    auto chan = std::make_shared<AnimationChannelRotate>();
+
+    chan->time.reserve(time_buffer.count);
+    for (int i = 0; i < time_buffer.count; ++i){
+        float t;
+        time_buffer.read(&t, i * sizeof(float), sizeof(float));
+        chan->time.push_back(t);
+    }
+    
+    chan->data.reserve(data_buffer.count);
+    for (int i = 0; i < data_buffer.count; ++i){
+        chan->data.emplace_back(
+            _loadNormalizedBufferElement(data_buffer, 4 * i + 3, errors),
+            _loadNormalizedBufferElement(data_buffer, 4 * i, errors),
+            _loadNormalizedBufferElement(data_buffer, 4 * i + 1, errors),
+            _loadNormalizedBufferElement(data_buffer, 4 * i + 2, errors)
+        );
+    }
+
+    return chan;
+};
+
+float
+ModelLoaderGltf::_loadNormalizedBufferElement(const Buffer &buffer,
+                                              int i,
+                                              std::vector<std::string> &errors) const {
+    switch (buffer.data_type){
+    case BufferElemType::Byte:
+        return std::fmax(buffer.readElement<char>(i) / 127.0, -1.0);
+
+    case BufferElemType::UByte:
+        return buffer.readElement<unsigned char>(i) / 255.0;
+
+    case BufferElemType::Short:
+        return std::fmax(buffer.readElement<short int>(i) / 32767.0, -1.0);
+
+    case BufferElemType::UShort:
+        return buffer.readElement<unsigned short int>(i) / 65535.0;
+
+    case BufferElemType::Float:
+        return buffer.readElement<float>(i);
+    
+    default:
+        errors.emplace_back("wrong element type: " + toString(buffer.data_type));
+        return 0;
     }
 }

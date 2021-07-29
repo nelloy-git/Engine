@@ -19,7 +19,7 @@ public:
     ~BufferGL() override;
 
     bool write(const void *src, size_t dst_offset, size_t size) override;
-    bool read(void *dst, size_t src_offset, size_t size) override;
+    bool read(void *dst, size_t src_offset, size_t size) const override;
 
     using CpuData = std::vector<char>;
     using GpuData = struct {

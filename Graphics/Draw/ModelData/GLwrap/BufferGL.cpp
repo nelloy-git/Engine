@@ -43,7 +43,7 @@ bool BufferGL::write(const void *src, size_t dst_offset, size_t size){
     }
 }
 
-bool BufferGL::read(void *dst, size_t src_offset, size_t size){
+bool BufferGL::read(void *dst, size_t src_offset, size_t size) const {
     if (src_offset + size > bytes){
         return false;
     }

@@ -1,6 +1,7 @@
 #pragma once
 
 #include <stddef.h>
+#include <vector>
 
 #include "GLwrap/Types.h"
 
@@ -16,7 +17,14 @@ public:
     const int index;
 
     virtual bool write(const void *src, size_t dst_offset, size_t size) = 0;
-    virtual bool read(void *dst, size_t src_offset, size_t size) = 0;
+    virtual bool read(void *dst, size_t src_offset, size_t size) const = 0;
+
+    template<typename T>
+    T readElement(unsigned int i) const {
+        T buf;
+        read(&buf, i * sizeof(T), sizeof(T));
+        return buf;
+    };
 
     const BufferType type;
     const BufferElemType data_type;

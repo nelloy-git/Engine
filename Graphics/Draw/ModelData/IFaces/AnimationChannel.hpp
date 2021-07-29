@@ -6,23 +6,30 @@
 #include "glm/glm.hpp"
 #include "glm/gtc/quaternion.hpp"
 
+#include "Draw/ModelData/IFaces/Buffer.hpp"
 #include "Draw/ModelData/IFaces/Node.hpp"
 
 namespace Graphics::Draw {
 
 class AnimationChannel {
 public:
-    AnimationChannel() = default;
-    virtual ~AnimationChannel() = default;
+    AnimationChannel(std::shared_ptr<Node> target,
+                     const Buffer &time_buffer);
+    virtual ~AnimationChannel() = 0;
 
     std::shared_ptr<Node> node;
     std::vector<float> time;
+
+protected:
+    static float _getNormalized(const Buffer &buffer, size_t pos);
 };
 
 class AnimationChannelTranslate : public AnimationChannel {
 public:
-    AnimationChannelTranslate() = default;
-    virtual ~AnimationChannelTranslate() = default;
+    AnimationChannelTranslate(std::shared_ptr<Node> target,
+                              const Buffer &time_buffer,
+                              const Buffer &data_buffer);
+    virtual ~AnimationChannelTranslate();
 
     glm::vec3 get(float time, Interpolation method);
     std::vector<glm::vec3> data;
@@ -30,8 +37,10 @@ public:
 
 class AnimationChannelRotate : public AnimationChannel {
 public:
-    AnimationChannelRotate() = default;
-    virtual ~AnimationChannelRotate() = default;
+    AnimationChannelRotate(std::shared_ptr<Node> target,
+                           const Buffer &time_buffer,
+                           const Buffer &data_buffer);
+    virtual ~AnimationChannelRotate();
 
     glm::quat get(float time, Interpolation method);
     std::vector<glm::quat> data;
@@ -39,8 +48,10 @@ public:
 
 class AnimationChannelScale : public AnimationChannel {
 public:
-    AnimationChannelScale() = default;
-    virtual ~AnimationChannelScale() = default;
+    AnimationChannelScale(std::shared_ptr<Node> target,
+                          const Buffer &time_buffer,
+                          const Buffer &data_buffer);
+    virtual ~AnimationChannelScale();
 
     glm::vec3 get(float time, Interpolation method);
     std::vector<glm::vec3> data;
@@ -48,8 +59,10 @@ public:
 
 class AnimationChannelWeight : public AnimationChannel {
 public:
-    AnimationChannelWeight() = default;
-    virtual ~AnimationChannelWeight() = default;
+    AnimationChannelWeight(std::shared_ptr<Node> target,
+                           const Buffer &time_buffer,
+                           const Buffer &data_buffer);
+    virtual ~AnimationChannelWeight();
 
     std::vector<float> get(float time, Interpolation method);
     std::vector<std::vector<float>> data;
