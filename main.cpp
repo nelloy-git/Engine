@@ -81,7 +81,7 @@ int main(int argc, const char** argv){
         object->setModel(model_3d);
         object->setCamera(cam);
         object->setScene(0);
-        // object->active_animation = 0;
+        // object->setAnimation(0);
         object->transform.setT(glm::vec3((float)i, 0.f, 0.f));
         object->transform.setR(glm::angleAxis((float)(3 * 3.1415 / 2), glm::vec3(0, 1, 0)));
         object->transform.setS(glm::vec3(0.1, 0.1, 0.1));
@@ -131,7 +131,7 @@ int main(int argc, const char** argv){
         #pragma omp parallel for num_threads(4)
         for (int i = 0; i < objects.size(); ++i){
             // objects[i]->time += dt;
-            // objects[i]->transform.setR(glm::angleAxis((float)(angle), glm::vec3(0, 1, 0)));
+            objects[i]->transform.setR(glm::angleAxis((float)(angle), glm::vec3(0, 1, 0)));
             objects[i]->setAnimation(objects[i]->getAnimation().first + dt, 0);
             objects[i]->update();
         }

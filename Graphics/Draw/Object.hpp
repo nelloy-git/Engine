@@ -14,6 +14,9 @@
 namespace Graphics::Draw {
 
 class Object {
+
+friend Animation;
+
 public:
     Object();
     virtual ~Object();

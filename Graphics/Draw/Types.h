@@ -1,5 +1,7 @@
 #pragma once
 
+#include <unordered_map>
+
 #include "magic_enum.h"
 
 namespace Graphics::Draw {
@@ -7,7 +9,8 @@ namespace Graphics::Draw {
 enum class BufferType{
     Vertex,
     Index,
-    Other
+    Other,
+    Unknown
 };
 
 // Unknown must be last one.
@@ -95,11 +98,13 @@ enum class TextureFilter{
 
 enum class Interpolation {
     Linear,
+    Unknown
 };
 
 enum class TextureUsage {
     Texture0,
-    Texture1
+    Texture1,
+    Unknown
 };
 int getLocation(TextureUsage usage);
 
@@ -130,16 +135,19 @@ constexpr std::string toString(){
 template<typename T>
 std::string toString(T enum_value, bool full = false){
     static_assert(std::is_enum_v<T> && std::is_same_v<T, std::decay_t<T>>, "Enum type is required.");
+    static std::string type_name = toString<T>();
+    static std::unordered_map<T, std::string> val2str;
 
-    std::string str;
-    if (full){
-        constexpr auto type_name = magic_enum::enum_type_name<T>();
-        str = std::string(type_name) + "::";
+    auto iter = val2str.find(enum_value);
+    std::string name;
+    if (iter == val2str.end()){
+        name = magic_enum::enum_name(enum_value);
+        val2str[enum_value] = name;
+    } else {
+        name = iter->second;
     }
-    auto enum_name = magic_enum::enum_name(enum_value);
-    str += std::string(enum_name);
 
-    return str;
+    return full ? type_name + "::" + name : name;
 }
 
 template<typename T>

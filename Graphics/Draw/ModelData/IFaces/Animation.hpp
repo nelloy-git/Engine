@@ -2,30 +2,29 @@
 
 #include <vector>
 
-#include "glm/glm.hpp"
-#include "glm/gtc/quaternion.hpp"
-
-#include "Draw/ModelData/IFaces/AnimationChannel.hpp"
+#include "Draw/ModelData/IFaces/AnimCh.hpp"
+#include "Draw/ModelData/IFaces/AnimCh/AnimChR.hpp"
 
 namespace Graphics::Draw {
 
-class Model;
+class Object;
 
 class Animation {
 public:
-    Animation(const Model &mode, int index) :
-        model(model),
-        index(index){}
-
-    virtual ~Animation(){}
+    Animation(const Model &mode, int index);
+    virtual ~Animation();
 
     const Model &model;
     const int index;
 
-    std::vector<std::shared_ptr<AnimationChannelTranslate>> translations;
-    std::vector<std::shared_ptr<AnimationChannelRotate>> rotations;
-    std::vector<std::shared_ptr<AnimationChannelScale>> scales;
-    std::vector<std::shared_ptr<AnimationChannelWeight>> weights;
+    void apply(float time, Object &obj);
+
+    std::vector<std::shared_ptr<AnimCh>> channels;
+
+    // std::vector<std::shared_ptr<AnimChT>> translations;
+    // std::vector<std::shared_ptr<AnimChR>> rotations;
+    // std::vector<std::shared_ptr<AnimationChannelScale>> scales;
+    // std::vector<std::shared_ptr<AnimationChannelWeight>> weights;
 };
 
 }
