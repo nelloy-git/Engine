@@ -74,12 +74,12 @@ bool Object::update(){
     _updateScene();
     _updateAnimation();
 
-    if (_node_transforms_changed){
+    // if (_node_transforms_changed){
         auto parent_mat = _camera->matrix * transform.mat;
         for (int i = 0; i < _scene->nodes.size(); ++i){
             _updateNodeTransform(*_scene->nodes[i], parent_mat);
         }
-    }
+    // }
 
     return true;
 }

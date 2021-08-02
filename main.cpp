@@ -131,8 +131,8 @@ int main(int argc, const char** argv){
         #pragma omp parallel for num_threads(4)
         for (int i = 0; i < objects.size(); ++i){
             // objects[i]->time += dt;
-            objects[i]->transform.setR(glm::angleAxis((float)(angle), glm::vec3(0, 1, 0)));
-            objects[i]->setAnimation(objects[i]->getAnimation().first + dt, 0);
+            // objects[i]->transform.setR(glm::angleAxis((float)(angle), glm::vec3(0, 1, 0)));
+            objects[i]->setAnimation(objects[i]->getAnimation().first + dt / 4, 0);
             objects[i]->update();
         }
         auto update_time = timer->elapsed() - clear_time;

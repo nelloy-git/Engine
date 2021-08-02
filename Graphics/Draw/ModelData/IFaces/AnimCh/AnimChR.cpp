@@ -1,5 +1,7 @@
 #include "Draw/ModelData/IFaces/AnimCh/AnimChR.hpp"
 
+#include <iostream>
+
 using namespace Graphics::Draw;
 
 AnimChR::AnimChR(std::shared_ptr<Node> target,
@@ -43,25 +45,28 @@ void AnimChR::_applyLinear(float time, Transform &transform) const {
         return;
     }
 
-    auto low = std::lower_bound(_time_list.begin(), _time_list.end(), time);
-    if (low <= _time_list.begin()){
-        transform.setR(_data_list[0]);
-        return;
-    }
-
-    auto up = low + 1;
-    if (up >= _time_list.end()){
+    auto upper = std::lower_bound(_time_list.begin(), _time_list.end(), time);
+    if (upper >= _time_list.end()){
         transform.setR(_data_list.back());
         return;
     }
 
-    auto t1 = *low;
-    auto t2 = *up;
+    auto lower = upper - 1;
+    if (lower <= _time_list.begin()){
+        transform.setR(_data_list[0]);
+        return;
+    }
 
-    auto k1 = (time - t1) / (t2 - t1);
-    auto k2 = 1 - k1;
-    auto d1 = _data_list[std::distance(_time_list.begin(), low)];
-    auto d2 = _data_list[std::distance(_time_list.begin(), up)];
+    auto t1 = *upper;
+    auto t2 = *lower;
+
+    float k1 = (time - t1) / (t2 - t1);
+    float k2 = 1 - k1;
+
+    int p1 = std::distance(_time_list.begin(), upper);
+    int p2 = p1 + 1;
+    auto d1 = _data_list[p1];
+    auto d2 = _data_list[p2];
 
     transform.setR(k1 * d1 + k2 * d2);
 }
