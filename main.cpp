@@ -132,7 +132,7 @@ int main(int argc, const char** argv){
         for (int i = 0; i < objects.size(); ++i){
             // objects[i]->time += dt;
             // objects[i]->transform.setR(glm::angleAxis((float)(angle), glm::vec3(0, 1, 0)));
-            objects[i]->setAnimation(objects[i]->getAnimation().first + dt / 4, 0);
+            objects[i]->setAnimation(objects[i]->getAnimation().first + dt, 0);
             objects[i]->update();
         }
         auto update_time = timer->elapsed() - clear_time;
@@ -148,6 +148,7 @@ int main(int argc, const char** argv){
         if (last > 1){
             // rot_vel = -rot_vel;
 
+            std::cout << "================" << std::endl;
             std::cout << "Loop time: " << dt << std::endl;
             std::cout << "Clear time: " << clear_time << std::endl;
             std::cout << "Update time: " << update_time << std::endl;
