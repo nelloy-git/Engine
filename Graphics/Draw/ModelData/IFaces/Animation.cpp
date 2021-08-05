@@ -1,12 +1,16 @@
 #include "Draw/ModelData/IFaces/Animation.hpp"
 
 #include "Draw/Object.hpp"
+#include "Log.h"
+
+#include <unistd.h>
 
 using namespace Graphics::Draw;
 
-Animation::Animation(const Model &mode, int index) :
+Animation::Animation(const Model &model, int index) :
     model(model),
     index(index){
+    channels.resize(model.nodes().size());
 }
 
 
@@ -14,9 +18,19 @@ Animation::~Animation(){
 }
 
 
-void Animation::apply(float time, Object &obj){
-    for (auto chan : channels){
-        auto &targ = obj._node_transforms[chan->getTarget()->index];
-        chan->apply(time, targ);
+glm::mat4 Animation::getMat(const Node &node, float time){
+
+    auto &list = channels[node.index];
+
+    if (list.empty()){
+        return node.transform.mat;
     }
-};
+
+    Transform tr = node.transform;
+    std::vector<float> morph;
+    for (int i = 0; i < list.size(); ++i){
+        list[i]->apply(time, tr);
+    }
+    tr.applyTRS();
+    return tr.mat;
+}

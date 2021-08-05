@@ -75,13 +75,13 @@ int main(int argc, const char** argv){
 
 
     std::vector<std::shared_ptr<Draw::Object>> objects;
-    for (int i = 0; i < 1; ++i){
+    for (int i = 0; i < 1000; ++i){
         auto object = std::make_shared<Draw::Object>();
         objects.push_back(object);
         object->setModel(model_3d);
         object->setCamera(cam);
         object->setScene(0);
-        // object->setAnimation(0);
+        object->setAnimation(0);
         object->transform.setT(glm::vec3((float)i, 0.f, 0.f));
         object->transform.setR(glm::angleAxis((float)(3 * 3.1415 / 2), glm::vec3(0, 1, 0)));
         object->transform.setS(glm::vec3(0.1, 0.1, 0.1));
@@ -99,26 +99,36 @@ int main(int argc, const char** argv){
     float last = 0;
     float rot_vel = (float)(3.14 / 8);
     float angle = 0;
+
+    bool stop = false;
+    window->keyboard.onPress.add([&stop](GLwrap::KeyboardKey key, GLwrap::KeyMode mode){
+        if (key == GLwrap::KeyboardKey::SPACE){
+            stop = !stop;
+            std::cout << "Pressed" <<std::endl;
+        }
+    });
+
+
     while (running){
         float dt = timer->elapsed();
         last += dt;
         timer->start();
 
         float dist = cam_vel * dt;
-
-        if (window->keyboard.isDown(GLwrap::KeyboardKey::W)){
+        
+        if (!stop && window->keyboard.isDown(GLwrap::KeyboardKey::W)){
             cam->pos += cam->direction * dist;
         }
 
-        if (window->keyboard.isDown(GLwrap::KeyboardKey::S)){
+        if (!stop && window->keyboard.isDown(GLwrap::KeyboardKey::S)){
             cam->pos -= cam->direction * dist;
         }
 
-        if (window->keyboard.isDown(GLwrap::KeyboardKey::D)){
+        if (!stop && window->keyboard.isDown(GLwrap::KeyboardKey::D)){
             cam->pos += cam->right * dist;
         }
 
-        if (window->keyboard.isDown(GLwrap::KeyboardKey::A)){
+        if (!stop && window->keyboard.isDown(GLwrap::KeyboardKey::A)){
             cam->pos -= cam->right * dist;
         }
 
@@ -127,13 +137,15 @@ int main(int argc, const char** argv){
 
         auto clear_time = timer->elapsed();
 
-        angle += dt * rot_vel;
-        #pragma omp parallel for num_threads(4)
+        dt = stop ? 0 : dt;
+        #pragma omp parallel for num_threads(16)
         for (int i = 0; i < objects.size(); ++i){
             // objects[i]->time += dt;
             // objects[i]->transform.setR(glm::angleAxis((float)(angle), glm::vec3(0, 1, 0)));
-            objects[i]->setAnimation(objects[i]->getAnimation().first + dt, 0);
-            objects[i]->update();
+            auto obj = objects[i];
+            // obj->setAnimation(0);
+            obj->setAnimationTime(obj->getAnimationTime() + dt);
+            obj->update();
         }
         auto update_time = timer->elapsed() - clear_time;
 

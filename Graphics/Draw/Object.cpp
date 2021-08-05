@@ -1,130 +1,130 @@
 #include "Draw/Object.hpp"
 
-#include "glm/gtc/matrix_transform.hpp"
-
 #include "Log.h"
 
 using namespace Graphics::Draw;
 
-Object::Object(){
+template<typename T>
+using Ref = Object::Ref<T>;
+
+Object::Object() :
+    _model_mat(transform.mat){
 }
 
 Object::~Object(){
 }
 
-const Transform &Object::getNodeTransform(const Node &node) const {
-    int i = node.index;
-    if (i < 0 || i > _node_transforms.size()){
-        throw std::invalid_argument("node index is out of range.");
+void Object::update(){
+    if (!_model || !_camera || !_scene){
+        return;
     }
-    return _node_transforms[i];
+
+    transform.applyTRS();
+    if (!_changed && _model_mat == transform.mat){
+        return;
+    }
+
+    _model_mat = transform.mat;
+    auto root_mat = _camera->mat * transform.mat;
+    for (int i = 0; i <_scene->nodes.size(); ++i){
+        _updateNode(*_scene->nodes[i], root_mat);
+    }
 }
 
-void Object::setModel(std::shared_ptr<Model> model){
+const glm::mat4 *Object::getNodeMat(int index) const {
+    if (index < 0 || index >= _node_mats.size()){
+        return nullptr;
+    }
+    return &_node_mats[index];
+}
+
+const std::vector<float> *Object::getNodeMorphWeights(int index) const{
+    if (index < 0 || index >= _node_weights.size()){
+        return nullptr;
+    }
+    return &_node_weights[index];
+}
+
+void Object::setModel(Ref<Model> model){
+    _changed = _model.get() != model.get();
     _model = model;
-    _model_changed = true;
+    if (model){
+        _node_mats = std::vector<glm::mat4>(model->nodes().size());
+        _node_weights = std::vector<std::vector<float>>(model->nodes().size());
+    }
+    _scene = nullptr;
+    _anim = nullptr;
 }
 
-std::shared_ptr<Model> Object::getModel() const {
+const Ref<Model> Object::getModel() const {
     return _model;
 }
 
-void Object::setCamera(std::shared_ptr<Camera> camera){
+void Object::setCamera(Ref<Camera> camera){
+    _changed = _camera.get() != camera.get();
     _camera = camera;
-    _camera_changed = true;
 }
 
-std::shared_ptr<Camera> Object::getCamera() const {
+const Ref<Camera> Object::getCamera() const {
     return _camera;
 }
 
 void Object::setScene(int index){
-    _scene_index = index;
-    if (index < 0 || (_model && index > _model->scenes().size())){
+    if (!_model || index < 0 || index >= _model->scenes().size()){
         return;
     }
-    _scene = _model->scenes()[index];
+
+    auto sc = _model->scenes()[index];
+    _changed = _scene.get() != sc.get();
+    _scene = sc;
 }
 
-std::shared_ptr<Scene> Object::getScene() const {
-    return _scene;
+const int Object::getScene() const {
+    return _scene ? _scene->index : -1;
 }
 
-void Object::setAnimation(float time, int index){
+void Object::setAnimation(int index){
+    if (!_model || index < 0 || index >= _model->animations().size()){
+        return;
+    }
+
+    auto a = _model->animations()[index];
+    _changed = _anim.get() != a.get();
+    _anim = a;
+    _anim_time = 0;
+}
+
+const int Object::getAnimation() const {
+    return _anim ? _anim->index : -1;
+}
+
+void Object::setAnimationTime(float time){
+    if (!_anim){
+        return;
+    }
+
+    _changed = _anim_time != time;
     _anim_time = time;
-    _anim_index = index;
-    if (index < 0 || (_model && index > _model->animations().size())){
+}
+
+const float Object::getAnimationTime() const {
+    return _anim_time;
+}
+
+void Object::_updateNode(const Node &node, const glm::mat4 &root_mat){
+    if (node.index < 0 || node.index >= _node_mats.size()){
         return;
     }
-    _anim = _model->animations()[index];
-}
 
-std::pair<float, int> Object::getAnimation() const {
-    return std::make_pair(_anim_time, _anim_index);
-}
-
-bool Object::update(){
-    if (!_model){return false;}
-    if (!_camera){return false;}
-    if (!_scene){return false;}
-
-    transform.applyTRS();
-    _updateCamera();
-    _updateModel();
-    _updateScene();
-    _updateAnimation();
-
-    // if (_node_transforms_changed){
-        auto parent_mat = _camera->matrix * transform.mat;
-        for (int i = 0; i < _scene->nodes.size(); ++i){
-            _updateNodeTransform(*_scene->nodes[i], parent_mat);
-        }
-    // }
-
-    return true;
-}
-
-void Object::_updateCamera(){
-    if (!_camera_changed){return;}
-    _node_transforms_changed = true;
-}
-
-void Object::_updateModel(){
-    if (!_model_changed){return;}
-    _node_transforms_changed = true;
-
-    int s = _model->nodes().size();
-    _node_transforms = std::vector<Transform>(s);
-    setScene(_scene_index);
-}
-
-void Object::_updateScene(){
-    if (!_scene_changed){return;}
-    _node_transforms_changed = true;
-}
-
-void Object::_updateAnimation(){
-    if (!_anim_changed){return;}
-    _node_transforms_changed = true;
-}
-
-void Object::_updateNodeTransform(Node &node, const glm::mat4 &parent_mat){
-    Transform *res = &_node_transforms[node.index];
-    *res = node.transform;
-
+    auto &mat = _node_mats[node.index];
     if (_anim){
-        _anim->apply(_anim_time, *this);
-    }    
-    
-    res->applyTRS();
-    res->mat = parent_mat * res->mat;
+        mat = root_mat * _anim->getMat(node, _anim_time);
+    } else {
+        mat = root_mat * node.transform.mat;
+    }
 
     for (int i = 0; i < node.children.size(); ++i){
         auto child = node.children[i];
-        if (!child){
-            continue;
-        }
-        
-        _updateNodeTransform(*child, res->mat);
+        _updateNode(*child, mat);
     }
 }

@@ -13,7 +13,7 @@ public:
             std::shared_ptr<Buffer> data_buffer);
     virtual ~AnimChR();
 
-    virtual void apply(float time, Transform &transform) const override;
+    virtual void apply(float time, Transform &transform, std::vector<float> &morph) const override;
 
 protected:
     void _applyLinear(float time, Transform &transform) const;

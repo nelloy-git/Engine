@@ -10,9 +10,8 @@ else ()
     set(/usr/bin/gcc-9.exe)
 endif (WIN32)
 
-#set(CMAKE_BUILD_TYPE Debug)
+add_compile_definitions(DEBUG)
 add_compile_options(-g -O0)
-#set(CMAKE_BUILD_TYPE RelWithDebInfo)
 
 add_subdirectory(Graphics)
 

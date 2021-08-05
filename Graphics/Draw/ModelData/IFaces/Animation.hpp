@@ -11,20 +11,20 @@ class Object;
 
 class Animation {
 public:
-    Animation(const Model &mode, int index);
+    Animation(const Model &model, int index);
     virtual ~Animation();
 
     const Model &model;
     const int index;
 
-    void apply(float time, Object &obj);
+    glm::mat4 getMat(const Node &node, float time);
 
-    std::vector<std::shared_ptr<AnimCh>> channels;
+    // node.index -> list of channels for node -> channel
+    std::vector<std::vector<std::shared_ptr<AnimCh>>> channels;
 
-    // std::vector<std::shared_ptr<AnimChT>> translations;
-    // std::vector<std::shared_ptr<AnimChR>> rotations;
-    // std::vector<std::shared_ptr<AnimationChannelScale>> scales;
-    // std::vector<std::shared_ptr<AnimationChannelWeight>> weights;
+private:
+    float min_time = -1;
+    float max_time = -1;
 };
 
 }

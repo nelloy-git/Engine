@@ -10,7 +10,7 @@ inline float halfPI(){
 }
 
 Camera::Camera() :
-    matrix(this, &Camera::_getMatrix, nullptr),
+    mat(this, &Camera::_getMatrix, nullptr),
     pos(this, &Camera::_getPos, &Camera::_setPos),
     direction(this, &Camera::_getDirection, &Camera::_setDirection),
     right(this, &Camera::_getRight, nullptr),

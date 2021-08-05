@@ -11,7 +11,7 @@ public:
     Camera();
     virtual ~Camera();
 
-    const Property<glm::mat4, Camera> matrix;
+    const Property<glm::mat4, Camera> mat;
     Property<glm::vec3, Camera> pos;
     Property<glm::vec3, Camera> direction;
     const Property<glm::vec3, Camera> right;

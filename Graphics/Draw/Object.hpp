@@ -1,92 +1,58 @@
 #pragma once
 
-#include <optional>
-#include <unordered_map>
-
-#include "glm/glm.hpp"
-#include "glm/gtc/quaternion.hpp"
-
 #include "Draw/Utils/Transform.hpp"
 #include "Draw/Utils/Camera.hpp"
+
+#include "Draw/ModelData/IFaces/Animation.hpp"
+#include "Draw/ModelData/IFaces/Scene.hpp"
 #include "Draw/ModelData/IFaces/Model.hpp"
-#include "Property.hpp"
 
 namespace Graphics::Draw {
 
 class Object {
-
-friend Animation;
-
 public:
     Object();
     virtual ~Object();
 
-    bool update();
-    // bool changed();
-    // const glm::mat4 &getMatrix(const Node &node) const;
-
     Transform transform;
-    const Transform &getNodeTransform(const Node &node) const;
 
-    void setModel(std::shared_ptr<Model> model);
-    std::shared_ptr<Model> getModel() const;
+    void update();
+    const glm::mat4 *getNodeMat(int index) const;
+    const std::vector<float> *getNodeMorphWeights(int index) const;
 
-    void setCamera(std::shared_ptr<Camera> camera);
-    std::shared_ptr<Camera> getCamera() const;
+    template<typename T>
+    using Ref = std::shared_ptr<T>;
+
+    void setModel(Ref<Model> model);
+    const Ref<Model> getModel() const;
+
+    void setCamera(Ref<Camera> camera);
+    const Ref<Camera> getCamera() const;
 
     void setScene(int index);
-    std::shared_ptr<Scene> getScene() const;
+    const int getScene() const;
 
-    void setAnimation(float time, int index);
-    std::pair<float, int> getAnimation() const;
+    void setAnimation(int index);
+    const int getAnimation() const ;
 
-    // Property<std::shared_ptr<Model>, Object> model;
-    // Property<std::shared_ptr<Camera>, Object> camera;
-    // Property<int, Object> active_scene;
+    void setAnimationTime(float time);
+    const float getAnimationTime() const;
 
-    // float time = 0;
-    // Property<int, Object> active_animation;
+    // TODO Animation mixing.
 
 private:
+    void _updateNode(const Node &node, const glm::mat4 &root_mat);
 
-    void _updateModel();
-    void _updateCamera();
-    void _updateScene();
-    void _updateAnimation();
-    void _updateNodeTransform(Node &node, const glm::mat4 &parent_mat);
+    bool _changed = true;
 
-    bool _node_transforms_changed;
-    std::vector<Transform> _node_transforms;
-
-    bool _model_changed;
-    std::shared_ptr<Model> _model;
-
-    bool _camera_changed;
-    std::shared_ptr<Camera> _camera;
-
-    bool _scene_changed;
-    int _scene_index;
-    std::shared_ptr<Scene> _scene;
-
-    bool _anim_changed;
+    glm::mat4 _model_mat;
+    std::vector<glm::mat4> _node_mats;
+    std::vector<std::vector<float>> _node_weights;
+    Ref<Model> _model;
+    Ref<Camera> _camera;
+    Ref<Scene> _scene;
+    Ref<Animation> _anim;
     float _anim_time;
-    int _anim_index;
-    std::shared_ptr<Animation> _anim;
-
-    // const std::shared_ptr<Model> &_getModel();
-    // void _setModel(const std::shared_ptr<Model> &model);
-
-    // const std::shared_ptr<Camera> &_getCamera();
-    // void _setCamera(const std::shared_ptr<Camera> &camera);
-
-    // int _active_scene = 0;
-    // const int &_getActiveScene();
-    // void _setActiveScene(const int &scene);
-
-    // int _active_animation = -1;
-    // const int &_getActiveAnimation();
-    // void _setActiveAnimation(const int &anim);
-    // std::map<const Node *, glm::mat4> _matrices;
 };
 
 }

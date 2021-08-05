@@ -7,6 +7,7 @@
 
 #include "Draw/ModelData/IFaces/AnimCh/AnimChT.hpp"
 #include "Draw/ModelData/IFaces/AnimCh/AnimChR.hpp"
+#include "Draw/ModelData/IFaces/AnimCh/AnimChS.hpp"
 
 #include "Log.h"
 
@@ -370,14 +371,17 @@ ModelLoaderGltf::_loadAnimationChannel(const tinygltf::AnimationChannel &gltf_ch
     std::shared_ptr<AnimCh> chan;
     auto &gltf_targ = gltf_chan.target_path;
     if (gltf_targ == "translation"){
-        chan = std::make_shared<AnimChT>(target, time_buffer, data_buffer);
+        chan = std::make_shared<AnimChS>(target, time_buffer, data_buffer);
     } else if (gltf_targ == "rotation"){
         chan = std::make_shared<AnimChR>(target, time_buffer, data_buffer);
+    } else if (gltf_targ == "scale"){
+        chan = std::make_shared<AnimChS>(target, time_buffer, data_buffer);
     } else {
         errors.push_back("unknown animation data type \"" + gltf_targ + "\"");
         return;
     }
-    anim.channels.push_back(chan);
+
+    anim.channels[target->index].push_back(chan);
 }
 
 // Ref<AnimationChannelTranslate>

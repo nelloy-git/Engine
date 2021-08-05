@@ -29,7 +29,7 @@ AnimChR::AnimChR(std::shared_ptr<Node> target,
 AnimChR::~AnimChR(){
 }
 
-void AnimChR::apply(float time, Transform &transform) const {
+void AnimChR::apply(float time, Transform &transform, std::vector<float> &morph) const {
     switch (_method){
         case Interpolation::Linear:
             return _applyLinear(time, transform);
@@ -40,33 +40,36 @@ void AnimChR::apply(float time, Transform &transform) const {
 }
 
 void AnimChR::_applyLinear(float time, Transform &transform) const {
-    // Out of range.
-    if (time < _time_list[0] || time > _time_list.back()){
-        return;
-    }
-
-    auto upper = std::lower_bound(_time_list.begin(), _time_list.end(), time);
-    if (upper >= _time_list.end()){
-        transform.setR(_data_list.back());
-        return;
-    }
-
-    auto lower = upper - 1;
-    if (lower <= _time_list.begin()){
+    
+    if (time <= _time_list[0]){
         transform.setR(_data_list[0]);
         return;
     }
 
-    auto t1 = *upper;
-    auto t2 = *lower;
+    if (time >= _time_list.back()){
+        transform.setR(_data_list.back());
+        return;
+    }
 
-    float k1 = (time - t1) / (t2 - t1);
-    float k2 = 1 - k1;
+    auto up = std::lower_bound(_time_list.begin(), _time_list.end(), time);
+    if (up == _time_list.end()){
+        transform.setR(_data_list.back());
+        return;
+    }
 
-    int p1 = std::distance(_time_list.begin(), upper);
-    int p2 = p1 + 1;
-    auto d1 = _data_list[p1];
-    auto d2 = _data_list[p2];
+    auto low = up - 1;
 
-    transform.setR(k1 * d1 + k2 * d2);
+    auto low_t = *low;
+    auto up_t = *up;
+
+    float up_k = (time - low_t) / (up_t - low_t);
+    float low_k = 1 - up_k;
+
+    int low_p = std::distance(_time_list.begin(), low);
+    int up_p = low_p + 1;
+
+    auto low_d = _data_list[low_p];
+    auto up_d = _data_list[up_p];
+
+    transform.setR(glm::slerp(low_d, up_d, up_k));
 }

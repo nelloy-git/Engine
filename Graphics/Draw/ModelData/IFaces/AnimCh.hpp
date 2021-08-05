@@ -15,7 +15,7 @@ public:
            Interpolation method = Interpolation::Linear);
     virtual ~AnimCh();
 
-    virtual void apply(float time, Transform &transform) const = 0;
+    virtual void apply(float time, Transform &transform, std::vector<float> &morph) const = 0;
 
     const std::shared_ptr<Node> getTarget() const;
     const std::shared_ptr<Buffer> getTime() const;

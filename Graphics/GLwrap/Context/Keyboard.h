@@ -17,8 +17,8 @@ public:
     bool isDown(KeyboardKey key);
     bool isDown(KeyboardKey key) const;
 
-    const Event<KeyboardKey, KeyMode> onPress;
-    const Event<KeyboardKey, KeyMode> onRelease;
+    Event<KeyboardKey, KeyMode> onPress;
+    Event<KeyboardKey, KeyMode> onRelease;
 
 private:
     std::unordered_map<KeyboardKey, bool> _down;

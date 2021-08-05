@@ -78,22 +78,28 @@ bool ShaderGL::verify(){
 void ShaderGL::draw(const Object &obj){
 
     std::shared_ptr<Model> model = obj.getModel();
-    if (!model){return;}
+    if (!model){
+        return;
+    }
 
-    auto scene = obj.getScene();
-    if (!scene){return;}
+    int scene_index = obj.getScene();
+    if (scene_index < 0){
+        return;
+    }
 
+    auto scene = model->scenes()[scene_index];
     for (int i = 0; i < scene->nodes.size(); ++i){
-        _drawNode(*scene->nodes[i], obj);
+        auto node = scene->nodes[i];
+        _drawNode(*node, obj);
     }
 }
 
 void ShaderGL::_drawNode(const Node &node, const Object &obj){
-    const glm::mat4 &mat = obj.getNodeTransform(node).mat;
+    auto mat = obj.getNodeMat(node.index);
 
     auto mesh = node.mesh;
-    if (mesh){
-        program->setUniformMat4f("model", glm::value_ptr(mat));
+    if (mesh && mat != nullptr){
+        program->setUniformMat4f("model", glm::value_ptr(*mat));
         program->setUniform1vi("morph_targets", mesh->weights.size());
         for (int i = 0; i < mesh->weights.size(); ++i){
             program->setUniform1vf("morph_weights[" + std::to_string(i) + "]", mesh->weights[i]);
@@ -121,6 +127,11 @@ void ShaderGL::_drawNode(const Node &node, const Object &obj){
             }
         }
     }
+#ifdef DEBUG
+    else if (mat == nullptr) {
+        LOG(MSG) << node.index << " empty mat.";
+    }
+#endif
 
     for (int i = 0; i < node.children.size(); ++i){
         _drawNode(*node.children[i], obj);

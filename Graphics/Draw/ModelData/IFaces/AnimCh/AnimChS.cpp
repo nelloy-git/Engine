@@ -1,4 +1,4 @@
-#include "Draw/ModelData/IFaces/AnimCh/AnimChT.hpp"
+#include "Draw/ModelData/IFaces/AnimCh/AnimChS.hpp"
 
 using namespace Graphics::Draw;
 
@@ -39,18 +39,18 @@ void AnimChS::apply(float time, Transform &transform, std::vector<float> &morph)
 void AnimChS::_applyLinear(float time, Transform &transform) const {
     
     if (time <= _time_list[0]){
-        transform.setT(_data_list[0]);
+        transform.setS(_data_list[0]);
         return;
     }
 
     if (time >= _time_list.back()){
-        transform.setT(_data_list.back());
+        transform.setS(_data_list.back());
         return;
     }
 
     auto up = std::lower_bound(_time_list.begin(), _time_list.end(), time);
     if (up == _time_list.end()){
-        transform.setT(_data_list.back());
+        transform.setS(_data_list.back());
         return;
     }
 
@@ -68,5 +68,5 @@ void AnimChS::_applyLinear(float time, Transform &transform) const {
     auto low_d = _data_list[low_p];
     auto up_d = _data_list[up_p];
 
-    transform.setT(glm::mix(low_d, up_d, up_k));
+    transform.setS(glm::mix(low_d, up_d, up_k));
 }

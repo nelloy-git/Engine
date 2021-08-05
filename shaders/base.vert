@@ -1,5 +1,4 @@
 #version 330 core
-#extension GL_ARB_enhanced_layouts: enable
 
 uniform mat4 model;
 
