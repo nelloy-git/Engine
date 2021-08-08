@@ -8,6 +8,7 @@
 #include "Draw/ModelData/IFaces/AnimCh/AnimChT.hpp"
 #include "Draw/ModelData/IFaces/AnimCh/AnimChR.hpp"
 #include "Draw/ModelData/IFaces/AnimCh/AnimChS.hpp"
+#include "Draw/ModelData/IFaces/AnimCh/AnimChW.hpp"
 
 #include "Log.h"
 
@@ -162,7 +163,7 @@ ModelLoaderGltf::_loadMesh(const tinygltf::Mesh &gltf_mesh,
 
     auto &gltf_weights = gltf_mesh.weights;
     for (int i = 0; i < gltf_weights.size(); ++i){
-        mesh->weights.push_back(gltf_weights[i]);
+        mesh->morph.push_back(gltf_weights[i]);
     }
 }
 
@@ -376,6 +377,8 @@ ModelLoaderGltf::_loadAnimationChannel(const tinygltf::AnimationChannel &gltf_ch
         chan = std::make_shared<AnimChR>(target, time_buffer, data_buffer);
     } else if (gltf_targ == "scale"){
         chan = std::make_shared<AnimChS>(target, time_buffer, data_buffer);
+    } else if (gltf_targ == "weights"){
+        chan = std::make_shared<AnimChW>(target, time_buffer, data_buffer, target->mesh->morph.size());
     } else {
         errors.push_back("unknown animation data type \"" + gltf_targ + "\"");
         return;

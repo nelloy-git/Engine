@@ -61,6 +61,15 @@ bool Program::setUniform1vf(const std::string &name, const float val){
     return true;
 }
 
+bool Program::setUniformFloatArray(const std::string &name, const float *ptr, size_t size){
+    GLuint loc = getUniformLoc(name);
+    if (loc < 0){
+        return false;
+    }
+    glUniform1fv(loc, size, ptr);
+    return true;
+}
+
 bool Program::setUniform1vi(const std::string &name, const int val){
     GLuint loc = getUniformLoc(name);
     if (loc < 0){

@@ -100,9 +100,11 @@ void ShaderGL::_drawNode(const Node &node, const Object &obj){
     auto mesh = node.mesh;
     if (mesh && mat != nullptr){
         program->setUniformMat4f("model", glm::value_ptr(*mat));
-        program->setUniform1vi("morph_targets", mesh->weights.size());
-        for (int i = 0; i < mesh->weights.size(); ++i){
-            program->setUniform1vf("morph_weights[" + std::to_string(i) + "]", mesh->weights[i]);
+        
+        auto weights = obj.getNodeMorphWeights(node.index);
+        program->setUniform1vi("morph_targets", weights->size());
+        if (weights->size() > 0){
+            program->setUniformFloatArray("morph_weights", &weights->at(0), weights->size());
         }
 
         for (int i = 0; i < mesh->primitives().size(); ++i){

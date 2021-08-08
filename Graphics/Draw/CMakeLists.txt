@@ -19,6 +19,8 @@ add_library (${PROJECT_NAME} STATIC
     ./ModelData/IFaces/AnimCh.cpp
     ./ModelData/IFaces/AnimCh/AnimChT.cpp
     ./ModelData/IFaces/AnimCh/AnimChR.cpp
+    ./ModelData/IFaces/AnimCh/AnimChS.cpp
+    ./ModelData/IFaces/AnimCh/AnimChW.cpp
     ./ModelData/IFaces/Buffer.cpp
     ./ModelData/IFaces/Model.cpp
     ./ModelData/IFaces/Node.cpp

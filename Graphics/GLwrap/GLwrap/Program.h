@@ -24,6 +24,8 @@ public:
     bool setUniformVec4f(const std::string &name, const float vec[4]);
     bool setUniformMat4f(const std::string &name, const float mat[16]);
 
+    bool setUniformFloatArray(const std::string &name, const float *ptr, size_t size);
+
     const GLuint id;
 
 private:

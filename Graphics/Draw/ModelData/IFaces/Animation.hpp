@@ -17,7 +17,7 @@ public:
     const Model &model;
     const int index;
 
-    glm::mat4 getMat(const Node &node, float time);
+    void getMat(const Node &node, float time, glm::mat4 *mat, std::vector<float> *morph);
 
     // node.index -> list of channels for node -> channel
     std::vector<std::vector<std::shared_ptr<AnimCh>>> channels;

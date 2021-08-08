@@ -31,6 +31,35 @@
 using namespace Graphics;
 
 const float cam_vel = 5;
+bool pause = false;
+
+void camMove(GLwrap::Window &window, Graphics::Draw::Camera &cam, float dist){
+        
+    if (!pause && window.keyboard.isDown(GLwrap::KeyboardKey::W)){
+        cam.pos += cam.direction * dist;
+    }
+
+    if (!pause && window.keyboard.isDown(GLwrap::KeyboardKey::S)){
+        cam.pos -= cam.direction * dist;
+    }
+
+    if (!pause && window.keyboard.isDown(GLwrap::KeyboardKey::D)){
+        cam.pos += cam.right * dist;
+    }
+
+    if (!pause && window.keyboard.isDown(GLwrap::KeyboardKey::A)){
+        cam.pos -= cam.right * dist;
+    }
+
+    if (!pause && window.keyboard.isDown(GLwrap::KeyboardKey::SPACE)){
+        cam.pos += cam.up * dist;
+    }
+
+    if (!pause && window.keyboard.isDown(GLwrap::KeyboardKey::LEFT_CONTROL)){
+        cam.pos -= cam.up * dist;
+    }
+
+}
 
 int main(int argc, const char** argv){
     int width = 640;
@@ -75,7 +104,7 @@ int main(int argc, const char** argv){
 
 
     std::vector<std::shared_ptr<Draw::Object>> objects;
-    for (int i = 0; i < 1000; ++i){
+    for (int i = 0; i < 1; ++i){
         auto object = std::make_shared<Draw::Object>();
         objects.push_back(object);
         object->setModel(model_3d);
@@ -100,10 +129,9 @@ int main(int argc, const char** argv){
     float rot_vel = (float)(3.14 / 8);
     float angle = 0;
 
-    bool stop = false;
-    window->keyboard.onPress.add([&stop](GLwrap::KeyboardKey key, GLwrap::KeyMode mode){
-        if (key == GLwrap::KeyboardKey::SPACE){
-            stop = !stop;
+    window->keyboard.onPress.add([](GLwrap::KeyboardKey key, GLwrap::KeyMode mode){
+        if (key == GLwrap::KeyboardKey::P){
+            pause = !pause;
             std::cout << "Pressed" <<std::endl;
         }
     });
@@ -115,29 +143,14 @@ int main(int argc, const char** argv){
         timer->start();
 
         float dist = cam_vel * dt;
-        
-        if (!stop && window->keyboard.isDown(GLwrap::KeyboardKey::W)){
-            cam->pos += cam->direction * dist;
-        }
-
-        if (!stop && window->keyboard.isDown(GLwrap::KeyboardKey::S)){
-            cam->pos -= cam->direction * dist;
-        }
-
-        if (!stop && window->keyboard.isDown(GLwrap::KeyboardKey::D)){
-            cam->pos += cam->right * dist;
-        }
-
-        if (!stop && window->keyboard.isDown(GLwrap::KeyboardKey::A)){
-            cam->pos -= cam->right * dist;
-        }
+        camMove(*window, *cam, dist);
 
         glClearColor(back_color.x, back_color.y, back_color.z, back_color.w);
         glClear(GL_DEPTH_BUFFER_BIT | GL_COLOR_BUFFER_BIT);
 
         auto clear_time = timer->elapsed();
 
-        dt = stop ? 0 : dt;
+        dt = pause ? 0 : dt;
         #pragma omp parallel for num_threads(16)
         for (int i = 0; i < objects.size(); ++i){
             // objects[i]->time += dt;
@@ -166,20 +179,6 @@ int main(int argc, const char** argv){
             std::cout << "Update time: " << update_time << std::endl;
             std::cout << "Draw time: " << draw_time << std::endl;
             std::cout << cam->pos[0] << "; " << cam->pos[1] << "; " << cam->pos[2] << std::endl;
-            // std::cout << "Model:" << std::endl;
-            // std::cout << "[" << model3d->nodes[0]->translation[0]
-            //           << ", " << model3d->nodes[0]->translation[1]
-            //           << ", " << model3d->nodes[0]->translation[2]
-            //           << "]" << std::endl;
-            // std::cout << "[" << model3d->nodes[0]->rotation[0] << ", "
-            //           << model3d->nodes[0]->rotation[1] << ", "
-            //           << model3d->nodes[0]->rotation[2] << ", "
-            //           << model3d->nodes[0]->rotation[3] << "]" << std::endl;
-            // std::cout << "[" << model3d->nodes[0]->scale[0]
-            //           << ", " << model3d->nodes[0]->scale[1]
-            //           << ", " << model3d->nodes[0]->scale[2]
-            //           << "]" << std::endl;
-            // std::cout << std::endl << std::endl;
             last = 0;
         }
     }

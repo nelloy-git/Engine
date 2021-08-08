@@ -116,15 +116,17 @@ void Object::_updateNode(const Node &node, const glm::mat4 &root_mat){
         return;
     }
 
-    auto &mat = _node_mats[node.index];
+    auto mat = &_node_mats[node.index];
+    auto morph = &_node_weights[node.index];
     if (_anim){
-        mat = root_mat * _anim->getMat(node, _anim_time);
+        _anim->getMat(node, _anim_time, mat, morph);
+        *mat = root_mat * (*mat);
     } else {
-        mat = root_mat * node.transform.mat;
+        *mat = root_mat * node.transform.mat;
     }
 
     for (int i = 0; i < node.children.size(); ++i){
         auto child = node.children[i];
-        _updateNode(*child, mat);
+        _updateNode(*child, *mat);
     }
 }

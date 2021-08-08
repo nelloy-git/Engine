@@ -22,7 +22,7 @@ public:
 
     const Model &model;
     const int index;
-    std::vector<float> weights;
+    std::vector<float> morph;
 
 protected:
     std::vector<std::shared_ptr<Primitive>> _primitives;
