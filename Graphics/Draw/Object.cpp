@@ -4,9 +4,6 @@
 
 using namespace Graphics::Draw;
 
-template<typename T>
-using Ref = Object::Ref<T>;
-
 Object::Object() :
     _model_mat(transform.mat){
 }
@@ -38,58 +35,67 @@ const glm::mat4 *Object::getNodeMat(int index) const {
     return &_node_mats[index];
 }
 
-const std::vector<float> *Object::getNodeMorphWeights(int index) const{
+const std::vector<float> *Object::getNodeMorph(int index) const{
     if (index < 0 || index >= _node_weights.size()){
         return nullptr;
     }
     return &_node_weights[index];
 }
 
-void Object::setModel(Ref<Model> model){
-    _changed = _model.get() != model.get();
+void Object::setModel(Model *model){
+    _changed = _model != model;
     _model = model;
-    if (model){
-        _node_mats = std::vector<glm::mat4>(model->nodes().size());
-        _node_weights = std::vector<std::vector<float>>(model->nodes().size());
+    if (_changed && model){
+        int count = model->getNodesCount();
+        _node_mats = std::vector<glm::mat4>(count);
+        _node_weights = std::vector<std::vector<float>>(count);
     }
     _scene = nullptr;
     _anim = nullptr;
 }
 
-const Ref<Model> Object::getModel() const {
+Model *Object::getModel() {
     return _model;
 }
 
-void Object::setCamera(Ref<Camera> camera){
-    _changed = _camera.get() != camera.get();
+const Model *Object::getModel() const {
+    return _model;
+}
+
+void Object::setCamera(Camera *camera){
+    _changed = _camera != camera;
     _camera = camera;
 }
 
-const Ref<Camera> Object::getCamera() const {
+Camera *Object::getCamera() {
+    return _camera;
+}
+
+const Camera *Object::getCamera() const {
     return _camera;
 }
 
 void Object::setScene(int index){
-    if (!_model || index < 0 || index >= _model->scenes().size()){
+    if (!_model || index < 0 || index >= _model->getScenesCount()){
         return;
     }
 
-    auto sc = _model->scenes()[index];
-    _changed = _scene.get() != sc.get();
+    auto sc = _model->getScene(index);
+    _changed = _scene != sc;
     _scene = sc;
 }
 
-const int Object::getScene() const {
+int Object::getScene() const {
     return _scene ? _scene->index : -1;
 }
 
 void Object::setAnimation(int index){
-    if (!_model || index < 0 || index >= _model->animations().size()){
+    if (!_model || index < 0 || index >= _model->getAnimationsCount()){
         return;
     }
 
-    auto a = _model->animations()[index];
-    _changed = _anim.get() != a.get();
+    auto a = _model->getAnimation(index);
+    _changed = _anim != a;
     _anim = a;
     _anim_time = 0;
 }
@@ -119,7 +125,7 @@ void Object::_updateNode(const Node &node, const glm::mat4 &root_mat){
     auto mat = &_node_mats[node.index];
     auto morph = &_node_weights[node.index];
     if (_anim){
-        _anim->getMat(node, _anim_time, mat, morph);
+        // _anim->getMat(node, _anim_time, mat, morph);
         *mat = root_mat * (*mat);
     } else {
         *mat = root_mat * node.transform.mat;

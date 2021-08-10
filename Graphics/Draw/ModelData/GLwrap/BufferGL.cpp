@@ -8,7 +8,7 @@
 
 using namespace Graphics::Draw;
 
-BufferGL::BufferGL(const Model &model, int index,
+BufferGL::BufferGL(const Model *model, int index,
                    BufferType type, BufferElemType data_type, BufferElemStruct data_size,
                    size_t elem_count, size_t bytes, bool normalized) : 
     Buffer(model, index, type, data_type, data_size, elem_count, bytes, normalized){
@@ -16,10 +16,9 @@ BufferGL::BufferGL(const Model &model, int index,
     if (type == BufferType::Other){
         data.emplace<CpuData>(bytes);
     } else {;
-        data.emplace<GpuData>(GpuData{
-                                std::make_shared<GLwrap::BufferAccessor>(toGLwrap(data_size), toGLwrap(data_type), normalized, 0, 0),
-                                std::make_shared<GLwrap::Buffer>(toGLwrap(type), bytes)
-                              });
+        auto gl_accessor = new GLwrap::BufferAccessor(toGLwrap(data_size), toGLwrap(data_type), normalized, 0, 0);
+        auto gl_buffer = new GLwrap::Buffer(toGLwrap(type), bytes);
+        data.emplace<GpuData>(gl_accessor, gl_buffer);
     }
 
     // if (type == BufferType::Index){

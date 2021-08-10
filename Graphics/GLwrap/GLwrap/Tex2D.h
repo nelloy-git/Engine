@@ -1,11 +1,7 @@
 #pragma once
 
-#include <vector>
-#include <utility>
-
 #include "glad/gl.h"
 
-#include "Property.hpp"
 #include "GLwrap/Types.h"
 
 namespace GLwrap {
@@ -18,11 +14,24 @@ public:
 
     void bind();
     void unbind();
-    void setActive(GLuint index);
+    void enable(GLuint index);
 
     void write(const void *data,  
                GLsizei x, GLsizei y,
                GLsizei width, GLsizei height);
+
+
+    void setWrapS(Tex2DWrap wrap);
+    Tex2DWrap getWrapS();
+
+    void setWrapT(Tex2DWrap wrap);
+    Tex2DWrap getWrapT();
+
+    void setMinFilter(Tex2DFilter filter);
+    Tex2DFilter getMinFilter();
+
+    void setMagFilter(Tex2DFilter filter);
+    Tex2DFilter getMagFilter();
 
     const GLuint id;
 
@@ -31,31 +40,15 @@ public:
     const Tex2DInternalFormat format; 
     const Tex2DPixelFormat pixel_format;
     const Tex2DPixelType pixel_type;
-
-    Property<Tex2DWrap, Tex2D> wrap_s;
-    Property<Tex2DWrap, Tex2D> wrap_t;
-
-    Property<Tex2DFilter, Tex2D> min_filter;
-    Property<Tex2DFilter, Tex2D> mag_filter;
     
 private:
     static GLuint _newId();
 
     Tex2DWrap _wrap_s;
-    const Tex2DWrap &_getWrapS();
-    void _setWrapS(const Tex2DWrap &wrap);
-
     Tex2DWrap _wrap_t;
-    const Tex2DWrap &_getWrapT();
-    void _setWrapT(const Tex2DWrap &wrap);
 
     Tex2DFilter _min_filter;
-    const Tex2DFilter &_getMinFilter();
-    void _setMinFilter(const Tex2DFilter &filter);
-
     Tex2DFilter _mag_filter;
-    const Tex2DFilter &_getMagFilter();
-    void _setMagFilter(const Tex2DFilter &filter);
 };
 
 }

@@ -4,24 +4,21 @@
 
 #include "glm/glm.hpp"
 
+#include "Draw/ModelData/IFaces/ModelData.h"
 #include "Draw/ModelData/IFaces/Texture.hpp"
 
 namespace Graphics::Draw {
 
 class Model;
 
-class Material {
+class Material : public ModelData {
 public:
-    Material(const Model &model, int index) :
-        model(model),
-        index(index){};
+    Material(const Model *model, int index) :
+        ModelData(model, index){};
     virtual ~Material(){};
 
-    const Model &model;
-    int index;
-
     glm::vec4 base_color = {1.f, 1.f, 1.f, 1.f};
-    std::shared_ptr<Texture> base_texture = nullptr;
+    Texture *base_texture = nullptr;
 };
 
 }

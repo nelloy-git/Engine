@@ -25,7 +25,7 @@ bool PrimitiveGL::init(){
 
     for (auto &iter : attributes){
         auto attr = iter.first;
-        auto buffer = std::dynamic_pointer_cast<BufferGL>(iter.second);
+        auto buffer = dynamic_cast<BufferGL*>(iter.second);
         if (!buffer){
             LOG(ERR) << "got non GLwrap buffer.";
             return false;
@@ -36,15 +36,15 @@ bool PrimitiveGL::init(){
             continue;
         }
 
-        // const auto &data = std::get<BufferGL::GpuData>(buffer->data);
+        BufferGL::GpuData *gl_buffer;
+        if (iter.first != PrimitiveAttribute::TexCoord_1){
+            gl_buffer = &std::get<BufferGL::GpuData>(buffer->data);
+        } else {
+            auto buf = dynamic_cast<BufferGL *>(attributes[PrimitiveAttribute::TexCoord_0]);
+            gl_buffer = &std::get<BufferGL::GpuData>(buf->data);
+        }
 
-        const auto &data = iter.first != PrimitiveAttribute::TexCoord_1 ?
-                                std::get<BufferGL::GpuData>(buffer->data)
-                                : std::get<BufferGL::GpuData>(std::dynamic_pointer_cast<BufferGL>(attributes[PrimitiveAttribute::TexCoord_0])->data);
-        
-
-
-        gl_layouts[loc] = std::make_pair(data.gl_data.get(), data.gl_accessor.get());
+        gl_layouts[loc] = std::make_pair(gl_buffer->gl_data, gl_buffer->gl_accessor);
     }
 
     for (int i = 0; i < morph_targets.size(); i++){
@@ -56,7 +56,7 @@ bool PrimitiveGL::init(){
             PrimitiveAttribute::Tangent
         };
 
-        std::shared_ptr<Buffer> buff_list[] = {
+        Buffer *buff_list[] = {
             targ.pos,
             targ.norm,
             targ.tang
@@ -67,7 +67,7 @@ bool PrimitiveGL::init(){
             auto name = getMorphTargetName(i, attr);
             auto loc = getMorphTargetLocation(i, morph_targets.size(), attr);
 
-            auto buffer = std::dynamic_pointer_cast<BufferGL>(buff_list[j]);
+            auto buffer = dynamic_cast<BufferGL *>(buff_list[j]);
             if (!buffer){
                 LOG(ERR) << "got non GLwrap buffer. Attribute: " << name;
                 return false;
@@ -78,12 +78,12 @@ bool PrimitiveGL::init(){
             }
 
             const auto &data = std::get<BufferGL::GpuData>(buffer->data);
-            gl_layouts[loc] = std::make_pair(data.gl_data.get(), data.gl_accessor.get());
+            gl_layouts[loc] = std::make_pair(data.gl_data, data.gl_accessor);
         }
     }
 
     if (indices){
-        auto ind = std::dynamic_pointer_cast<BufferGL>(indices);
+        auto ind = dynamic_cast<BufferGL *>(indices);
         if (!ind){
             LOG(ERR) << "got non GLwrap buffer.";
             return false;

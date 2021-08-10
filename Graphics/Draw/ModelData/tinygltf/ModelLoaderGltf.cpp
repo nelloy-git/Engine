@@ -14,9 +14,6 @@
 
 using namespace Graphics::Draw;
 
-template<typename T>
-using Ref = ModelLoaderGltf::Ref<T>;
-
 ModelLoaderGltf::ModelLoaderGltf() :
     ModelLoader(){
 }
@@ -42,14 +39,14 @@ void ModelLoaderGltf::load(Model &dst,
     _linkNodes(*gltf_model, dst, errors);
 }
 
-std::shared_ptr<tinygltf::Model>
+std::unique_ptr<tinygltf::Model>
 ModelLoaderGltf::_loadGltfModel(const std::string &path,
                                 std::vector<std::string> &errors) const {
     tinygltf::TinyGLTF loader;
     std::string err;
     std::string warn;
 
-    auto model = std::make_shared<tinygltf::Model>();
+    auto model = std::make_unique<tinygltf::Model>();
 
     bool res = loader.LoadASCIIFromFile(model.get(), &err, &warn, path);
     if (!warn.empty()) {
@@ -93,10 +90,11 @@ ModelLoaderGltf::_loadBuffer(const tinygltf::Accessor &gltf_accessor,
     size_t stride = view.byteStride == 0 ? elem_size : view.byteStride;
 
     auto type = gltfConvert::getBufferType(view.target);
-    auto buffer = model.addBuffer(type, elem_type, elem_struct,
-                                  gltf_accessor.count,
-                                  gltf_accessor.count * elem_size,
-                                  gltf_accessor.normalized);
+    auto buffer = addBuffer(model,
+                            type, elem_type, elem_struct,
+                            gltf_accessor.count,
+                            gltf_accessor.count * elem_size,
+                            gltf_accessor.normalized);
 
     for (auto i = 0; i < gltf_accessor.count; i++){
         if (!buffer->write(&data.data.at(view.byteOffset + gltf_accessor.byteOffset + i * stride),
@@ -116,18 +114,18 @@ ModelLoaderGltf::_loadTexture(const tinygltf::Texture &gltf_tex,
     auto &sampler = gltf_model.samplers[gltf_tex.sampler];
     auto &image = gltf_model.images[gltf_tex.source];
 
-    auto tex = model.addTexture(image.width, image.height, image.component, image.bits);
+    auto tex = addTexture(model, image.width, image.height, image.component, image.bits);
     tex->write(&image.image.at(0), 0, 0, image.width, image.height);
 
-    tex->wrap_s = gltfConvert::getTextureWrap(sampler.wrapS);
-    tex->wrap_t = gltfConvert::getTextureWrap(sampler.wrapT);
+    tex->setWrapS(gltfConvert::getTextureWrap(sampler.wrapS));
+    tex->setWrapT(gltfConvert::getTextureWrap(sampler.wrapT));
     
     if (sampler.minFilter > 0){
-        tex->min_filter = gltfConvert::getTextureFilter(sampler.minFilter);
+        tex->setMinFilter(gltfConvert::getTextureFilter(sampler.minFilter));
     }
     
     if (sampler.magFilter > 0){
-        tex->mag_filter = gltfConvert::getTextureFilter(sampler.magFilter);
+        tex->setMagFilter(gltfConvert::getTextureFilter(sampler.magFilter));
     }
 }
 
@@ -137,14 +135,14 @@ ModelLoaderGltf::_loadMaterial(const tinygltf::Material &gltf_material,
                                Model &model,
                                std::vector<std::string> &errors) const{
 
-    auto mater = model.addMaterial();
+    auto mater = addMaterial(model);
                                                  
     for (int i = 0; i < 4; i++){
         mater->base_color[i] = (float)gltf_material.pbrMetallicRoughness.baseColorFactor[i];
     }
 
     auto index = gltf_material.pbrMetallicRoughness.baseColorTexture.index;
-    mater->base_texture = model.textures()[index];
+    mater->base_texture = model.getTexture(index);
 
     if (!mater->base_texture){
         errors.push_back("texture[" + std::to_string(index) + "] is not initialized.");
@@ -156,7 +154,7 @@ ModelLoaderGltf::_loadMesh(const tinygltf::Mesh &gltf_mesh,
                            const tinygltf::Model &gltf_model,
                            Model &model,
                            std::vector<std::string> &errors) const{
-    auto mesh = model.addMesh();
+    auto mesh = addMesh(model);
     for (int i = 0; i < gltf_mesh.primitives.size(); ++i){
         _loadPrimitive(gltf_mesh.primitives[i], gltf_model, model, *mesh, errors);
     }
@@ -174,7 +172,7 @@ ModelLoaderGltf::_loadPrimitive(const tinygltf::Primitive &gltf_prim,
                                 Mesh &mesh,
                                 std::vector<std::string> &errors) const{
 
-    auto prim = mesh.addPrimitive();
+    auto prim = addPrimitive(mesh);
 
     prim->mode = gltfConvert::getDrawMode(gltf_prim.mode);
     if (prim->mode == PrimitiveDrawMode::Unknown){
@@ -183,7 +181,7 @@ ModelLoaderGltf::_loadPrimitive(const tinygltf::Primitive &gltf_prim,
     }
 
     if (gltf_prim.indices >= 0){
-        prim->indices = model.buffers()[gltf_prim.indices];
+        prim->indices = model.getBuffer(gltf_prim.indices);
         if (!prim->indices || prim->indices->type != BufferType::Index){
             errors.push_back("invalid index array type (buffer[" + std::to_string(gltf_prim.indices) + "]).");
             return;
@@ -191,7 +189,7 @@ ModelLoaderGltf::_loadPrimitive(const tinygltf::Primitive &gltf_prim,
     }
 
     if (gltf_prim.material >= 0){
-        prim->material = model.materials()[gltf_prim.material];
+        prim->material = model.getMaterial(gltf_prim.material);
         if (!prim->material){
             errors.push_back("material is not initialized (material[" + std::to_string(gltf_prim.material) + "]).");
             return;
@@ -205,7 +203,7 @@ ModelLoaderGltf::_loadPrimitive(const tinygltf::Primitive &gltf_prim,
             continue;
         }
 
-        auto buff = model.buffers()[iter.second];
+        auto buff = model.getBuffer(iter.second);
         if (!buff || buff->type != BufferType::Vertex){
             errors.push_back("got wrong buffer type (buffer[" + std::to_string(iter.second) + "]).");
             continue;
@@ -217,13 +215,13 @@ ModelLoaderGltf::_loadPrimitive(const tinygltf::Primitive &gltf_prim,
     for (int i = 0; i < gltf_prim.targets.size(); i++){
         auto &list = gltf_prim.targets[i];
 
-        std::shared_ptr<Buffer> pos;
-        std::shared_ptr<Buffer> norm;
-        std::shared_ptr<Buffer> tang;
+        Buffer *pos;
+        Buffer *norm;
+        Buffer *tang;
 
         for (auto &iter : list){
             auto attr = gltfConvert::getAttribute(iter.first);
-            auto buff = model.buffers()[iter.second];
+            auto buff = model.getBuffer(iter.second);
             switch (attr){
                 case PrimitiveAttribute::Position:
                     pos = buff;
@@ -238,12 +236,12 @@ ModelLoaderGltf::_loadPrimitive(const tinygltf::Primitive &gltf_prim,
                     break;
 
                 default:
-                    errors.push_back("got unknown target attribute (" + iter.first + ").");
+                    errors.emplace_back("got unknown target attribute (" + iter.first + ").");
                     continue;
             }
         }
             
-        prim->morph_targets.push_back({pos, norm, tang});
+        prim->morph_targets.emplace_back(pos, norm, tang);
     }
 
     prim->init();
@@ -254,7 +252,7 @@ ModelLoaderGltf::_loadNode(const tinygltf::Node &gltf_node,
                            const tinygltf::Model &gltf_model,
                            Model &model,
                            std::vector<std::string> &errors) const{
-    std::shared_ptr<Node> node;
+    Node *node;
 
     if (gltf_node.matrix.size() != 0){
         if (gltf_node.matrix.size() == 16){
@@ -264,7 +262,7 @@ ModelLoaderGltf::_loadNode(const tinygltf::Node &gltf_node,
                     mat[i][j] = gltf_node.matrix[i * 4 + j];
                 }
             }
-            node = model.addNode(mat);
+            node = addNode(model, mat);
         } else {
             errors.push_back("wrong matrix size.");
         }
@@ -296,11 +294,11 @@ ModelLoaderGltf::_loadNode(const tinygltf::Node &gltf_node,
                 gltf_node.translation[2]};
         }
 
-        node = model.addNode(trans, rot, scale);
+        node = addNode(model, trans, rot, scale);
     }
 
     if (gltf_node.mesh >= 0){
-        node->mesh = model.meshes()[gltf_node.mesh];
+        node->mesh = model.getMesh(gltf_node.mesh);
     }
 }
 
@@ -311,14 +309,14 @@ ModelLoaderGltf::_linkNodes(const tinygltf::Model &gltf_model,
 
     for (int i = 0; i < gltf_model.nodes.size(); i++){
         auto &gltf_node = gltf_model.nodes[i];
-        auto node = model.nodes()[i];
+        auto node = model.getNode(i);
 
         if (node->children.size() > 0){
             continue;
         }
 
         for (int j = 0; j < gltf_node.children.size(); j++){
-            auto child = model.nodes()[gltf_node.children[j]];
+            auto child = model.getNode(gltf_node.children[j]);
             node->children.push_back(child);
 
             if (child->parent){
@@ -336,11 +334,11 @@ ModelLoaderGltf::_loadScene(const tinygltf::Scene &gltf_scene,
                             const tinygltf::Model &gltf_model,
                             Model &model,
                             std::vector<std::string> &errors) const{
-    auto scene = model.addScene();
+    auto scene = addScene(model);
 
     for (int i = 0; i < gltf_scene.nodes.size(); i++){
         int node_pos = gltf_scene.nodes[i];
-        scene->nodes.push_back(model.nodes()[node_pos]);
+        scene->nodes.emplace_back(model.getNode(node_pos));
     }
 }
 
@@ -349,7 +347,7 @@ ModelLoaderGltf::_loadAnimation(const tinygltf::Animation &gltf_anim,
                                 const tinygltf::Model &gltf_model,
                                 Model &model,
                                 std::vector<std::string> &errors) const{
-    auto anim = model.addAnimation();
+    auto anim = addAnimation(model);
 
     for (int i = 0; i < gltf_anim.channels.size(); ++i){
         auto &gltf_chan = gltf_anim.channels[i];        
@@ -365,14 +363,14 @@ ModelLoaderGltf::_loadAnimationChannel(const tinygltf::AnimationChannel &gltf_ch
                                        Animation &anim,
                                        std::vector<std::string> &errors) const{
     
-    auto target = model.nodes()[gltf_chan.target_node];
-    auto time_buffer = model.buffers().at(gltf_anim.samplers[gltf_chan.sampler].input);
-    auto data_buffer = model.buffers().at(gltf_anim.samplers[gltf_chan.sampler].output);
+    auto target = model.getNode(gltf_chan.target_node);
+    auto time_buffer = model.getBuffer(gltf_anim.samplers[gltf_chan.sampler].input);
+    auto data_buffer = model.getBuffer(gltf_anim.samplers[gltf_chan.sampler].output);
 
     std::shared_ptr<AnimCh> chan;
     auto &gltf_targ = gltf_chan.target_path;
     if (gltf_targ == "translation"){
-        chan = std::make_shared<AnimChS>(target, time_buffer, data_buffer);
+        chan = std::make_shared<AnimChT>(target, time_buffer, data_buffer);
     } else if (gltf_targ == "rotation"){
         chan = std::make_shared<AnimChR>(target, time_buffer, data_buffer);
     } else if (gltf_targ == "scale"){
@@ -386,83 +384,3 @@ ModelLoaderGltf::_loadAnimationChannel(const tinygltf::AnimationChannel &gltf_ch
 
     anim.channels[target->index].push_back(chan);
 }
-
-// Ref<AnimationChannelTranslate>
-// ModelLoaderGltf::_loadAnimationChannelTranslation(const Buffer &time_buffer,
-//                                                   const Buffer &data_buffer,
-//                                                   std::vector<std::string> &errors) const {
-
-//     auto chan = std::make_shared<AnimationChannelTranslate>();
-
-//     chan->time.reserve(time_buffer.count);
-//     for (int i = 0; i < time_buffer.count; ++i){
-//         float t;
-//         time_buffer.read(&t, i * sizeof(float), sizeof(float));
-//         chan->time.push_back(t);
-//     }
-    
-//     chan->data.reserve(data_buffer.count);
-//     for (int i = 0; i < data_buffer.count; ++i){
-//         chan->data.emplace_back(
-//             _loadNormalizedBufferElement(data_buffer, 3 * i, errors),
-//             _loadNormalizedBufferElement(data_buffer, 3 * i + 1, errors),
-//             _loadNormalizedBufferElement(data_buffer, 3 * i + 2, errors)
-//         );
-//     }
-
-//     return chan;
-// }
-
-
-// Ref<AnimationChannelRotate>
-// ModelLoaderGltf::_loadAnimationChannelRotation(const Buffer &time_buffer,
-//                                                const Buffer &data_buffer,
-//                                                std::vector<std::string> &errors) const {
-
-//     auto chan = std::make_shared<AnimationChannelRotate>();
-
-//     chan->time.reserve(time_buffer.count);
-//     for (int i = 0; i < time_buffer.count; ++i){
-//         float t;
-//         time_buffer.read(&t, i * sizeof(float), sizeof(float));
-//         chan->time.push_back(t);
-//     }
-    
-//     chan->data.reserve(data_buffer.count);
-//     for (int i = 0; i < data_buffer.count; ++i){
-//         chan->data.emplace_back(
-//             _loadNormalizedBufferElement(data_buffer, 4 * i + 3, errors),
-//             _loadNormalizedBufferElement(data_buffer, 4 * i, errors),
-//             _loadNormalizedBufferElement(data_buffer, 4 * i + 1, errors),
-//             _loadNormalizedBufferElement(data_buffer, 4 * i + 2, errors)
-//         );
-//     }
-
-//     return chan;
-// };
-
-// float
-// ModelLoaderGltf::_loadNormalizedBufferElement(const Buffer &buffer,
-//                                               int i,
-//                                               std::vector<std::string> &errors) const {
-//     switch (buffer.data_type){
-//     case BufferElemType::Byte:
-//         return std::fmax(buffer.readElement<char>(i) / 127.0, -1.0);
-
-//     case BufferElemType::UByte:
-//         return buffer.readElement<unsigned char>(i) / 255.0;
-
-//     case BufferElemType::Short:
-//         return std::fmax(buffer.readElement<short int>(i) / 32767.0, -1.0);
-
-//     case BufferElemType::UShort:
-//         return buffer.readElement<unsigned short int>(i) / 65535.0;
-
-//     case BufferElemType::Float:
-//         return buffer.readElement<float>(i);
-    
-//     default:
-//         errors.emplace_back("wrong element type: " + toString(buffer.data_type));
-//         return 0;
-//     }
-// }

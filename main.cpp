@@ -76,7 +76,6 @@ int main(int argc, const char** argv){
         running = false;
     });
 
-    std::cout << Draw::toString<Draw::Node>() << std::endl;
 
     // std::shared_ptr<Model::Model> model3d = Model::Creator::newModel("../test/triang/triang.gltf");
     // std::shared_ptr<Draw::Model> model3d = Draw::Creator::newModel("../test/book/scene.gltf");
@@ -97,6 +96,8 @@ int main(int argc, const char** argv){
         }
     }
 
+    // auto n = std::make_shared<Draw::Node>(*model_3d, model_3d->nodes().size(), glm::mat4(1.0));
+
     auto cam = std::make_shared<Graphics::Draw::Camera>();
     cam->width = width;
     cam->height = height;
@@ -107,10 +108,10 @@ int main(int argc, const char** argv){
     for (int i = 0; i < 1; ++i){
         auto object = std::make_shared<Draw::Object>();
         objects.push_back(object);
-        object->setModel(model_3d);
-        object->setCamera(cam);
+        object->setModel(model_3d.get());
+        object->setCamera(cam.get());
         object->setScene(0);
-        object->setAnimation(0);
+        // object->setAnimation(0);
         object->transform.setT(glm::vec3((float)i, 0.f, 0.f));
         object->transform.setR(glm::angleAxis((float)(3 * 3.1415 / 2), glm::vec3(0, 1, 0)));
         object->transform.setS(glm::vec3(0.1, 0.1, 0.1));
@@ -151,7 +152,7 @@ int main(int argc, const char** argv){
         auto clear_time = timer->elapsed();
 
         dt = pause ? 0 : dt;
-        #pragma omp parallel for num_threads(16)
+        // #pragma omp parallel for num_threads(16)
         for (int i = 0; i < objects.size(); ++i){
             // objects[i]->time += dt;
             // objects[i]->transform.setR(glm::angleAxis((float)(angle), glm::vec3(0, 1, 0)));

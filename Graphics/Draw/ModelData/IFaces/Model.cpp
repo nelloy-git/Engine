@@ -2,36 +2,72 @@
 
 using namespace Graphics::Draw;
 
-template<typename T>
-using ref = std::shared_ptr<T>;
 
-Model::~Model(){
+Animation *Model::getAnimation(int i) const {
+    return _getRawPtr(_animations, i);
 }
 
-const std::vector<ref<Animation>> &Model::animations() const {
-    return _animations;
+
+int Model::getAnimationsCount() const {
+    return _animations.size();
 }
 
-const std::vector<ref<Buffer>> &Model::buffers() const {
-    return _buffers;
+
+Buffer *Model::getBuffer(int i) const {
+    return _getRawPtr(_buffers, i);
 }
 
-const std::vector<ref<Scene>> &Model::scenes() const {
-    return _scenes;
+
+int Model::getBuffersCount() const {
+    return _buffers.size();
 }
 
-const std::vector<ref<Node>> &Model::nodes() const {
-    return _nodes;
+
+Texture *Model::getTexture(int i) const {
+    return _getRawPtr(_textures, i);
 }
 
-const std::vector<ref<Mesh>> &Model::meshes() const {
-    return _meshes;
+
+int Model::getTexturesCount() const {
+    return _textures.size();
 }
 
-const std::vector<ref<Material>> &Model::materials() const {
-    return _materials;
+
+Material *Model::getMaterial(int i) const {
+    return _getRawPtr(_materials, i);
 }
 
-const std::vector<ref<Texture>> &Model::textures() const {
-    return _textures;
+
+int Model::getMaterialsCount() const {
+    return _materials.size();
+}
+
+
+Mesh *Model::getMesh(int i) const {
+    return _getRawPtr(_meshes, i);
+}
+
+
+int Model::getMeshesCount() const {
+    return _meshes.size();
+}
+
+
+Node *Model::getNode(int i) const {
+    return _getRawPtr(_nodes, i);
+}
+
+
+int Model::getNodesCount() const {
+    return _nodes.size();
+}
+
+
+Scene *Model::getScene(int i) const {
+    return _getRawPtr(_scenes, i);
+}
+
+
+int Model::getScenesCount() const {
+    return _scenes.size();
 }

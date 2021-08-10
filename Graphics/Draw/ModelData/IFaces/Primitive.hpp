@@ -12,9 +12,9 @@
 namespace Graphics::Draw {
 
 struct PrimitiveMorhpTarget {
-    std::shared_ptr<Buffer> pos;
-    std::shared_ptr<Buffer> norm;
-    std::shared_ptr<Buffer> tang;
+    Buffer *pos;
+    Buffer *norm;
+    Buffer *tang;
 };
 
 class Primitive {
@@ -25,9 +25,9 @@ public:
     virtual bool init() = 0;
 
     PrimitiveDrawMode mode;
-    std::shared_ptr<Buffer> indices = nullptr;
-    std::shared_ptr<Material> material = nullptr;
-    std::map<PrimitiveAttribute, std::shared_ptr<Buffer>> attributes;
+    Buffer *indices = nullptr;
+    Material *material = nullptr;
+    std::map<PrimitiveAttribute, Buffer*> attributes;
     std::vector<PrimitiveMorhpTarget> morph_targets;
 
 protected:

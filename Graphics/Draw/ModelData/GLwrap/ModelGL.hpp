@@ -7,35 +7,33 @@ namespace Graphics::Draw {
 class ModelGL : public Model {
 public:
     ModelGL();
-    virtual ~ModelGL() override;
+    virtual ~ModelGL();
 
-    virtual Ref<Animation> addAnimation() override;
-    virtual Ref<Buffer> addBuffer(BufferType type,
-                                  BufferElemType data_type,
-                                  BufferElemStruct data_struct,
-                                  size_t count,
-                                  size_t bytes,
-                                  bool normalized) override;
-                              
-    virtual Ref<Texture> addTexture(int width,
-                                    int height,
-                                    int channels,
-                                    int bpp) override;
+protected:
+    virtual Animation *_addAnimation() override;
+    virtual Buffer *_addBuffer(BufferType type,
+                              BufferElemType data_type,
+                              BufferElemStruct data_struct,
+                              size_t count,
+                              size_t bytes,
+                              bool normalized) override;
+    virtual Texture *_addTexture(int width,
+                                int height,
+                                int channels,
+                                int bpp) override;
+    virtual Material *_addMaterial() override;
+    virtual Mesh *_addMesh() override;
+    virtual Node *_addNode(const glm::mat4 &mat) override;
+    virtual Node *_addNode(const glm::vec3 &trans,
+                          const glm::quat &rot,
+                          const glm::vec3 &scale) override;
+    virtual Scene *_addScene() override;
 
-    virtual Ref<Material> addMaterial() override;
-    virtual Ref<Mesh> addMesh() override;
-    virtual Ref<Node> addNode(const glm::mat4 &mat) override;
-    virtual Ref<Node> addNode(const glm::vec3 &trans,
-                              const glm::quat &rot,
-                              const glm::vec3 &scale) override;
-    virtual Ref<Scene> addScene() override;
-
-    template<typename R, typename T, typename ...ARGS>
-    inline Ref<R> _addObj(std::vector<T> &list, ARGS ...args){
-        int index = list.size();
-        auto obj = std::make_shared<R>(*this, index, args...);
-        list.push_back(obj);
-        return obj;
+    template<typename R, typename T, typename ... Args>
+    inline R *_addObj(std::vector<Uptr<T>> &list, Args&& ...args){
+        auto raw = new R(this, list.size(), std::forward<Args>(args)...);
+        list.emplace_back(raw);
+        return raw;
     }
 };
 

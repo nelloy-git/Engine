@@ -4,15 +4,15 @@
 
 using namespace Graphics::Draw;
 
-MeshGL::MeshGL(const Model &model, int index) :
+MeshGL::MeshGL(const Model *model, int index) :
     Mesh(model, index){
 }
 
 MeshGL::~MeshGL(){
 }
 
-std::shared_ptr<Primitive> MeshGL::addPrimitive(){
-    auto prim = std::make_shared<PrimitiveGL>();
-    _primitives.push_back(prim);
-    return prim;
+Primitive *MeshGL::_addPrimitive(){
+    auto ptr = new PrimitiveGL();
+    _primitives.emplace_back(ptr);
+    return ptr;
 }

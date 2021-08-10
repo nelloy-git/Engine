@@ -13,7 +13,7 @@ namespace Graphics::Draw {
 
 class BufferGL : public Buffer {
 public:
-    BufferGL(const Model &model, int index,
+    BufferGL(const Model *model, int index,
              BufferType type, BufferElemType data_type, BufferElemStruct data_size,
              size_t count, size_t bytes, bool normalized);
     ~BufferGL() override;
@@ -22,14 +22,17 @@ public:
     bool read(void *dst, size_t src_offset, size_t size) const override;
 
     using CpuData = std::vector<char>;
-    using GpuData = struct {
-        std::shared_ptr<GLwrap::BufferAccessor> gl_accessor;
-        std::shared_ptr<GLwrap::Buffer> gl_data;
+    struct GpuData {
+        GpuData(GLwrap::BufferAccessor *accessor,
+                GLwrap::Buffer *data) :
+            gl_accessor(accessor),
+            gl_data(data){};
+
+        GLwrap::BufferAccessor *gl_accessor;
+        GLwrap::Buffer *gl_data;
     };
 
     std::variant<CpuData, GpuData> data;
-
-private:
 
 };
 

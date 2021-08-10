@@ -4,21 +4,19 @@
 
 using namespace Graphics::Draw;
 
-Node::Node(const Model &model,
+Node::Node(const Model *model,
            int index,
            const glm::mat4 &mat) :
-    index(index),
-    model(model),
+    ModelData(model, index),
     transform(mat){
 }
 
-Node::Node(const Model &model,
+Node::Node(const Model *model,
            int index,
            const glm::vec3 &trans,
            const glm::quat &rot,
            const glm::vec3 &scale) :
-    index(index),
-    model(model),
+    ModelData(model, index),
     transform(trans, rot, scale){
 }
 

@@ -2,9 +2,9 @@
 
 using namespace Graphics::Draw;
 
-AnimChS::AnimChS(std::shared_ptr<Node> target,
-                 std::shared_ptr<Buffer> time_buffer,
-                 std::shared_ptr<Buffer> data_buffer) :
+AnimChT::AnimChT(Node *target,
+                 Buffer *time_buffer,
+                 Buffer *data_buffer) :
     AnimCh(target, time_buffer, data_buffer){
     
     // init _time_list
@@ -23,10 +23,10 @@ AnimChS::AnimChS(std::shared_ptr<Node> target,
     }
 }
 
-AnimChS::~AnimChS(){
+AnimChT::~AnimChT(){
 }
 
-void AnimChS::apply(float time, Transform &transform, std::vector<float> &morph) const {
+void AnimChT::apply(float time, Transform &transform, std::vector<float> &morph) const {
     switch (_method){
         case Interpolation::Linear:
             return _applyLinear(time, transform);
@@ -36,7 +36,7 @@ void AnimChS::apply(float time, Transform &transform, std::vector<float> &morph)
     }
 }
 
-void AnimChS::_applyLinear(float time, Transform &transform) const {
+void AnimChT::_applyLinear(float time, Transform &transform) const {
     
     if (time <= _time_list[0]){
         transform.setT(_data_list[0]);

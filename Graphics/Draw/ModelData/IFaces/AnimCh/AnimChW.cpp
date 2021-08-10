@@ -2,9 +2,9 @@
 
 using namespace Graphics::Draw;
 
-AnimChW::AnimChW(std::shared_ptr<Node> target,
-                 std::shared_ptr<Buffer> time_buffer,
-                 std::shared_ptr<Buffer> data_buffer,
+AnimChW::AnimChW(Node *target,
+                 Buffer *time_buffer,
+                 Buffer *data_buffer,
                  int weights_count) :
     AnimCh(target, time_buffer, data_buffer){
     
@@ -16,7 +16,7 @@ AnimChW::AnimChW(std::shared_ptr<Node> target,
 
     // init _data_list
     for (int i = 0; i < data_buffer->count; ++i){
-        _data_list.push_back({});
+        _data_list.emplace_back(0);
         for (int j = 0; j < weights_count; ++j){
             _data_list.back().push_back(_getNormFloat(*data_buffer, i * weights_count + j));
         }

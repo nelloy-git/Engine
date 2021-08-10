@@ -8,9 +8,9 @@ namespace Graphics::Draw {
 
 class AnimChR : public AnimCh {
 public:
-    AnimChR(std::shared_ptr<Node> target,
-            std::shared_ptr<Buffer> time_buffer,
-            std::shared_ptr<Buffer> data_buffer);
+    AnimChR(Node *target,
+            Buffer *time_buffer,
+            Buffer *data_buffer);
     virtual ~AnimChR();
 
     virtual void apply(float time, Transform &transform, std::vector<float> &morph) const override;

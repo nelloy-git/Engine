@@ -8,9 +8,9 @@
 using namespace Graphics::Draw;
 
 
-AnimCh::AnimCh(std::shared_ptr<Node> target,
-               std::shared_ptr<Buffer> time_buffer,
-               std::shared_ptr<Buffer> data_buffer,
+AnimCh::AnimCh(Node *target,
+               Buffer *time_buffer,
+               Buffer *data_buffer,
                Interpolation method) :
     _target(target),
     _time(time_buffer),
@@ -23,17 +23,17 @@ AnimCh::~AnimCh(){
 }
 
 
-const std::shared_ptr<Node> AnimCh::getTarget() const {
+const Node *AnimCh::getTarget() const {
     return _target;
 }
 
 
-const std::shared_ptr<Buffer> AnimCh::getTime() const {
+const Buffer *AnimCh::getTime() const {
     return _time;
 }
 
 
-const std::shared_ptr<Buffer> AnimCh::getData() const {
+const Buffer *AnimCh::getData() const {
     return _data;
 }
 

@@ -20,7 +20,8 @@ public:
     bool verify() override;
     void draw(const Object &obj) override;
 
-    std::shared_ptr<GLwrap::Program> program;
+    GLwrap::Program *getProgram();
+
 
 private:
     bool _verifyAttributes();
@@ -29,6 +30,8 @@ private:
 
     void _drawNode(const Node &node, const Object &obj);
     void _applyMaterial(const Material &material);
+
+    std::unique_ptr<GLwrap::Program> _program;
 
     std::vector<std::string> _messages;
 

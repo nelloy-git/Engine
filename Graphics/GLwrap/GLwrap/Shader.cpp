@@ -64,17 +64,3 @@ std::shared_ptr<Shader> Shader::fromFile(ShaderType type, const std::string& pat
 Shader::~Shader(){
     glDeleteShader(id);
 }
-
-size_t GLwrap::getDataTypeSize(ElementType type){
-    switch (type){
-
-    case ElementType::Float:
-        return sizeof(GLfloat);
-
-    case ElementType::UInt:
-        return sizeof(GLuint);
-    
-    default:
-        throw std::invalid_argument("Unknown ShaderDataType");
-    }
-}

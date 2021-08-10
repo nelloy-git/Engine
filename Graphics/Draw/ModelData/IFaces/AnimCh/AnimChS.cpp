@@ -2,9 +2,9 @@
 
 using namespace Graphics::Draw;
 
-AnimChS::AnimChS(std::shared_ptr<Node> target,
-                 std::shared_ptr<Buffer> time_buffer,
-                 std::shared_ptr<Buffer> data_buffer) :
+AnimChS::AnimChS(Node *target,
+                 Buffer *time_buffer,
+                 Buffer *data_buffer) :
     AnimCh(target, time_buffer, data_buffer){
     
     // init _time_list

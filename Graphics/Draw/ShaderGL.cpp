@@ -20,10 +20,12 @@ ShaderGL::ShaderGL(const std::string &vertex_source,
                    const std::string &fragment_source) :
     Shader(){
 
-    auto vert = std::make_shared<GLwrap::Shader>(GLwrap::ShaderType::Vertex, vertex_source);
-    auto frag = std::make_shared<GLwrap::Shader>(GLwrap::ShaderType::Fragment, fragment_source);
-    program = std::make_shared<GLwrap::Program>(std::vector({vert, frag}));
-    program->use();
+    auto vert = new GLwrap::Shader(GLwrap::ShaderType::Vertex, vertex_source);
+    auto frag = new GLwrap::Shader(GLwrap::ShaderType::Fragment, fragment_source);
+
+    std::vector<const GLwrap::Shader *> list{vert, frag};
+    _program = std::make_unique<GLwrap::Program>(list);
+    _program->use();
 }
 
 ShaderGL::~ShaderGL(){
@@ -77,7 +79,7 @@ bool ShaderGL::verify(){
 
 void ShaderGL::draw(const Object &obj){
 
-    std::shared_ptr<Model> model = obj.getModel();
+    auto model = obj.getModel();
     if (!model){
         return;
     }
@@ -87,7 +89,7 @@ void ShaderGL::draw(const Object &obj){
         return;
     }
 
-    auto scene = model->scenes()[scene_index];
+    auto scene = model->getScene(scene_index);
     for (int i = 0; i < scene->nodes.size(); ++i){
         auto node = scene->nodes[i];
         _drawNode(*node, obj);
@@ -99,16 +101,16 @@ void ShaderGL::_drawNode(const Node &node, const Object &obj){
 
     auto mesh = node.mesh;
     if (mesh && mat != nullptr){
-        program->setUniformMat4f("model", glm::value_ptr(*mat));
+        _program->setUniformMat4f("model", glm::value_ptr(*mat));
         
-        auto weights = obj.getNodeMorphWeights(node.index);
-        program->setUniform1vi("morph_targets", weights->size());
+        auto weights = obj.getNodeMorph(node.index);
+        _program->setUniform1vi("morph_targets", weights->size());
         if (weights->size() > 0){
-            program->setUniformFloatArray("morph_weights", &weights->at(0), weights->size());
+            _program->setUniformFloatArray("morph_weights", &weights->at(0), weights->size());
         }
 
-        for (int i = 0; i < mesh->primitives().size(); ++i){
-            auto prim = mesh->primitives()[i];
+        for (int i = 0; i < mesh->getPrimitivesCount(); ++i){
+            auto prim = mesh->getPrimitive(i);
             if (!prim){
                 continue;
             }
@@ -121,8 +123,8 @@ void ShaderGL::_drawNode(const Node &node, const Object &obj){
                 if (targ.tang){++morph_attr_count;}
             }
 
-            program->setUniform1vi("morph_attributes", morph_attr_count);
-            auto prim_gl = std::dynamic_pointer_cast<PrimitiveGL>(prim);
+            _program->setUniform1vi("morph_attributes", morph_attr_count);
+            auto prim_gl = dynamic_cast<PrimitiveGL *>(prim);
             if (prim_gl){
                 _applyMaterial(*prim_gl->material);
                 prim_gl->draw();
@@ -141,9 +143,9 @@ void ShaderGL::_drawNode(const Node &node, const Object &obj){
 }
 
 void ShaderGL::_applyMaterial(const Material &mater){
-    program->setUniformVec4f("baseColor", glm::value_ptr(mater.base_color));
-    auto tex = std::dynamic_pointer_cast<TextureGL>(mater.base_texture);
-    tex->setActive(0);
+    _program->setUniformVec4f("baseColor", glm::value_ptr(mater.base_color));
+    auto tex = dynamic_cast<TextureGL *>(mater.base_texture);
+    tex->enable(0);
 }
 
 bool ShaderGL::_verifyAttributes(){
@@ -156,7 +158,7 @@ bool ShaderGL::_verifyAttributes(){
         auto attr_name = toString(attr);
         auto attr_loc = getLocation(attr);
 
-        bool valid = attr_loc == program->getAttribLoc(attr_name);
+        bool valid = attr_loc == _program->getAttribLoc(attr_name);
         _messages.push_back("\t\"" + attr_name + "\" "
                             + (valid ? "found" : "NOT FOUND"));
         ok &= valid;
@@ -179,7 +181,7 @@ bool ShaderGL::_verifyMorphs(){
     //         auto targ_name = getMorphTargetName(i, targ);
     //         auto targ_loc = getMorphTargetLocation(i, targ);
 
-    //         bool valid = targ_loc == program->getAttribLoc(targ_name);
+    //         bool valid = targ_loc == _program->getAttribLoc(targ_name);
     //         _messages.push_back("\t\"" + targ_name + "\" "
     //                             + (valid ? "found" : "NOT FOUND"));
     //         ok &= valid;
@@ -193,7 +195,7 @@ bool ShaderGL::_verifyUniforms(){
     bool ok = true;
     _messages.push_back("Uniforms:");
 
-    bool valid = (program->getUniformLoc("model") >= 0);
+    bool valid = (_program->getUniformLoc("model") >= 0);
     _messages.push_back("\t\"model\" " + std::string(valid ? "found" : "NOT FOUND"));
     ok &= valid;
 

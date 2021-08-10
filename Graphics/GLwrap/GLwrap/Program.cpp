@@ -6,7 +6,7 @@
 
 using namespace GLwrap;
 
-Program::Program(const std::vector<std::shared_ptr<Shader>>& attach) :
+Program::Program(const std::vector<const Shader *> &attach) :
     id(glCreateProgram()){
 
     for (auto shader : attach){

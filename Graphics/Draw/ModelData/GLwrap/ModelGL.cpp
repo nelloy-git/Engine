@@ -7,9 +7,6 @@
 
 using namespace Graphics::Draw;
 
-template<typename T>
-using ref = std::shared_ptr<T>;
-
 ModelGL::ModelGL() :
     Model(){
 }
@@ -17,22 +14,22 @@ ModelGL::ModelGL() :
 ModelGL::~ModelGL(){
 }
 
-ref<Animation> ModelGL::addAnimation(){
+Animation *ModelGL::_addAnimation(){
     return _addObj<Animation>(_animations);
 }
 
-ref<Buffer> ModelGL::addBuffer(BufferType type,
+Buffer *ModelGL::_addBuffer(BufferType type,
                                BufferElemType data_type,
                                BufferElemStruct data_struct,
                                size_t count,
                                size_t bytes,
                                bool normalized){
     return _addObj<BufferGL>(_buffers,
-                            type, data_type, data_struct,
-                            count, bytes, normalized);
+                             type, data_type, data_struct,
+                             count, bytes, normalized);
 }
 
-ref<Texture> ModelGL::addTexture(int width,
+Texture *ModelGL::_addTexture(int width,
                                  int height,
                                  int channels,
                                  int bpp){
@@ -40,24 +37,24 @@ ref<Texture> ModelGL::addTexture(int width,
                               width, height, channels, bpp);
 }
 
-ref<Material> ModelGL::addMaterial(){
+Material *ModelGL::_addMaterial(){
     return _addObj<Material>(_materials);
 }
 
-ref<Mesh> ModelGL::addMesh(){
+Mesh *ModelGL::_addMesh(){
     return _addObj<MeshGL>(_meshes);
 }
 
-ref<Node> ModelGL::addNode(const glm::mat4 &mat){
+Node *ModelGL::_addNode(const glm::mat4 &mat){
     return _addObj<Node>(_nodes, mat);
 }
 
-ref<Node> ModelGL::addNode(const glm::vec3 &trans,
+Node *ModelGL::_addNode(const glm::vec3 &trans,
                            const glm::quat &rot,
                            const glm::vec3 &scale){
     return _addObj<Node>(_nodes, trans, rot, scale);
 }
 
-ref<Scene> ModelGL::addScene(){
+Scene *ModelGL::_addScene(){
     return _addObj<Scene>(_scenes);
 }

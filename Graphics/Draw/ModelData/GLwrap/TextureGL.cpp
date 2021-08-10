@@ -4,7 +4,7 @@
 
 using namespace Graphics::Draw;
 
-TextureGL::TextureGL(const Model &model, int index,
+TextureGL::TextureGL(const Model *model, int index,
                      int width, int height, int channels, int bpp) : 
     Texture(model, index, width, height, channels, bpp){
 
@@ -32,7 +32,7 @@ TextureGL::TextureGL(const Model &model, int index,
     auto pixel_type = bpp == 8 ? GLwrap::Tex2DPixelType::UNSIGNED_BYTE
                                : GLwrap::Tex2DPixelType::UNSIGNED_SHORT;
 
-    data = std::make_shared<GLwrap::Tex2D>(
+    _data = std::make_unique<GLwrap::Tex2D>(
         width, height, internal_fmt, pixel_fmt, pixel_type);
         
 }
@@ -41,45 +41,45 @@ TextureGL::~TextureGL(){
 }
 
 void TextureGL::write(const void *ptr, int x, int y, int width, int height){
-    data->write(ptr, x, y, width, height);
+    _data->write(ptr, x, y, width, height);
 }
 
-void TextureGL::setActive(int layout){
-    data->setActive(layout);
+void TextureGL::enable(int layout){
+    _data->enable(layout);
 }
 
-const TextureWrap &TextureGL::_getWrapS(){
+TextureWrap TextureGL::getWrapS() const {
     return _wrap_s;
 }
 
-void TextureGL::_setWrapS(const TextureWrap &wrap){
-    data->wrap_s = toGLwrap(wrap);
+void TextureGL::setWrapS(TextureWrap wrap){
+    _data->setWrapS(toGLwrap(wrap));
     _wrap_s = wrap;
 }
 
-const TextureWrap &TextureGL::_getWrapT(){
+TextureWrap TextureGL::getWrapT() const {
     return _wrap_t;
 }
 
-void TextureGL::_setWrapT(const TextureWrap &wrap){
-    data->wrap_t = toGLwrap(wrap);
+void TextureGL::setWrapT(TextureWrap wrap){
+    _data->setWrapT(toGLwrap(wrap));
     _wrap_t = wrap;
 }
 
-const TextureFilter &TextureGL::_getMinFilter(){
+TextureFilter TextureGL::getMinFilter() const {
     return _min_filter;
 }
 
-void TextureGL::_setMinFilter(const TextureFilter &filter){
-    data->min_filter = toGLwrap(filter);
+void TextureGL::setMinFilter(TextureFilter filter){
+    _data->setMinFilter(toGLwrap(filter));
     _min_filter = filter;
 }
 
-const TextureFilter &TextureGL::_getMagFilter(){
+TextureFilter TextureGL::getMagFilter() const {
     return _mag_filter;
 }
 
-void TextureGL::_setMagFilter(const TextureFilter &filter){
-    data->mag_filter = toGLwrap(filter);
+void TextureGL::setMagFilter(TextureFilter filter){
+    _data->setMagFilter(toGLwrap(filter));
     _mag_filter = filter;
 }

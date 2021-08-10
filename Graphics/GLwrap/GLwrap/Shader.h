@@ -7,8 +7,6 @@
 
 namespace GLwrap {
 
-size_t getDataTypeSize(ElementType type);
-
 class Shader {
 public:
     Shader(ShaderType type, const std::string& code);

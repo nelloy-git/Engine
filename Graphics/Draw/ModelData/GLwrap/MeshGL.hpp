@@ -5,11 +5,13 @@
 namespace Graphics::Draw {
 
 class MeshGL : public Mesh {
+
 public:
-    MeshGL(const Model &model, int index);
+    MeshGL(const Model *model, int index);
     ~MeshGL();
 
-    std::shared_ptr<Primitive> addPrimitive() override;
+protected:
+    Primitive *_addPrimitive() override;
 };
 
 }

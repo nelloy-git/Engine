@@ -5,10 +5,12 @@
 
 using namespace Graphics::Draw;
 
-Animation::Animation(const Model &model, int index) :
-    model(model),
-    index(index){
-    channels.resize(model.nodes().size());
+template<typename T>
+using Uptr = Animation::Uptr<T>;
+
+Animation::Animation(const Model *model, int index) :
+    ModelData(model, index){
+    channels.resize(model->getNodesCount());
 }
 
 
@@ -16,21 +18,43 @@ Animation::~Animation(){
 }
 
 
-void Animation::getMat(const Node &node, float time, glm::mat4 *mat, std::vector<float> *morph){
-
-    auto &list = channels[node.index];
-    *morph = node.mesh ? node.mesh->morph : std::vector<float>();
-
-    if (list.empty()){
-        *mat = node.transform.mat;
-        return;
+bool Animation::apply(const Node &node,
+                      float time,
+                      Transform &trans,
+                      std::vector<float> &morph) const {
+    auto list = _getAnimChList(node);
+    if (!list){
+        return false;
     }
 
-    Transform tr = node.transform;
-    for (int i = 0; i < list.size(); ++i){
-        list[i]->apply(time, tr, *morph);
+    trans = node.transform;
+    morph = node.mesh ? node.mesh->morph : std::vector<float>();
+
+    for (int i = 0; i < list->size(); ++i){
+        list->at(i)->apply(time, trans, morph);
     }
-    tr.applyTRS();
-    *mat = tr.mat;
-    return;
+    trans.applyTRS();
+
+    return true;
+}
+
+const std::vector<Uptr<AnimCh>> *Animation::_getAnimChList(const Node &node) const {
+    int node_i = node.index;
+    if (node_i < 0 || node_i >= _channels.size()){
+        return nullptr;
+    }
+    return &_channels[node_i];
+}
+
+AnimCh *Animation::_getAnimCh(const Node &node, int i) const {
+    auto list = _getAnimChList(node);
+    if (!list){
+        return nullptr;
+    }
+
+    if (i < 0 || i >= list->size()){
+        return nullptr;
+    }
+
+    return list->at(i).get();
 }

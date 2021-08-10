@@ -6,12 +6,12 @@
 
 namespace Graphics::Draw {
 
-class AnimChS : public AnimCh {
+class AnimChT : public AnimCh {
 public:
-    AnimChS(std::shared_ptr<Node> target,
-            std::shared_ptr<Buffer> time_buffer,
-            std::shared_ptr<Buffer> data_buffer);
-    virtual ~AnimChS();
+    AnimChT(Node *target,
+            Buffer *time_buffer,
+            Buffer *data_buffer);
+    virtual ~AnimChT();
 
     virtual void apply(float time, Transform &transform, std::vector<float> &morph) const override;
 

@@ -1,59 +1,42 @@
 #pragma once
 
-#include <memory>
-
-#include "Property.hpp"
-
 #include "Draw/Types.h"
+
+#include "Draw/ModelData/IFaces/ModelData.h"
 
 namespace Graphics::Draw {
 
-class Model;
-
-class Texture {
+class Texture : public ModelData {
 public:
-    const Model &model;
-    const int index;
+    Texture(const Model *model, int index, int width, int height, int channels, int bpp) :
+        ModelData(model, index),
+        width(width),
+        height(height),
+        channels(channels),
+        bpp(bpp){
+    };
+    virtual ~Texture(){};
 
     virtual void write(const void *ptr, int x, int y, int width, int height) = 0;
+
+    virtual TextureWrap getWrapS() const = 0;
+    virtual void setWrapS(TextureWrap wrap) = 0;
+
+    virtual TextureWrap getWrapT() const = 0;
+    virtual void setWrapT(TextureWrap wrap) = 0;
+
+    virtual TextureFilter getMinFilter() const = 0;
+    virtual void setMinFilter(TextureFilter filter) = 0;
+
+    virtual TextureFilter getMagFilter() const = 0;
+    virtual void setMagFilter(TextureFilter filter) = 0;
 
     const int width;
     const int height;
     const int channels;
     const int bpp;
 
-    Property<TextureWrap, Texture> wrap_s;
-    Property<TextureWrap, Texture> wrap_t;
-
-    Property<TextureFilter, Texture> min_filter;
-    Property<TextureFilter, Texture> mag_filter;
-
 protected:
-    Texture(const Model &model, int index, int width, int height, int channels, int bpp) :
-        model(model),
-        index(index),
-        width(width),
-        height(height),
-        channels(channels),
-        bpp(bpp),
-        wrap_s(this, &Texture::_getWrapS, &Texture::_setWrapS),
-        wrap_t(this, &Texture::_getWrapT, &Texture::_setWrapT),
-        min_filter(this, &Texture::_getMinFilter, &Texture::_setMinFilter),
-        mag_filter(this, &Texture::_getMagFilter, &Texture::_setMagFilter){
-    };
-    virtual ~Texture(){};
-
-    virtual const TextureWrap &_getWrapS() = 0;
-    virtual void _setWrapS(const TextureWrap &wrap) = 0;
-
-    virtual const TextureWrap &_getWrapT() = 0;
-    virtual void _setWrapT(const TextureWrap &wrap) = 0;
-
-    virtual const TextureFilter &_getMinFilter() = 0;
-    virtual void _setMinFilter(const TextureFilter &filter) = 0;
-
-    virtual const TextureFilter &_getMagFilter() = 0;
-    virtual void _setMagFilter(const TextureFilter &filter) = 0;
 };
 
 }

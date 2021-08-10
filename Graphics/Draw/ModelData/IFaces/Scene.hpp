@@ -3,21 +3,18 @@
 #include <vector>
 #include <unordered_map>
 
+#include "Draw/ModelData/IFaces/ModelData.h"
 #include "Draw/ModelData/IFaces/Node.hpp"
 
 namespace Graphics::Draw {
 
-class Scene {
+class Scene : public ModelData {
 public:
-    Scene(const Model &mode, int index) :
-        model(model),
-        index(index){};
+    Scene(const Model *model, int index) :
+        ModelData(model, index){};
     virtual ~Scene(){};
 
-    const Model &model;
-    const int index;
-
-    std::vector<std::shared_ptr<Node>> nodes;
+    std::vector<Node *> nodes;
 };
 
 }

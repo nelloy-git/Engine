@@ -11,7 +11,7 @@ namespace GLwrap {
 
 class Program {
 public:
-    Program(const std::vector<std::shared_ptr<Shader>> &attach);
+    Program(const std::vector<const Shader *> &attach);
     virtual ~Program();
 
     void use() const;

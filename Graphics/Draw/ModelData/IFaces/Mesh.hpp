@@ -3,29 +3,36 @@
 #include <vector>
 #include <memory>
 
+#include "Draw/ModelData/IFaces/ModelData.h"
 #include "Draw/ModelData/IFaces/Primitive.hpp"
 
 namespace Graphics::Draw {
 
-class Mesh {
+class Mesh : public ModelData {
+friend class ModelLoader;
+
 public:
-    Mesh(const Model &model, int index) :
-        model(model),
-        index(index){};
+    Mesh(const Model *model, int index) :
+        ModelData(model, index){};
     virtual ~Mesh(){};
 
-    const std::vector<std::shared_ptr<Primitive>> &primitives(){
-        return _primitives;
+    Primitive *getPrimitive(int i){
+        if (i < 0 || i >= _primitives.size()){
+            return nullptr;
+        }
+        return _primitives[i].get();
     };
 
-    virtual std::shared_ptr<Primitive> addPrimitive() = 0;
+    int getPrimitivesCount(){
+        return _primitives.size();
+    };
 
-    const Model &model;
-    const int index;
     std::vector<float> morph;
 
 protected:
-    std::vector<std::shared_ptr<Primitive>> _primitives;
+    std::vector<std::unique_ptr<Primitive>> _primitives;
+
+    virtual Primitive *_addPrimitive() = 0;
 };
 
 }
