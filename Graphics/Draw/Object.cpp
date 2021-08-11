@@ -125,8 +125,9 @@ void Object::_updateNode(const Node &node, const glm::mat4 &root_mat){
     auto mat = &_node_mats[node.index];
     auto morph = &_node_weights[node.index];
     if (_anim){
-        // _anim->getMat(node, _anim_time, mat, morph);
-        *mat = root_mat * (*mat);
+        Transform tr;
+        _anim->apply(node, _anim_time, tr, *morph);
+        *mat = root_mat * (tr.mat);
     } else {
         *mat = root_mat * node.transform.mat;
     }

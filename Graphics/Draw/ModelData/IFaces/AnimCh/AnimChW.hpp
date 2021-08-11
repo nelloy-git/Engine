@@ -8,9 +8,9 @@ namespace Graphics::Draw {
 
 class AnimChW : public AnimCh {
 public:
-    AnimChW(Node *target,
-            Buffer *time_buffer,
-            Buffer *data_buffer,
+    AnimChW(const Node &target,
+            const Buffer &time_buffer,
+            const Buffer &data_buffer,
             int weights_count);
     virtual ~AnimChW();
 

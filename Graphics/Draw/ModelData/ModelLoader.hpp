@@ -65,9 +65,36 @@ protected:
 
     static inline Primitive *addPrimitive(Mesh &mesh){
         return mesh._addPrimitive();
-    }
+    };
 
-    static
+    static inline AnimChR *_addAnimChR(Animation &anim,
+                                       const Node &target,
+                                       const Buffer &time_buffer,
+                                       const Buffer &data_buffer){
+        return anim._addChR(target, time_buffer, data_buffer);
+    };
+
+    static inline AnimChS *_addAnimChS(Animation &anim,
+                                       const Node &target,
+                                       const Buffer &time_buffer,
+                                       const Buffer &data_buffer){
+        return anim._addChS(target, time_buffer, data_buffer);
+    };
+
+    static inline AnimChT *_addAnimChT(Animation &anim,
+                                       const Node &target,
+                                       const Buffer &time_buffer,
+                                       const Buffer &data_buffer){
+        return anim._addChT(target, time_buffer, data_buffer);
+    };
+
+    static inline AnimChW *_addAnimChW(Animation &anim,
+                                       const Node &target,
+                                       const Buffer &time_buffer,
+                                       const Buffer &data_buffer,
+                                       int morph_size){
+        return anim._addChW(target, time_buffer, data_buffer, morph_size);
+    };
 };
 
 }

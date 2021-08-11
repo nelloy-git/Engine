@@ -23,6 +23,7 @@ Shader::Shader(ShaderType type, const std::string& code) :
         char msg[4096];
         GLsizei msglen;
         glGetShaderInfoLog(id, 4096, &msglen, msg);
+        glDeleteShader(id);
         throw std::invalid_argument(msg);
     }
 }

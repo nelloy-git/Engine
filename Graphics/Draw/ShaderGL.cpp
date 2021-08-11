@@ -23,7 +23,7 @@ ShaderGL::ShaderGL(const std::string &vertex_source,
     auto vert = new GLwrap::Shader(GLwrap::ShaderType::Vertex, vertex_source);
     auto frag = new GLwrap::Shader(GLwrap::ShaderType::Fragment, fragment_source);
 
-    std::vector<const GLwrap::Shader *> list{vert, frag};
+    auto list = new std::vector<const GLwrap::Shader *>{vert, frag};
     _program = std::make_unique<GLwrap::Program>(list);
     _program->use();
 }

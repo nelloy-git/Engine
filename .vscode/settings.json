@@ -93,6 +93,7 @@
         "filesystem": "cpp",
         "valarray": "cpp",
         "variant": "cpp",
-        "ranges": "cpp"
+        "ranges": "cpp",
+        "*.vert": "cpp"
     }
 }

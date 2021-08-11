@@ -20,6 +20,7 @@ enum class DrawMode : GLenum {
 
 enum class ShaderType : GLenum {
     Vertex = GL_VERTEX_SHADER,
+    Geometry = GL_GEOMETRY_SHADER,
     Fragment = GL_FRAGMENT_SHADER
 };
 

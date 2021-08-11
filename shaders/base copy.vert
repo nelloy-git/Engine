@@ -1,4 +1,4 @@
-#version 330 core
+#version 420 core
 
 uniform mat4 model;
 
@@ -41,8 +41,20 @@ void morph3Attrib(inout vec3 pos, inout vec3 norm, inout vec3 tang){
     }
 }
 
+subroutine vec3 getPos(in vec3 pos);
+
+subroutine(getPos) vec3 getPos_once(in vec3 pos){
+    return 4 * pos;
+};
+
+subroutine(getPos) vec3 getPos_double(in vec3 pos){
+    return 2 * pos;
+} 
+
+subroutine uniform getPos getPosUniform;
+
 void main(){
-    vec3 morhed_position = Position;
+    vec3 morhed_position = getPosUniform(Position);
     vec3 morhed_normal = Normal;
     vec3 morhed_tangent = Tangent;
 

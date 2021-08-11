@@ -4,24 +4,24 @@
 
 using namespace Graphics::Draw;
 
-AnimChR::AnimChR(Node *target,
-                 Buffer *time_buffer,
-                 Buffer *data_buffer) :
+AnimChR::AnimChR(const Node &target,
+                 const Buffer &time_buffer,
+                 const Buffer &data_buffer) :
     AnimCh(target, time_buffer, data_buffer){
     
     // init _time_list
-    _time_list.resize(time_buffer->count);
+    _time_list.resize(time_buffer.count);
     for (int i = 0; i < _time_list.size(); ++i){
-        time_buffer->read(&_time_list[i], i * sizeof(float), sizeof(float));
+        time_buffer.read(&_time_list[i], i * sizeof(float), sizeof(float));
     }
 
     // init _data_list
-    for (int i = 0; i < data_buffer->count; ++i){
+    for (int i = 0; i < data_buffer.count; ++i){
         _data_list.emplace_back(
-            _getNormFloat(*data_buffer, 4 * i + 3),
-            _getNormFloat(*data_buffer, 4 * i),
-            _getNormFloat(*data_buffer, 4 * i + 1),
-            _getNormFloat(*data_buffer, 4 * i + 2)
+            _getNormFloat(data_buffer, 4 * i + 3),
+            _getNormFloat(data_buffer, 4 * i),
+            _getNormFloat(data_buffer, 4 * i + 1),
+            _getNormFloat(data_buffer, 4 * i + 2)
         );
     }
 }

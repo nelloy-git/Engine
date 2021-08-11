@@ -8,9 +8,9 @@
 using namespace Graphics::Draw;
 
 
-AnimCh::AnimCh(Node *target,
-               Buffer *time_buffer,
-               Buffer *data_buffer,
+AnimCh::AnimCh(const Node &target,
+               const Buffer &time_buffer,
+               const Buffer &data_buffer,
                Interpolation method) :
     _target(target),
     _time(time_buffer),
@@ -23,17 +23,17 @@ AnimCh::~AnimCh(){
 }
 
 
-const Node *AnimCh::getTarget() const {
+const Node &AnimCh::getTarget() const {
     return _target;
 }
 
 
-const Buffer *AnimCh::getTime() const {
+const Buffer &AnimCh::getTime() const {
     return _time;
 }
 
 
-const Buffer *AnimCh::getData() const {
+const Buffer &AnimCh::getData() const {
     return _data;
 }
 

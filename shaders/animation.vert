@@ -1,13 +1,71 @@
 #version 330 core
 
-in vec3 MorphData0;
-in vec3 MorphData1;
-in vec3 MorphData2;
-in vec3 MorphData3;
-in vec3 MorphData4;
-in vec3 MorphData5;
-in vec3 MorphData6;
-in vec3 MorphData7;
+in vec3 morph_data0;
+in vec3 morph_data1;
+in vec3 morph_data2;
+in vec3 morph_data3;
+in vec3 morph_data4;
+in vec3 morph_data5;
+in vec3 morph_data6;
+in vec3 morph_data7;
+
+uniform float morph_weights[8];
+
+subroutine void morphPos0(inout vec3 pos);
+subroutine(morphPos0) void morphPos0Pass(inout vec3 pos){}
+subroutine(morphPos0) void morphPos0Apply(inout vec3 pos){
+    pos += morph_weights[0] * morph_data0;
+}
+
+
+subroutine void morphPos1(inout vec3 pos);
+subroutine(morphPos1) void morphPos1Pass(inout vec3 pos){}
+subroutine(morphPos1) void morphPos1Apply(inout vec3 pos){
+    pos += morph_weights[1] * morph_data1;
+}
+
+
+subroutine void morphPos2(inout vec3 pos);
+subroutine(morphPos2) void morphPos2Pass(inout vec3 pos){}
+subroutine(morphPos2) void morphPos2Apply(inout vec3 pos){
+    pos += morph_weights[2] * morph_data2;
+}
+
+
+subroutine void morphPos3(inout vec3 pos);
+subroutine(morphPos3) void morphPos1Pass(inout vec3 pos){}
+subroutine(morphPos3) void morphPos1Apply(inout vec3 pos){
+    pos += morph_weights[3] * morph_data3;
+}
+
+
+subroutine void morphPos4(inout vec3 pos);
+subroutine(morphPos4) void morphPos1Pass(inout vec3 pos){}
+subroutine(morphPos4) void morphPos1Apply(inout vec3 pos){
+    pos += morph_weights[4] * morph_data4;
+}
+
+
+subroutine void morphPos5(inout vec3 pos);
+subroutine(morphPos5) void morphPos1Pass(inout vec3 pos){}
+subroutine(morphPos5) void morphPos1Apply(inout vec3 pos){
+    pos += morph_weights[5] * morph_data5;
+}
+
+
+subroutine void morphPos6(inout vec3 pos);
+subroutine(morphPos6) void morphPos1Pass(inout vec3 pos){}
+subroutine(morphPos6) void morphPos1Apply(inout vec3 pos){
+    pos += morph_weights[6] * morph_data6;
+}
+
+
+subroutine void morphPos7(inout vec3 pos);
+subroutine(morphPos7) void morphPos1Pass(inout vec3 pos){}
+subroutine(morphPos7) void morphPos1Apply(inout vec3 pos){
+    pos += morph_weights[7] * morph_data7;
+}
+
 
 vec3 getData(in int pos){
     if (pos == 0){

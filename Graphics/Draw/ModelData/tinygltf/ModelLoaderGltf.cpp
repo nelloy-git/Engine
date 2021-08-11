@@ -363,24 +363,21 @@ ModelLoaderGltf::_loadAnimationChannel(const tinygltf::AnimationChannel &gltf_ch
                                        Animation &anim,
                                        std::vector<std::string> &errors) const{
     
-    auto target = model.getNode(gltf_chan.target_node);
-    auto time_buffer = model.getBuffer(gltf_anim.samplers[gltf_chan.sampler].input);
-    auto data_buffer = model.getBuffer(gltf_anim.samplers[gltf_chan.sampler].output);
+    auto &target = *model.getNode(gltf_chan.target_node);
+    auto &time_buffer = *model.getBuffer(gltf_anim.samplers[gltf_chan.sampler].input);
+    auto &data_buffer = *model.getBuffer(gltf_anim.samplers[gltf_chan.sampler].output);
 
-    std::shared_ptr<AnimCh> chan;
     auto &gltf_targ = gltf_chan.target_path;
     if (gltf_targ == "translation"){
-        chan = std::make_shared<AnimChT>(target, time_buffer, data_buffer);
+        _addAnimChT(anim, target, time_buffer, data_buffer);
     } else if (gltf_targ == "rotation"){
-        chan = std::make_shared<AnimChR>(target, time_buffer, data_buffer);
+        _addAnimChR(anim, target, time_buffer, data_buffer);
     } else if (gltf_targ == "scale"){
-        chan = std::make_shared<AnimChS>(target, time_buffer, data_buffer);
+        _addAnimChS(anim, target, time_buffer, data_buffer);
     } else if (gltf_targ == "weights"){
-        chan = std::make_shared<AnimChW>(target, time_buffer, data_buffer, target->mesh->morph.size());
+        _addAnimChW(anim, target, time_buffer, data_buffer, target.mesh->morph.size());
     } else {
         errors.push_back("unknown animation data type \"" + gltf_targ + "\"");
         return;
     }
-
-    anim.channels[target->index].push_back(chan);
 }

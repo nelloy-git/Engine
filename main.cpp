@@ -105,14 +105,14 @@ int main(int argc, const char** argv){
 
 
     std::vector<std::shared_ptr<Draw::Object>> objects;
-    for (int i = 0; i < 1; ++i){
+    for (int i = 0; i < 10; ++i){
         auto object = std::make_shared<Draw::Object>();
         objects.push_back(object);
         object->setModel(model_3d.get());
         object->setCamera(cam.get());
         object->setScene(0);
-        // object->setAnimation(0);
-        object->transform.setT(glm::vec3((float)i, 0.f, 0.f));
+        object->setAnimation(0);
+        object->transform.setT(glm::vec3(100.0 * i, 0.f, 0.f));
         object->transform.setR(glm::angleAxis((float)(3 * 3.1415 / 2), glm::vec3(0, 1, 0)));
         object->transform.setS(glm::vec3(0.1, 0.1, 0.1));
         object->transform.applyTRS();

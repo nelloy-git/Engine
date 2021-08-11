@@ -10,7 +10,7 @@ using Uptr = Animation::Uptr<T>;
 
 Animation::Animation(const Model *model, int index) :
     ModelData(model, index){
-    channels.resize(model->getNodesCount());
+    _channels.resize(model->getNodesCount());
 }
 
 
@@ -57,4 +57,29 @@ AnimCh *Animation::_getAnimCh(const Node &node, int i) const {
     }
 
     return list->at(i).get();
+}
+
+
+AnimChT *Animation::_addChT(const Node &target, const Buffer &time_buffer, const Buffer &data_buffer){
+    auto ptr = new AnimChT(target, time_buffer, data_buffer);
+    _channels[target.index].emplace_back(ptr);
+    return ptr;
+}
+
+AnimChR *Animation::_addChR(const Node &target, const Buffer &time_buffer, const Buffer &data_buffer){
+    auto ptr = new AnimChR(target, time_buffer, data_buffer);
+    _channels[target.index].emplace_back(ptr);
+    return ptr;
+}
+
+AnimChS *Animation::_addChS(const Node &target, const Buffer &time_buffer, const Buffer &data_buffer){
+    auto ptr = new AnimChS(target, time_buffer, data_buffer);
+    _channels[target.index].emplace_back(ptr);
+    return ptr;
+}
+
+AnimChW *Animation::_addChW(const Node &target, const Buffer &time_buffer, const Buffer &data_buffer, int morph_size){
+    auto ptr = new AnimChW(target, time_buffer, data_buffer, morph_size);
+    _channels[target.index].emplace_back(ptr);
+    return ptr;
 }
