@@ -14,10 +14,10 @@ public:
     virtual ~Buffer();
 
     /* if (size == 0){size = this->size;} */
-    bool write(const void *data, size_t  offset = 0, size_t size = 0);
+    virtual bool write(const void *data, size_t  offset = 0, size_t size = 0);
 
     /* if (size == 0){size = this->size;} */
-    bool read(void *data, size_t  offset = 0, size_t  size = 0) const;
+    virtual bool read(void *data, size_t  offset = 0, size_t  size = 0) const;
 
     void bind() const;
     void unbind() const;
