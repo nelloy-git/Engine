@@ -1,36 +1,53 @@
 #pragma once
 
-#include <unordered_map>
 #include <memory>
+#include <unordered_map>
 #include <utility>
+#include <vector>
 
 #include "glad/gl.h"
 
 #include "GLwrap/BufferAccessor.h"
-#include "GLwrap/Buffer.h"
+#include "GLwrap/BufferTyped.h"
 
 namespace GLwrap {
 
 class Array {
 public:
-    using BufferPair = std::pair<const GLwrap::Buffer*,
-                                 const GLwrap::BufferAccessor*>;
-
-    // Multiple buffers
-    Array(const std::unordered_map<int, BufferPair> &layouts,
-          const Buffer *indices = nullptr, ElementType index_size = ElementType::Short);
-
-    // Multiple buffers
-    Array(const std::unordered_map<int, BufferPair> &layouts);
+    using Layout = unsigned int;
 
     // Only one buffer
-    Array(const Buffer &indices,
-          const Buffer &data,
-          const std::unordered_map<int, BufferAccessor *> &accessors);
-
-    // Only one buffer
+    // template<ElementType E>
     Array(const Buffer &data,
-          const std::unordered_map<int, BufferAccessor *> &accessors);
+          const std::unordered_map<int, const BufferAccessor &> &accessors,
+          const BufferTyped<toType<E>()> *indices = nullptr){
+        id(_newId()),
+        indexed(true){
+
+        // glBindVertexArray(id);
+
+        // data.bind();
+        // for (auto iter : accessors){
+        //     auto loc = iter.first;
+        //     if (loc > Array::max_layouts()){
+        //         continue;
+        //     }
+        //     iter.second.enable(loc);
+        // }
+        
+        // if (indices){
+        //     indices->bind();
+        // };
+
+        // glBindVertexArray(0);
+    };
+
+    using BufferPair = std::pair<const GLwrap::Buffer &,
+                                 const GLwrap::BufferAccessor &>;
+
+    // Multiple buffers
+    Array(const std::unordered_map<Layout, BufferPair> &layouts,
+          const BufferUint *indices = nullptr);
 
 
     virtual ~Array();

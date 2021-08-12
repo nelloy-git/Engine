@@ -18,8 +18,32 @@ GLint Array::max_layouts(){
     return max;
 }
 
+// Array::Array(const Buffer &data,
+//              const std::unordered_map<Layout, const BufferAccessor &> &accessors,
+//              const BufferTyped<toType<E>()> *indices) :
+//     id(_newId()),
+//     indexed(true){
+
+//     glBindVertexArray(id);
+
+//     data.bind();
+//     for (auto iter : accessors){
+//         auto loc = iter.first;
+//         if (loc > Array::max_layouts()){
+//             continue;
+//         }
+//         iter.second.enable(loc);
+//     }
+    
+//     if (indices){
+//         indices->bind();
+//     };
+
+//     glBindVertexArray(0);
+// }
+
 Array::Array(const std::unordered_map<int, BufferPair> &layouts,
-             const Buffer *indices, ElementType index_size) :
+             const BufferUint *indices = nullptr) :
     id(_newId()),
     indexed(indices),
     _indeces_type(index_size){
@@ -55,32 +79,6 @@ Array::Array(const std::unordered_map<int, BufferPair> &layouts) :
         iter.second.first->bind();
         iter.second.second->enable(loc);
     }
-
-    glBindVertexArray(0);
-}
-
-Array::Array(const Buffer &indices,
-             const Buffer &data,
-             const std::unordered_map<int, BufferAccessor *> &accessors) :
-    id(_newId()),
-    indexed(true){
-
-    glBindVertexArray(id);
-
-    data.bind();
-    for (auto iter : accessors){
-        auto loc = iter.first;
-        if (loc > Array::max_layouts()){
-            continue;
-        }
-
-        auto acc = iter.second;
-        if (acc){
-            acc->enable(loc);
-        }
-    }
-    
-    indices.bind();
 
     glBindVertexArray(0);
 }

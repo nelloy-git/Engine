@@ -31,8 +31,12 @@ public:
     ShaderInputGLDefault();
     virtual ~ShaderInputGLDefault();
 
-    static virtual const std::vector<const GLwrap::BufferAccessor> &getAccessors();
+    virtual GLwrap::Array *createArray(const std::vector<Input> &data) override;
+
+    const std::vector<const GLwrap::BufferAccessor> &getAccessors();
     
+private:
+    static const std::string &_getSources();
 };
 
 }

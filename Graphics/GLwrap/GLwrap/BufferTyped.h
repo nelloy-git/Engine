@@ -1,5 +1,7 @@
 #pragma once
 
+#include <vector>
+
 #include "glad/gl.h"
 
 #include "GLwrap/Buffer.h"
@@ -11,36 +13,22 @@ class BufferTyped : public Buffer {
 public:
     BufferTyped(BufferType type, const std::vector<T> &list, BufferUsage usage = BufferUsage::STATIC) :
         Buffer(type, list.size() * sizeof(T)){
-        // write()
+        write(&list[0]);
     };
     virtual ~BufferTyped();
 
-    /* if (size == 0){size = this->size;} */
-    bool write(const void *data, size_t  offset = 0, size_t size = 0);
+    void set(uint i, const T &data){
+        write(&data, i * sizeof(T), sizeof(T));
+    }
 
-    /* if (size == 0){size = this->size;} */
-    bool read(void *data, size_t  offset = 0, size_t  size = 0) const;
+    T get(uint i){
+        T tmp;
+        read(&tmp, i * sizeof(T), sizeof(T));
+        return tmp;
+    }
 
-    void bind() const;
-    void unbind() const;
-
-    const GLuint id;
-    const size_t size;
-    const BufferType type;
-    const BufferUsage usage;
-
-protected:
-    inline virtual bool write(const void *data, size_t  offset = 0, size_t size = 0) override{
-        Buffer::write(data, offset, size);
-    };
-
-    inline virtual bool read(void *data, size_t  offset = 0, size_t  size = 0) const override{
-        Buffer::read(data, offset, size);
-    };
-
-
-private:
-    static GLuint _newId();
 };
+
+using BufferUint = BufferTyped<unsigned int>;
 
 }

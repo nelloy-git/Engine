@@ -56,6 +56,27 @@ enum class ElementType : GLenum {
     Double = GL_DOUBLE,
 };
 
+template<ElementType E>
+struct toType {
+    using type = typename std::conditional<E == ElementType::Byte, char,
+                          std::conditional<E == ElementType::UByte, unsigned char, 
+                          std::conditional<E == ElementType::Short, short int, 
+                          std::conditional<E == ElementType::UShort, unsigned short int, 
+                          std::conditional<E == ElementType::Int, int, 
+                          std::conditional<E == ElementType::UInt, unsigned int, 
+                          std::conditional<E == ElementType::Float, float, 
+                          double>>>>>>>;
+};
+
+template<typename T>
+constexpr ElementType fromType(){
+    if constexpr (std::is_same_v<T, char>()){
+        return ElementType::Byte;
+    } else {
+        static_assert(true, "Is not ElementType");
+    }
+}
+
 enum class Tex2DWrap : GLint {
     Repeat = GL_REPEAT,
     ClampToEdge = GL_CLAMP_TO_EDGE,

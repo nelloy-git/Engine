@@ -3,7 +3,8 @@
 #include <string>
 #include <vector>
 
-#include "GLwrap/Buffer.h"
+#include "GLwrap/Array.h"
+#include "GLwrap/BufferTyped.h"
 #include "GLwrap/BufferAccessor.h"
 #include "GLwrap/Shader.h"
 
@@ -15,20 +16,16 @@ template<typename T>
 class ShaderInputGL : public ShaderInput {
 public:
     // nullptr for default shader.
-    ShaderInputGL(const std::string *src = nullptr);
-    virtual ~ShaderInputGL();
+    ShaderInputGL(const std::string *src = nullptr){
+        ShaderInput(), gl(src)
+    };
+    virtual ~ShaderInputGL(){};
 
     using Input = T;
+    // There is only 16 layouts for vec4 vertex attributes. 
     static_assert(sizeof(T) <= 16 * 4 * sizeof(float));
 
-    static GLwrap::Buffer *createBuffer(const std::vector<Input> &data){
-        auto buff = new GLwrap::Buffer(GLwrap::BufferType::Array,
-                                       data.size() * sizeof(Input));
-        buff->write(&data[0]);
-        return buff;
-    };
-
-    static virtual const std::vector<const GLwrap::BufferAccessor> &getAccessors() = 0;
+    virtual GLwrap::Array *createArray(const std::vector<T> &data) = 0;
 
     const GLwrap::Shader gl;
 };
