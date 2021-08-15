@@ -8,14 +8,12 @@ namespace Graphics::Render {
 
 class ShaderFragmentGL {
 public:
-    ShaderFragmentGL(const std::string *src = nullptr);
-    virtual ~ShaderFragmentGL();
+    ShaderFragmentGL(const std::string &src) :
+        gl(GLwrap::ShaderType::Fragment, src){
+    };
+    virtual ~ShaderFragmentGL(){};
 
     const GLwrap::Shader gl;
-
-private:
-    static const std::string &_getDefaultSrc();
-
 };
 
 }

@@ -1,5 +1,6 @@
 #pragma once
 
+#include <any>
 #include <memory>
 #include <unordered_map>
 #include <utility>
@@ -12,45 +13,48 @@
 
 namespace GLwrap {
 
-class Array {
+class BufferArray {
 public:
     using Layout = unsigned int;
 
-    // Only one buffer
-    // template<ElementType E>
-    Array(const Buffer &data,
-          const std::unordered_map<int, const BufferAccessor &> &accessors,
-          const BufferTyped<toType<E>()> *indices = nullptr){
+    BufferArray(const Buffer &data,
+                const std::unordered_map<Layout, const BufferAccessor *> &accessors);
+
+    template<typename T>
+    BufferArray(const Buffer &data,
+                const std::unordered_map<Layout, const BufferAccessor *> &accessors,
+                const BufferTyped<T> &indices) :
         id(_newId()),
-        indexed(true){
+        indexed(true),
+        _indices_type(fromType<T>()),
+        _indices_count(indices.size){
+        static_assert(_indices_type == ElementType::UByte
+                      || _indices_type == ElementType::UShort
+                      || _indices_type == ElementType::UInt,
+                      "Wrong indices data type");
+        _bindBuffers(data, accessors, {&indices});
+    }
 
-        // glBindVertexArray(id);
+    using BufferPair = std::pair<const GLwrap::Buffer *,
+                                 const GLwrap::BufferAccessor *>;
 
-        // data.bind();
-        // for (auto iter : accessors){
-        //     auto loc = iter.first;
-        //     if (loc > Array::max_layouts()){
-        //         continue;
-        //     }
-        //     iter.second.enable(loc);
-        // }
-        
-        // if (indices){
-        //     indices->bind();
-        // };
+    BufferArray(const std::unordered_map<Layout, BufferPair> &layouts);
 
-        // glBindVertexArray(0);
-    };
+    template<typename T>
+    BufferArray(const std::unordered_map<Layout, BufferPair> &layouts,
+                const BufferTyped<T> &indices) :
+        id(_newId()),
+        indexed(true),
+        _indices_type(fromType<T>()),
+        _indices_count(indices.size){
+        static_assert(_indices_type == ElementType::UByte
+                      || _indices_type == ElementType::UShort
+                      || _indices_type == ElementType::UInt,
+                      "Wrong indices data type");
+        _bindBuffers(layouts, {&indices});
+    }
 
-    using BufferPair = std::pair<const GLwrap::Buffer &,
-                                 const GLwrap::BufferAccessor &>;
-
-    // Multiple buffers
-    Array(const std::unordered_map<Layout, BufferPair> &layouts,
-          const BufferUint *indices = nullptr);
-
-
-    virtual ~Array();
+    virtual ~BufferArray();
 
     static GLint max_layouts();
 
@@ -65,10 +69,18 @@ public:
     void drawElements(DrawMode mode, ElementType type, GLuint vertex_count, GLuint64 byte_offset) const;
 
 private:
-    const ElementType _indeces_type;
+    static GLuint _newId();
+
+    void _bindBuffers(const Buffer &data,
+                      const std::unordered_map<Layout, const BufferAccessor *> &accessors,
+                      const std::optional<const Buffer *> indices);
+
+    void _bindBuffers(const std::unordered_map<Layout, BufferPair> &layouts,
+                      const std::optional<const Buffer *> indices);
+
+    const std::optional<ElementType> _indices_type;
     const GLuint _indices_count;
 
-    static GLuint _newId();
 };
 
 }

@@ -1,15 +1,14 @@
 #include "GLwrap/Buffer.h"
 
 #include <stdexcept>
-
-#include "Log.h"
+#include <iostream>
 
 using namespace GLwrap;
 
 Buffer::Buffer(BufferType type, size_t size, BufferUsage usage) : 
     id(_newId()),
     type(type),
-    size(size),
+    bytes(size),
     usage(usage){
 
     glBindBuffer(static_cast<GLenum>(type), id);
@@ -23,14 +22,15 @@ Buffer::~Buffer(){
 
 bool Buffer::write(const void *data, size_t data_offset, size_t data_size){
     if (data_size == 0){
-        data_size = size;
+        data_size = bytes;
     }
     
-    if (data_offset + data_size > size){
-        LOG(WRN) << "Write outside of buffer ("
-                 << "offset: " << data_offset << ", "
-                 << "data size: " << data_size << ", "
-                 << "buffer size: " << size << ").";
+    if (data_offset + data_size > bytes){
+        std::cout << "Write outside of buffer ("
+                  << "offset: " << data_offset << ", "
+                  << "data size: " << data_size << ", "
+                  << "buffer size: " << bytes << ")."
+                  << std::endl;
         return false;
     }
 
@@ -42,14 +42,15 @@ bool Buffer::write(const void *data, size_t data_offset, size_t data_size){
 
 bool Buffer::read(void *data, size_t data_offset, size_t data_size) const {
     if (data_size == 0){
-        data_size = size;
+        data_size = bytes;
     }
     
-    if (data_offset + data_size > size){
-        LOG(WRN) << "Read outside of buffer ("
-                 << "offset: " << data_offset << ", "
-                 << "data size: " << data_size << ", "
-                 << "buffer size: " << size << ").";
+    if (data_offset + data_size > bytes){
+        std::cout << "Read outside of buffer ("
+                  << "offset: " << data_offset << ", "
+                  << "data size: " << data_size << ", "
+                  << "buffer size: " << bytes << ")."
+                  << std::endl;;
         return false;
     }
 

@@ -12,6 +12,8 @@
 namespace Graphics::Draw {
 
 struct PrimitiveMorhpTarget {
+    PrimitiveMorhpTarget(Buffer *pos, Buffer *norm, Buffer *tang) :
+        pos(pos), norm(norm), tang(tang){};
     Buffer *pos;
     Buffer *norm;
     Buffer *tang;

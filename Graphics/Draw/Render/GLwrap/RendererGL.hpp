@@ -5,25 +5,25 @@
 #include "GLwrap/Program.h"
 
 #include "Draw/Render/Renderer.hpp"
-#include "Draw/Render/GLwrap/ShaderInputGL.hpp"
 #include "Draw/Render/GLwrap/ShaderVertexGL.hpp"
 #include "Draw/Render/GLwrap/ShaderFragmentGL.hpp"
 
 namespace Graphics::Render {
 
+template<typename T>
 class RendererGL : public Renderer {
 public:
-    RendererGL(const std::string *input = nullptr,
-               const std::string *vertex = nullptr,
-               const std::string *fragment = nullptr);
-    virtual ~RendererGL();
+    RendererGL(const ShaderVertexGL<T> &vert,
+               const ShaderFragmentGL &frag) :
+        Renderer(),
+        gl(std::vector{
+            &vert.gl,
+            &frag.gl,
+        }){
+    };
+    virtual ~RendererGL(){};
 
-protected:
-    std::unique_ptr<ShaderInputGL> _input_shader;
-    std::unique_ptr<ShaderVertexGL> _vertex_shader;
-    std::unique_ptr<ShaderFragmentGL> _fragment_shader;
-
-    std::unique_ptr<GLwrap::Program> _gl;
+    GLwrap::Program gl;
 };
 
 }

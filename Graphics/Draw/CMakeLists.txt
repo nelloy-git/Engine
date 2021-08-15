@@ -15,29 +15,33 @@ add_library (${PROJECT_NAME} STATIC
     ./Utils/Transform.cpp
     ./Utils/Camera.cpp
 
-    ./ModelData/IFaces/Animation.cpp
-    ./ModelData/IFaces/AnimCh.cpp
-    ./ModelData/IFaces/AnimCh/AnimChT.cpp
-    ./ModelData/IFaces/AnimCh/AnimChR.cpp
-    ./ModelData/IFaces/AnimCh/AnimChS.cpp
-    ./ModelData/IFaces/AnimCh/AnimChW.cpp
+    # ./Render/GLwrap/Default/ShaderInputGLDefault.cpp
+    ./Render/GLwrap/Default/ShaderVertexGLDefault.cpp
+    ./Render/GLwrap/Default/ShaderFragmentGLDefault.cpp
+
+    # ./ModelData/IFaces/Animation.cpp
+    # ./ModelData/IFaces/AnimCh.cpp
+    # ./ModelData/IFaces/AnimCh/AnimChT.cpp
+    # ./ModelData/IFaces/AnimCh/AnimChR.cpp
+    # ./ModelData/IFaces/AnimCh/AnimChS.cpp
+    # ./ModelData/IFaces/AnimCh/AnimChW.cpp
     # ./ModelData/IFaces/Buffer.cpp
-    ./ModelData/IFaces/Model.cpp
-    ./ModelData/IFaces/Node.cpp
+    # ./ModelData/IFaces/Model.cpp
+    # ./ModelData/IFaces/Node.cpp
 
-    ./ModelData/tinygltf/TypesGltf.cpp
-    ./ModelData/tinygltf/ModelLoaderGltf.cpp
+    # ./ModelData/tinygltf/TypesGltf.cpp
+    # ./ModelData/tinygltf/ModelLoaderGltf.cpp
 
-    ./ModelData/GLwrap/BufferGL.cpp
-    ./ModelData/GLwrap/MeshGL.cpp
-    ./ModelData/GLwrap/ModelGL.cpp
-    ./ModelData/GLwrap/PrimitiveGL.cpp
-    ./ModelData/GLwrap/TextureGL.cpp
-    ./ModelData/GLwrap/TypesGL.cpp
+    # ./ModelData/GLwrap/BufferGL.cpp
+    # ./ModelData/GLwrap/MeshGL.cpp
+    # ./ModelData/GLwrap/ModelGL.cpp
+    # ./ModelData/GLwrap/PrimitiveGL.cpp
+    # ./ModelData/GLwrap/TextureGL.cpp
+    # ./ModelData/GLwrap/TypesGL.cpp
 
-    ./Object.cpp
-    ./ShaderGL.cpp
-    ./Types.cpp
+    # ./Object.cpp
+    # ./ShaderGL.cpp
+    # ./Types.cpp
 
 )
 

@@ -23,7 +23,7 @@ public:
     void unbind() const;
 
     const GLuint id;
-    const size_t size;
+    const size_t bytes;
     const BufferType type;
     const BufferUsage usage;
 

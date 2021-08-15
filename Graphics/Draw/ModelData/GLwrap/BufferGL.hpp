@@ -22,17 +22,19 @@ public:
     bool read(void *dst, size_t src_offset, size_t size) const override;
 
     using CpuData = std::vector<char>;
+
+    template<typename T>
     struct GpuData {
         GpuData(GLwrap::BufferAccessor *accessor,
-                GLwrap::Buffer *data) :
+                GLwrap::BufferTyped<T> *data) :
             gl_accessor(accessor),
             gl_data(data){};
 
         GLwrap::BufferAccessor *gl_accessor;
-        GLwrap::Buffer *gl_data;
+        GLwrap::BufferTyped<T> *gl_data;
     };
 
-    std::variant<CpuData, GpuData> data;
+    std::variant<CpuData, GpuData<std::any>> data;
 
 };
 

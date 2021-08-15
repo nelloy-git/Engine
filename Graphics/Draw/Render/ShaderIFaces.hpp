@@ -2,15 +2,6 @@
 
 namespace Graphics::Render {
 
-class ShaderInput {
-public:
-    ShaderInput() = default;
-    virtual ~ShaderInput() = 0;
-};
-
-inline ShaderInput::~ShaderInput(){};
-
-
 
 class ShaderVertex {
 public:
@@ -19,7 +10,6 @@ public:
 };
 
 inline ShaderVertex::~ShaderVertex(){};
-
 
 
 class ShaderFragment {

@@ -21,7 +21,7 @@ PrimitiveGL::~PrimitiveGL(){
 bool PrimitiveGL::init(){
     _inited = false;
 
-    std::unordered_map<int, GLwrap::Array::BufferPair> gl_layouts;
+    std::unordered_map<GLwrap::BufferArray::Layout, GLwrap::BufferArray::BufferPair> gl_layouts;
 
     for (auto &iter : attributes){
         auto attr = iter.first;
@@ -36,15 +36,15 @@ bool PrimitiveGL::init(){
             continue;
         }
 
-        BufferGL::GpuData *gl_buffer;
-        if (iter.first != PrimitiveAttribute::TexCoord_1){
-            gl_buffer = &std::get<BufferGL::GpuData>(buffer->data);
-        } else {
-            auto buf = dynamic_cast<BufferGL *>(attributes[PrimitiveAttribute::TexCoord_0]);
-            gl_buffer = &std::get<BufferGL::GpuData>(buf->data);
-        }
+        // BufferGL::GpuData<std::any> *gl_buffer;
+        // if (iter.first != PrimitiveAttribute::TexCoord_1){
+        //     gl_buffer = &std::get<BufferGL::GpuData<std::any>>(buffer->data);
+        // } else {
+        //     auto buf = dynamic_cast<BufferGL *>(attributes[PrimitiveAttribute::TexCoord_0]);
+        //     gl_buffer = &std::get<BufferGL::GpuData<std::any>>(buf->data);
+        // }
 
-        gl_layouts[loc] = std::make_pair(gl_buffer->gl_data, gl_buffer->gl_accessor);
+        // gl_layouts[loc] = std::make_pair(gl_buffer->gl_data, gl_buffer->gl_accessor);
     }
 
     for (int i = 0; i < morph_targets.size(); i++){
@@ -77,8 +77,8 @@ bool PrimitiveGL::init(){
                 continue;
             }
 
-            const auto &data = std::get<BufferGL::GpuData>(buffer->data);
-            gl_layouts[loc] = std::make_pair(data.gl_data, data.gl_accessor);
+            // const auto &data = std::get<BufferGL::GpuData<std::any>>(buffer->data);
+            // gl_layouts[loc] = std::make_pair(data.gl_data, data.gl_accessor);
         }
     }
 
@@ -89,10 +89,10 @@ bool PrimitiveGL::init(){
             return false;
         }
 
-        const auto &data = std::get<BufferGL::GpuData>(ind->data);
-        vao = std::make_shared<GLwrap::Array>(*data.gl_data, gl_layouts);
+        // const auto &data = std::get<BufferGL::GpuData<std::any>>(ind->data);
+        // vao = std::make_shared<GLwrap::Array>(data.gl_data, gl_layouts);
     } else {
-        vao = std::make_shared<GLwrap::Array>(gl_layouts);
+        // vao = std::make_shared<GLwrap::Array>(gl_layouts);
     }
     
     _inited = true;
@@ -122,9 +122,9 @@ bool PrimitiveGL::_verifyLoc(int loc, const std::string &name){
     if (loc < 0){
         LOG(WRN) << "gl program does not have attribute " << name << ". Attribute ignored.";
         return false;
-    } else if (loc > GLwrap::Array::max_layouts()){
+    } else if (loc > GLwrap::BufferArray::max_layouts()){
         LOG(WRN) << "OpenGL can not use location " << loc << " for attribute" << name
-                 << ". Only " << GLwrap::Array::max_layouts() << " are available. Attribute ignored.";
+                 << ". Only " << GLwrap::BufferArray::max_layouts() << " are available. Attribute ignored.";
         return false;
     }
     return true;

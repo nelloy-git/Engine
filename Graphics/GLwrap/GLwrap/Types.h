@@ -58,22 +58,51 @@ enum class ElementType : GLenum {
 
 template<ElementType E>
 struct toType {
-    using type = typename std::conditional<E == ElementType::Byte, char,
-                          std::conditional<E == ElementType::UByte, unsigned char, 
-                          std::conditional<E == ElementType::Short, short int, 
-                          std::conditional<E == ElementType::UShort, unsigned short int, 
-                          std::conditional<E == ElementType::Int, int, 
-                          std::conditional<E == ElementType::UInt, unsigned int, 
-                          std::conditional<E == ElementType::Float, float, 
+    using type = typename std::conditional_t<E == ElementType::Byte, char,
+                          std::conditional_t<E == ElementType::UByte, unsigned char, 
+                          std::conditional_t<E == ElementType::Short, short int, 
+                          std::conditional_t<E == ElementType::UShort, unsigned short int, 
+                          std::conditional_t<E == ElementType::Int, int, 
+                          std::conditional_t<E == ElementType::UInt, unsigned int, 
+                          std::conditional_t<E == ElementType::Float, float, 
                           double>>>>>>>;
 };
 
 template<typename T>
 constexpr ElementType fromType(){
-    if constexpr (std::is_same_v<T, char>()){
+    static_assert(std::is_same_v<T, char>
+                  || std::is_same_v<T, unsigned char>
+                  || std::is_same_v<T, short int>
+                  || std::is_same_v<T, unsigned short int>
+                  || std::is_same_v<T, int>
+                  || std::is_same_v<T, unsigned int>
+                  || std::is_same_v<T, float>
+                  || std::is_same_v<T, double>,
+                    "Is not ElementType");
+
+    if (std::is_same_v<T, char>){
         return ElementType::Byte;
-    } else {
-        static_assert(true, "Is not ElementType");
+
+    } else if (std::is_same_v<T, unsigned char>){
+        return ElementType::UByte;
+
+    } else if (std::is_same_v<T, short int>){
+        return ElementType::Short;
+
+    } else if (std::is_same_v<T, unsigned short int>){
+        return ElementType::UShort;
+
+    } else if (std::is_same_v<T, int>){
+        return ElementType::Int;
+
+    } else if (std::is_same_v<T, unsigned int>){
+        return ElementType::UInt;
+
+    } else if (std::is_same_v<T, float>){
+        return ElementType::Float;
+
+    } else if (std::is_same_v<T, double>){
+        return ElementType::Double;
     }
 }
 

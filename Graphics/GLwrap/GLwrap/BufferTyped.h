@@ -12,21 +12,23 @@ template<typename T>
 class BufferTyped : public Buffer {
 public:
     BufferTyped(BufferType type, const std::vector<T> &list, BufferUsage usage = BufferUsage::STATIC) :
-        Buffer(type, list.size() * sizeof(T)){
-        write(&list[0]);
+        Buffer(type, list.size() * sizeof(T)),
+        size(list.size()){
+        write(list.data());
     };
-    virtual ~BufferTyped();
+    virtual ~BufferTyped(){};
 
-    void set(uint i, const T &data){
+    void set(unsigned int i, const T &data){
         write(&data, i * sizeof(T), sizeof(T));
     }
 
-    T get(uint i){
+    T get(unsigned int i){
         T tmp;
         read(&tmp, i * sizeof(T), sizeof(T));
         return tmp;
     }
 
+    const unsigned int size;
 };
 
 using BufferUint = BufferTyped<unsigned int>;

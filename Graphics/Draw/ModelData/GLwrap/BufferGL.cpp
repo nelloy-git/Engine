@@ -14,11 +14,11 @@ BufferGL::BufferGL(const Model *model, int index,
     Buffer(model, index, type, data_type, data_size, elem_count, bytes, normalized){
 
     if (type == BufferType::Other){
-        data.emplace<CpuData>(bytes);
+        // data.emplace<CpuData>(bytes);
     } else {;
         auto gl_accessor = new GLwrap::BufferAccessor(toGLwrap(data_size), toGLwrap(data_type), normalized, 0, 0);
         auto gl_buffer = new GLwrap::Buffer(toGLwrap(type), bytes);
-        data.emplace<GpuData>(gl_accessor, gl_buffer);
+        // data.emplace<GpuData>(gl_accessor, gl_buffer);
     }
 
     // if (type == BufferType::Index){
@@ -38,7 +38,7 @@ bool BufferGL::write(const void *src, size_t dst_offset, size_t size){
         memcpy(&std::get<CpuData>(data).at(dst_offset), src, size);
         return true;
     } else {
-        return std::get<GpuData>(data).gl_data->write(src, dst_offset, size);
+        // return std::get<GpuData>(data).gl_data->write(src, dst_offset, size);
     }
 }
 
@@ -51,6 +51,6 @@ bool BufferGL::read(void *dst, size_t src_offset, size_t size) const {
         memcpy(dst, &std::get<CpuData>(data).at(src_offset), size);
         return true;
     } else {
-        return std::get<GpuData>(data).gl_data->read(dst, src_offset, size);
+        // return std::get<GpuData<std::any>>(data).gl_data->read(dst, src_offset, size);
     }
 }

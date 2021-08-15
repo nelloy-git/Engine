@@ -5,8 +5,6 @@
 #include <sstream>
 #include <stdexcept>
 
-#include "Log.h"
-
 using namespace GLwrap;
 
 Shader::Shader(ShaderType type, const std::string& code) :
@@ -20,11 +18,11 @@ Shader::Shader(ShaderType type, const std::string& code) :
     auto res = GL_FALSE;
     glGetShaderiv(id, GL_COMPILE_STATUS, &res);
     if (res == GL_FALSE){
-        char msg[4096];
+        char *msg = new char[8192];
         GLsizei msglen;
-        glGetShaderInfoLog(id, 4096, &msglen, msg);
+        glGetShaderInfoLog(id, 8192, &msglen, msg);
         glDeleteShader(id);
-        throw std::invalid_argument(msg);
+        throw std::invalid_argument("GLwrap::Shader: " + std::string(msg));
     }
 }
 
@@ -47,7 +45,7 @@ std::shared_ptr<Shader> Shader::fromFile(ShaderType type, const std::string& pat
         file.close();
     } catch(std::ifstream::failure e){
         // auto s = __;
-        LOG(WRN) << "can not read file";
+        std::cout << "Can not read file" << std::endl;
         return nullptr;
     }
 
@@ -55,7 +53,7 @@ std::shared_ptr<Shader> Shader::fromFile(ShaderType type, const std::string& pat
     try {
         shader = std::make_shared<Shader>(type, code);
     } catch (std::invalid_argument e){
-        LOG(ERR) << "Can not load shader from file: " << path << "\n\t" << e.what();
+        std::cout << "Can not load shader from file: " << path << "\n\t" << e.what() << std::endl;
         return nullptr;
     }
 

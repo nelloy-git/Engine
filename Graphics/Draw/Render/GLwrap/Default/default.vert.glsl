@@ -89,4 +89,31 @@ vec3 getMorph_6(){
 vec3 getMorph_7(){
     return data_13.yzw;
 }
+
+uniform mat4 primitive_mat;
+
+out vec3 baseColor;
+out vec2 outTexCoord_0;
+out vec2 outTexCoord_1;
+
+void main(){
+    vec3 morhed_position = getPos();
+    vec3 morhed_normal = getNorm();
+    vec3 morhed_tangent = getTang();
+
+    // if (morph_attributes >= 3){
+    //     morph3Attrib(morhed_position, morhed_normal, morhed_tangent);
+    // } else if (morph_attributes >= 2){
+    //     morph2Attrib(morhed_position, morhed_normal);
+    // } else if (morph_attributes >= 1){
+    //     morph1Attrib(morhed_position);
+    // }
+
+    gl_Position = primitive_mat * vec4(morhed_position, 1.0);
+
+    baseColor = getColor();
+    outTexCoord_0 = getTexCoord_0();
+    outTexCoord_1 = getTexCoord_1();
+}
+
 )"

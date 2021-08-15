@@ -10,6 +10,7 @@ Program::Program(const std::vector<const Shader *> &attach) :
     id(glCreateProgram()){
 
     for (auto shader : attach){
+        if (!shader) continue;
         glAttachShader(id, shader->id);
     }
     glLinkProgram(id);
@@ -20,7 +21,7 @@ Program::Program(const std::vector<const Shader *> &attach) :
         char msg[4096];
         GLsizei msglen;
         glGetProgramInfoLog(id, 4096, &msglen, msg);
-        throw std::invalid_argument(msg);
+        throw std::invalid_argument("GLwrap::Program: " + std::string(msg));
     }
 }
 

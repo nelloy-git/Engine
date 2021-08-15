@@ -9,7 +9,7 @@ namespace Graphics::Render {
 class Renderer {
 public:
     Renderer() = default;
-    virtual ~Renderer();
+    virtual ~Renderer(){};
 };
 
 }
