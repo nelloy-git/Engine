@@ -24,7 +24,7 @@ using namespace Graphics;
 const float cam_vel = 5;
 bool pause = false;
 
-Render::Renderer *initRender(){
+auto *initRender(){
     Render::ShaderVertexGLDefault vert;
     Render::ShaderFragmentGLDefault frag;
 

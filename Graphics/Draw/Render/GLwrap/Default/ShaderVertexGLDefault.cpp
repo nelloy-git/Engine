@@ -10,14 +10,15 @@ ShaderVertexGLDefault::ShaderVertexGLDefault() :
 ShaderVertexGLDefault::~ShaderVertexGLDefault(){
 }
 
-GLwrap::BufferArray *ShaderVertexGLDefault::createArray(const std::vector<unsigned int> &indices,
-                                                       const std::vector<Input> &data){
+PrimitiveGL<ShaderInputGL> *
+ShaderVertexGLDefault::createPrimitive(const std::vector<unsigned int> &indices,
+                                       const std::vector<Input> &data){
 
     BufferTyped<Input> gl_data(BufferType::Array, data);
     auto &gl_accessors = getAccessors();
     BufferTyped<unsigned int> gl_indices(BufferType::IndexArray, indices);
 
-    return new BufferArray(gl_data, gl_accessors, gl_indices);
+    return new PrimitiveGL(gl_data, gl_accessors, gl_indices);
 }
 
 const std::string &ShaderVertexGLDefault::_getSources(){

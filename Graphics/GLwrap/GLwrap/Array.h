@@ -28,9 +28,9 @@ public:
         indexed(true),
         _indices_type(fromType<T>()),
         _indices_count(indices.size){
-        static_assert(_indices_type == ElementType::UByte
-                      || _indices_type == ElementType::UShort
-                      || _indices_type == ElementType::UInt,
+        static_assert(fromType<T>() == ElementType::UByte
+                      || fromType<T>() == ElementType::UShort
+                      || fromType<T>() == ElementType::UInt,
                       "Wrong indices data type");
         _bindBuffers(data, accessors, {&indices});
     }
@@ -47,9 +47,9 @@ public:
         indexed(true),
         _indices_type(fromType<T>()),
         _indices_count(indices.size){
-        static_assert(_indices_type == ElementType::UByte
-                      || _indices_type == ElementType::UShort
-                      || _indices_type == ElementType::UInt,
+        static_assert(fromType<T>() == ElementType::UByte
+                      || fromType<T>() == ElementType::UShort
+                      || fromType<T>() == ElementType::UInt,
                       "Wrong indices data type");
         _bindBuffers(layouts, {&indices});
     }

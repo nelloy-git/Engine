@@ -1,6 +1,7 @@
 #pragma once
 
 #include "Draw/Render/GLwrap/ShaderVertexGL.hpp"
+#include "Draw/Render/GLwrap/PrimitiveGL.hpp"
 
 namespace Graphics::Render {
 
@@ -34,8 +35,8 @@ public:
     ShaderVertexGLDefault();
     virtual ~ShaderVertexGLDefault();
 
-    virtual GLwrap::BufferArray *createArray(const std::vector<unsigned int> &indices,
-                                             const std::vector<Input> &data) override;
+    virtual PrimitiveGL<ShaderInputGL> *createPrimitive(const std::vector<unsigned int> &indices,
+                                                        const std::vector<Input> &data) override;
     
 private:
     static const std::string &_getSources();
