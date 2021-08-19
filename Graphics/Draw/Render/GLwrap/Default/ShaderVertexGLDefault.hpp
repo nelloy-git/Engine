@@ -35,12 +35,13 @@ public:
     ShaderVertexGLDefault();
     virtual ~ShaderVertexGLDefault();
 
-    virtual PrimitiveGL<ShaderInputGL> *createPrimitive(const std::vector<unsigned int> &indices,
-                                                        const std::vector<Input> &data) override;
+    virtual const std::unordered_map<BufferArray::Layout, const BufferAccessor *> &getAccessors(){
+        return getAccessorsStatic();
+    };
     
 private:
     static const std::string &_getSources();
-    static const std::unordered_map<GLwrap::BufferArray::Layout, const GLwrap::BufferAccessor *> &getAccessors();
+    static const std::unordered_map<GLwrap::BufferArray::Layout, const GLwrap::BufferAccessor *> &getAccessorsStatic();
 };
 
 }

@@ -10,17 +10,6 @@ ShaderVertexGLDefault::ShaderVertexGLDefault() :
 ShaderVertexGLDefault::~ShaderVertexGLDefault(){
 }
 
-PrimitiveGL<ShaderInputGL> *
-ShaderVertexGLDefault::createPrimitive(const std::vector<unsigned int> &indices,
-                                       const std::vector<Input> &data){
-
-    BufferTyped<Input> gl_data(BufferType::Array, data);
-    auto &gl_accessors = getAccessors();
-    BufferTyped<unsigned int> gl_indices(BufferType::IndexArray, indices);
-
-    return new PrimitiveGL(gl_data, gl_accessors, gl_indices);
-}
-
 const std::string &ShaderVertexGLDefault::_getSources(){
     static std::string src = 
         #include "Draw/Render/GLwrap/Default/default.vert.glsl"
@@ -29,7 +18,7 @@ const std::string &ShaderVertexGLDefault::_getSources(){
 }
 
 const std::unordered_map<BufferArray::Layout, const BufferAccessor *> &
-ShaderVertexGLDefault::getAccessors(){
+ShaderVertexGLDefault::getAccessorsStatic(){
     constexpr auto step = sizeof(ShaderVertexGL);
     constexpr auto size = 4 * sizeof(float);
     
