@@ -35,13 +35,13 @@ public:
     ShaderVertexGLDefault();
     virtual ~ShaderVertexGLDefault();
 
-    virtual const std::unordered_map<BufferArray::Layout, const BufferAccessor *> &getAccessors(){
+    virtual const AccessorsGL &getAccessors() const override {
         return getAccessorsStatic();
     };
     
 private:
     static const std::string &_getSources();
-    static const std::unordered_map<GLwrap::BufferArray::Layout, const GLwrap::BufferAccessor *> &getAccessorsStatic();
+    static const AccessorsGL &getAccessorsStatic();
 };
 
 }

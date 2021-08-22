@@ -24,11 +24,20 @@ public:
 
     using Input = T;
 
-    // virtual void draw(const PrimitiveGL<T> &primitive,
-    //                   const glm::mat4 &pose,
-    //                   const std::vector<float> &morph);
+    virtual void draw(const PrimitiveGL<T> &primitive,
+                      const glm::mat4 &pose,
+                      const std::vector<float> &morph);
+
+    inline virtual PrimitiveGL<T> *newPrimitive(const std::vector<unsigned int> &indices,
+                                                const std::vector<Input> &data) const {
+        return _vert->newPrimitive(indices, data);
+    };
 
     GLwrap::Program gl;
+
+private:
+    const ShaderVertexGL<T> *_vert;
+    const ShaderFragmentGL *_frag;
 };
 
 }

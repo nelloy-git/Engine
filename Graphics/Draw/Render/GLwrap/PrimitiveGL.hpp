@@ -5,8 +5,11 @@
 namespace Graphics::Render {
 
 template<typename T>
+class ShaderVertexGL;
+
+template<typename T>
 class PrimitiveGL {
-friend class RendererGL;
+friend ShaderVertexGL<T>;
 public:
     virtual ~PrimitiveGL(){};
 

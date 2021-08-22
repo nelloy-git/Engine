@@ -3,6 +3,8 @@
 using namespace Graphics::Render;
 using namespace GLwrap;
 
+using AccessorsGL = ShaderVertexGLDefault::AccessorsGL;
+
 ShaderVertexGLDefault::ShaderVertexGLDefault() :
     ShaderVertexGL<ShaderInputGL>(_getSources()){
 }
@@ -17,8 +19,7 @@ const std::string &ShaderVertexGLDefault::_getSources(){
     return src;
 }
 
-const std::unordered_map<BufferArray::Layout, const BufferAccessor *> &
-ShaderVertexGLDefault::getAccessorsStatic(){
+const AccessorsGL &ShaderVertexGLDefault::getAccessorsStatic(){
     constexpr auto step = sizeof(ShaderVertexGL);
     constexpr auto size = 4 * sizeof(float);
     

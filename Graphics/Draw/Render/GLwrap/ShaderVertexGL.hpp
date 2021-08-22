@@ -21,20 +21,22 @@ public:
     };
     virtual ~ShaderVertexGL(){};
 
-    using Input = T;
     // There is only 16 layouts for vec4 vertex attributes. 
+    using Input = T;
     static_assert(sizeof(T) <= 16 * 4 * sizeof(float));
+
+    using AccessorsGL = std::unordered_map<GLwrap::BufferArray::Layout, const GLwrap::BufferAccessor *>;
     
-    virtual PrimitiveGL<T> *createPrimitive(const std::vector<unsigned int> &indices,
-                                            const std::vector<Input> &data){
-        BufferTyped<Input> gl_data(BufferType::Array, data);
+    virtual PrimitiveGL<T> *newPrimitive(const std::vector<unsigned int> &indices,
+                                         const std::vector<Input> &data) const {
+        GLwrap::BufferTyped<Input> gl_data(GLwrap::BufferType::Array, data);
         auto &gl_accessors = getAccessors();
-        BufferTyped<unsigned int> gl_indices(BufferType::IndexArray, indices);
+        GLwrap::BufferTyped<unsigned int> gl_indices(GLwrap::BufferType::IndexArray, indices);
 
         return new PrimitiveGL(gl_data, gl_accessors, gl_indices);
     }
 
-    virtual const std::unordered_map<BufferArray::Layout, const BufferAccessor *> &getAccessors() = 0;
+    virtual const AccessorsGL &getAccessors() const = 0;
 
     const GLwrap::Shader gl;
 };
