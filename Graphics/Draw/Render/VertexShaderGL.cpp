@@ -1,3 +1,16 @@
+#include "Draw/Render/VertexShaderGL.hpp"
+
+using namespace Graphics::Render;
+
+VertexShaderGL::VertexShaderGL(const std::string &source){
+    gl = std::make_unique<GLwrap::Shader>(GLwrap::ShaderType::Vertex, source);
+}
+
+VertexShaderGL::~VertexShaderGL(){
+}
+
+const std::string &VertexShaderGL::_getSource(){
+    static std::string source = 
 R"(
 #version 420 core
 
@@ -90,7 +103,7 @@ vec3 getMorph_7(){
     return data_13.yzw;
 }
 
-uniform mat4 primitive_mat;
+uniform mat4 pose;
 
 out vec3 baseColor;
 out vec2 outTexCoord_0;
@@ -109,11 +122,13 @@ void main(){
     //     morph1Attrib(morhed_position);
     // }
 
-    gl_Position = primitive_mat * vec4(morhed_position, 1.0);
+    gl_Position = pose * vec4(morhed_position, 1.0);
 
     baseColor = getColor();
     outTexCoord_0 = getTexCoord_0();
     outTexCoord_1 = getTexCoord_1();
 }
 
-)"
+)";
+    return source;
+}

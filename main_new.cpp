@@ -11,9 +11,7 @@
 #include "Context/Timer.h"
 #include "Context/Window.h"
 
-#include "Draw/Render/GLwrap/RendererGL.hpp"
-#include "Draw/Render/GLwrap/Default/ShaderVertexGLDefault.hpp"
-#include "Draw/Render/GLwrap/Default/ShaderFragmentGLDefault.hpp"
+#include "Draw/Render/RendererGL.hpp"
 
 #include "Draw/Utils/Camera.hpp"
 
@@ -24,9 +22,24 @@ using namespace Graphics;
 const float cam_vel = 5;
 bool pause = false;
 
+std::vector<Render::VertexGL> cube = {
+    {.pos = {0, 0, 0}},
+    {.pos = {0, 0, 1}},
+    {.pos = {0, 1, 0}},
+    {.pos = {0, 1, 1}},
+    {.pos = {1, 0, 0}},
+    {.pos = {1, 0, 1}},
+    {.pos = {1, 1, 0}},
+    {.pos = {1, 1, 1}},
+};
+
+std::vector<unsigned int> cude_indices = {
+    1, 2, 3
+};
+
 auto *initRender(){
-    Render::ShaderVertexGLDefault vert;
-    Render::ShaderFragmentGLDefault frag;
+    Render::VertexShaderGL vert;
+    Render::FragmentShaderGL frag;
 
     return new Render::RendererGL(vert, frag);
 }
@@ -99,6 +112,7 @@ int main(int argc, const char** argv){
     });
 
     auto renderer = initRender();
+    auto prim = Render::PrimitiveGL(cude_indices, cube);
 
     while (running){
         float dt = timer->elapsed();

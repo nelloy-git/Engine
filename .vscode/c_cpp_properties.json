@@ -16,7 +16,7 @@
                 "Graphics/3rdparty/stb"
             ],
             "defines": [],
-            "compilerPath": "/usr/bin/g++",
+            "compilerPath": "D:\\MinGW\\bin\\g++",
             "cStandard": "c17",
             "cppStandard": "c++17"
         }

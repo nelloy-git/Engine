@@ -15,9 +15,15 @@ add_library (${PROJECT_NAME} STATIC
     ./Utils/Transform.cpp
     ./Utils/Camera.cpp
 
+    ./Render/FragmentShaderGL.cpp
+    ./Render/PrimitiveGL.cpp
+    ./Render/RendererGL.cpp
+    ./Render/VertexGL.cpp
+    ./Render/VertexShaderGL.cpp
+
     # ./Render/GLwrap/Default/ShaderInputGLDefault.cpp
-    ./Render/GLwrap/Default/ShaderVertexGLDefault.cpp
-    ./Render/GLwrap/Default/ShaderFragmentGLDefault.cpp
+    # ./Render/GLwrap/Default/ShaderVertexGLDefault.cpp
+    # ./Render/GLwrap/Default/ShaderFragmentGLDefault.cpp
 
     # ./ModelData/IFaces/Animation.cpp
     # ./ModelData/IFaces/AnimCh.cpp
