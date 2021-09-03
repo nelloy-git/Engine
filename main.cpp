@@ -18,10 +18,10 @@
 #include "Context/Timer.h"
 #include "Context/Window.h"
 
-#include "Draw/Utils/Camera.hpp"
-#include "Draw/ModelData/tinygltf/ModelLoaderGltf.hpp"
-#include "Draw/ModelData/GLwrap/ModelGL.hpp"
-#include "Draw/ShaderGL.hpp"
+#include "Graphics/Utils/Camera.hpp"
+#include "Graphics/ModelData/tinygltf/ModelLoaderGltf.hpp"
+#include "Graphics/ModelData/GLwrap/ModelGL.hpp"
+#include "Graphics/ShaderGL.hpp"
 
 // #include "Drawing/Camera.h"
 // #include "Drawing/Drawer.h"

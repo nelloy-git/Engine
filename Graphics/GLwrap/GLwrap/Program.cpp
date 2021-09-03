@@ -18,10 +18,12 @@ Program::Program(const std::vector<const Shader *> &attach) :
     auto res = GL_FALSE;
     glGetProgramiv(id, GL_LINK_STATUS, &res);
     if (res == GL_FALSE){
-        char msg[4096];
+        char *c_msg = new char[4096];
         GLsizei msglen;
-        glGetProgramInfoLog(id, 4096, &msglen, msg);
-        throw std::invalid_argument("GLwrap::Program: " + std::string(msg));
+        glGetProgramInfoLog(id, 4096, &msglen, c_msg);
+        std::string msg(c_msg);
+        delete c_msg;
+        throw std::invalid_argument("GLwrap::Program: " + msg);
     }
 }
 

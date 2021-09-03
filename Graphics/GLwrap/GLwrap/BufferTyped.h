@@ -28,7 +28,7 @@ public:
         return tmp;
     }
 
-    const unsigned int size;
+    const size_t size;
 };
 
 using BufferUint = BufferTyped<unsigned int>;

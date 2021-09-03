@@ -11,9 +11,9 @@
 #include "Context/Timer.h"
 #include "Context/Window.h"
 
-#include "Draw/Render/RendererGL.hpp"
+#include "Graphics/Render/RendererGL.hpp"
 
-#include "Draw/Utils/Camera.hpp"
+#include "Graphics/Utils/Camera.hpp"
 
 #include "Log.h"
 
@@ -21,21 +21,6 @@ using namespace Graphics;
 
 const float cam_vel = 5;
 bool pause = false;
-
-std::vector<Render::VertexGL> cube = {
-    {.pos = {0, 0, 0}},
-    {.pos = {0, 0, 1}},
-    {.pos = {0, 1, 0}},
-    {.pos = {0, 1, 1}},
-    {.pos = {1, 0, 0}},
-    {.pos = {1, 0, 1}},
-    {.pos = {1, 1, 0}},
-    {.pos = {1, 1, 1}},
-};
-
-std::vector<unsigned int> cude_indices = {
-    1, 2, 3
-};
 
 auto *initRender(){
     Render::VertexShaderGL vert;
@@ -98,7 +83,12 @@ int main(int argc, const char** argv){
     glm::vec4 back_color(0.2f, 0.3f, 0.3f, 1.0f);
     glm::vec3 model_translation(0.f);
     glm::quat model_rotation = glm::angleAxis((float)(3 * 3.1415 / 2), glm::vec3(0, 1, 0));
-    glm::vec3 model_scale = glm::vec3(0.1, 0.1, 0.1);
+    glm::vec3 model_scale = glm::vec3(1, 1, 1);
+
+    auto s = glm::scale(glm::mat4(1.f), model_scale);
+    auto r = glm::mat4_cast(model_rotation);
+    auto t = glm::translate(glm::mat4(1.f), model_translation);
+    glm::mat4 mat = t * r * s;
 
     float last = 0;
     float rot_vel = (float)(3.14 / 8);
@@ -112,7 +102,7 @@ int main(int argc, const char** argv){
     });
 
     auto renderer = initRender();
-    auto prim = Render::PrimitiveGL(cude_indices, cube);
+    auto prim = Render::PrimitiveGL::Cube();
 
     while (running){
         float dt = timer->elapsed();
@@ -126,6 +116,8 @@ int main(int argc, const char** argv){
         glClear(GL_DEPTH_BUFFER_BIT | GL_COLOR_BUFFER_BIT);
 
         auto clear_time = timer->elapsed();
+
+        renderer->draw(*prim, cam->mat * mat, {});
         
         window->swapBuffers();
         glfwPollEvents();

@@ -15,7 +15,8 @@ enum class DrawMode : GLenum {
     LineStrip = GL_LINE_STRIP,
     Triangles = GL_TRIANGLES,
     TriangleStrip = GL_TRIANGLE_STRIP,
-    TriangleFan = GL_TRIANGLE_FAN
+    TriangleFan = GL_TRIANGLE_FAN,
+    Unknown,
 };
 
 enum class ShaderType : GLenum {
@@ -27,6 +28,7 @@ enum class ShaderType : GLenum {
 enum class BufferType : GLenum {
     Array = GL_ARRAY_BUFFER,
     IndexArray = GL_ELEMENT_ARRAY_BUFFER,
+    Unknown
 };
 
 enum class BufferUsage : GLenum {
@@ -70,15 +72,15 @@ struct toType {
 
 template<typename T>
 constexpr ElementType fromType(){
-    static_assert(std::is_same_v<T, char>
-                  || std::is_same_v<T, unsigned char>
-                  || std::is_same_v<T, short int>
-                  || std::is_same_v<T, unsigned short int>
-                  || std::is_same_v<T, int>
-                  || std::is_same_v<T, unsigned int>
-                  || std::is_same_v<T, float>
-                  || std::is_same_v<T, double>,
-                    "Is not ElementType");
+    // static_assert(std::is_same_v<T, char>
+    //               || std::is_same_v<T, unsigned char>
+    //               || std::is_same_v<T, short int>
+    //               || std::is_same_v<T, unsigned short int>
+    //               || std::is_same_v<T, int>
+    //               || std::is_same_v<T, unsigned int>
+    //               || std::is_same_v<T, float>
+    //               || std::is_same_v<T, double>,
+    //                 "Is not ElementType");
 
     if (std::is_same_v<T, char>){
         return ElementType::Byte;

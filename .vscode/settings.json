@@ -96,6 +96,7 @@
         "ranges": "cpp",
         "*.vert": "cpp",
         "any": "cpp",
-        "*.glsl": "cpp"
+        "*.glsl": "cpp",
+        "shared_mutex": "cpp"
     }
 }
