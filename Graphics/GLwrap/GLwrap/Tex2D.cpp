@@ -27,15 +27,15 @@ Tex2D::~Tex2D(){
     glDeleteTextures(1, &id);
 }
 
-void Tex2D::bind(){
+void Tex2D::bind() const {
     glBindTexture(GL_TEXTURE_2D, id);
 }
 
-void Tex2D::unbind(){
+void Tex2D::unbind() const {
     glBindTexture(GL_TEXTURE_2D, 0);
 }
 
-void Tex2D::enable(GLuint index){
+void Tex2D::enable(GLuint index) const {
     glActiveTexture(GL_TEXTURE0 + index);
     glBindTexture(GL_TEXTURE_2D, id);
 }
@@ -57,7 +57,7 @@ GLuint Tex2D::_newId(){
     return id;
 }
 
-Tex2DWrap Tex2D::getWrapS(){
+Tex2DWrap Tex2D::getWrapS() const {
     return _wrap_s;
 }
 
@@ -68,7 +68,7 @@ void Tex2D::setWrapS(Tex2DWrap wrap){
     _wrap_s = wrap;
 }
 
-Tex2DWrap Tex2D::getWrapT(){
+Tex2DWrap Tex2D::getWrapT() const {
     return _wrap_t;
 }
 
@@ -79,7 +79,7 @@ void Tex2D::setWrapT(Tex2DWrap wrap){
     _wrap_t = wrap;
 }
 
-Tex2DFilter Tex2D::getMinFilter(){
+Tex2DFilter Tex2D::getMinFilter() const {
     return _min_filter;
 }
 
@@ -90,7 +90,7 @@ void Tex2D::setMinFilter(Tex2DFilter filter){
     _min_filter = filter;
 }
 
-Tex2DFilter Tex2D::getMagFilter(){
+Tex2DFilter Tex2D::getMagFilter() const {
     return _mag_filter;
 }
 

@@ -2,30 +2,29 @@
 
 #include <vector>
 
-#include "Graphics/Model/Data.hpp"
 #include "Graphics/Utils/Transform.hpp"
+
+#include "Graphics/Model/Mesh.hpp"
 
 namespace Graphics::Model {
 
-class Mesh;
-
-class Node : public Data {
+template<Render::Base::VertexStruct S>
+class Node {
 public:
-    Node(const Model *model, int index, const glm::mat4 &mat) :
-        Data(model, index),
+    explicit Node(const glm::mat4 &mat) noexcept :
         transform(mat){
     };
 
-    Node(const Model *model, int index,
-         const glm::vec3 &translation, const glm::quat &rotation, const glm::vec3 &scale) :
-        Data(model, index),
+    explicit Node(const glm::vec3 &translation,
+                  const glm::quat &rotation,
+                  const glm::vec3 &scale) noexcept :
         transform(translation, rotation, scale){
     };
 
     virtual ~Node(){};
 
     Transform transform;
-    Mesh *mesh = nullptr;
+    Mesh<S> *mesh = nullptr;
     Node *parent = nullptr;
     std::vector<Node *> children;
 };

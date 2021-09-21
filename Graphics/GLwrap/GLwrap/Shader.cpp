@@ -22,6 +22,7 @@ Shader::Shader(ShaderType type, const std::string& code) :
         GLsizei msglen;
         glGetShaderInfoLog(id, 8192, &msglen, msg);
         glDeleteShader(id);
+        std::cout << code.c_str();
         throw std::invalid_argument("GLwrap::Shader: " + std::string(msg));
     }
 }

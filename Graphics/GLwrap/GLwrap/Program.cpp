@@ -27,76 +27,47 @@ Program::Program(const std::vector<const Shader *> &attach) :
     }
 }
 
-Program::~Program(){
-    glDeleteProgram(id);
-}
 
-void Program::use() const{
+void Program::use() const {
     glUseProgram(id);
+    for (auto &iter : _subroutines){
+        glUniformSubroutinesuiv(static_cast<GLenum>(iter.first),
+                                iter.second.size(), iter.second.data());
+    }
 }
 
-GLuint Program::getAttribLoc(const std::string &name){
-    auto iter = _attributes.find(name);
-    if (iter == _attributes.end()){
-        _attributes[name] = glGetAttribLocation(id, name.c_str());
-        iter = _attributes.find(name);
+
+bool Program::setSubroutines(ShaderType type,
+                             const std::vector<GLuint> &list,
+                             bool ignore_checks){
+    if (!ignore_checks){
+        if (list.size() != getSubroutinesCount(type)){
+            return false;
+        }
+
+        for (int i = 0; i < list.size(); ++i){
+            GLint compatible_count;
+            glGetActiveSubroutineUniformiv(id, static_cast<GLenum>(type), i, GL_NUM_COMPATIBLE_SUBROUTINES, &compatible_count);
+
+            GLint *compatible_list = new GLint[compatible_count];
+            glGetActiveSubroutineUniformiv(id, static_cast<GLenum>(type), i, GL_COMPATIBLE_SUBROUTINES, compatible_list);
+
+            bool failed = true;
+            for (int j = 0; j < compatible_count; ++j){
+                if (list[i] == compatible_list[j]){
+                    failed = false;
+                    break;
+                }
+            }
+
+            delete[] compatible_list;
+
+            if (failed){
+                return false;
+            }
+        }
     }
 
-    return iter->second;
-}
-
-GLuint Program::getUniformLoc(const std::string &name){
-    auto iter = _uniforms.find(name);
-    if (iter == _uniforms.end()){
-        _uniforms[name] = glGetUniformLocation(id, name.c_str());
-        iter = _uniforms.find(name);
-    }
-
-    return iter->second;
-}
-
-bool Program::setUniform1vf(const std::string &name, const float val){
-    GLuint loc = getUniformLoc(name);
-    if (loc < 0){
-        return false;
-    }
-    glUniform1f(loc, val);
+    _subroutines[type] = list;
     return true;
 }
-
-bool Program::setUniformFloatArray(const std::string &name, const float *ptr, size_t size){
-    GLuint loc = getUniformLoc(name);
-    if (loc < 0){
-        return false;
-    }
-    glUniform1fv(loc, size, ptr);
-    return true;
-}
-
-bool Program::setUniform1vi(const std::string &name, const int val){
-    GLuint loc = getUniformLoc(name);
-    if (loc < 0){
-        return false;
-    }
-    glUniform1i(loc, val);
-    return true;
-}
-
-bool Program::setUniformVec4f(const std::string &name, const float vec[4]){
-    GLuint loc = getUniformLoc(name);
-    if (loc < 0){
-        return false;
-    }
-    glUniform4fv(loc, 1, vec);
-    return true;
-}
-
-bool Program::setUniformMat4f(const std::string &name, const float mat[16]){
-    GLuint loc = getUniformLoc(name);
-    if (loc < 0){
-        return false;
-    }
-    glUniformMatrix4fv(loc, 1, GL_FALSE, mat);
-    return true;
-}
-

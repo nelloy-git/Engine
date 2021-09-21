@@ -11,15 +11,25 @@ include_directories(../3rdparty/tinygltf)
 include_directories(../3rdparty/glm)
 
 add_library (${PROJECT_NAME} STATIC
+
+    # ./Render/FragmentShaderGL.cpp
+    # ./Render/RendererGL.cpp
+    ./Render/Easy/FShader.cpp
+    ./Render/Easy/VShader.cpp
+    ./Render/Easy/Renderer.cpp
+
+    # ./Model/Material.cpp
+    ./Model/Mesh.cpp
+    ./Model/Model.cpp
+    # ./Model/Render.cpp
+    # ./Model/Texture.cpp
+
+    # ./Model/gltf/Primitive.cpp
+    ./Model/Loader/TinyGltf/Types.cpp
+
     ../Utils/Log.cpp
     ./Utils/Transform.cpp
     ./Utils/Camera.cpp
-
-    ./Render/FragmentShaderGL.cpp
-    ./Render/PrimitiveGL.cpp
-    ./Render/RendererGL.cpp
-    ./Render/VertexGL.cpp
-    ./Render/VertexShaderGL.cpp
 
     # ./Render/GLwrap/Default/ShaderInputGLDefault.cpp
     # ./Render/GLwrap/Default/ShaderVertexGLDefault.cpp

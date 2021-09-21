@@ -98,6 +98,7 @@
         "any": "cpp",
         "*.glsl": "cpp",
         "shared_mutex": "cpp",
-        "cwctype": "cpp"
+        "cwctype": "cpp",
+        "source_location": "cpp"
     }
 }

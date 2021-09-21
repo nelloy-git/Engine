@@ -1,22 +1,21 @@
 #pragma once
 
+#include "Graphics/Render/Base/Vertex.hpp"
+
 namespace Graphics::Model {
 
-class Model;
+class ModelBase;
 
 class Data {
 public:
-    Data(const Model *model, int index) :
+    Data(const ModelBase &model, int index) :
         model(model),
         index(index){
     };
-    virtual ~Data() = 0;
+    virtual ~Data(){};
 
-    const Model *model;
+    const ModelBase &model;
     const int index;
-};
-
-inline Data::~Data(){
 };
 
 }

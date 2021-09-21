@@ -15,10 +15,11 @@
                 "Graphics/3rdparty/glm",
                 "Graphics/3rdparty/stb"
             ],
-            "defines": [],
-            "compilerPath": "D:\\MinGW\\bin\\g++",
+            "defines": [
+            ],
+            "compilerPath": "C:\\MinGW\\mingw64\\bin\\g++",
             "cStandard": "c17",
-            "cppStandard": "c++17"
+            "cppStandard": "c++20"
         }
     ],
     "version": 4

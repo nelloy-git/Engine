@@ -10,6 +10,8 @@ include_directories(./glad/include)
 include_directories(./glfw/include)
 include_directories(../Utils)
 
+add_definitions(-DDEBUG_GLWRAP)
+
 add_library (${PROJECT_NAME} STATIC
     ./GLwrap/Array.cpp
     ./GLwrap/Buffer.cpp
@@ -17,7 +19,6 @@ add_library (${PROJECT_NAME} STATIC
     ./GLwrap/Program.cpp
     ./GLwrap/Shader.cpp
     ./GLwrap/Tex2D.cpp
-    ./GLwrap/Types.cpp
     
     ./Context/Keyboard.cpp
     ./Context/Mouse.cpp

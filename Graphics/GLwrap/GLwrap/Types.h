@@ -42,7 +42,6 @@ enum class ElementStruct : GLint {
     Vec2 = 2,
     Vec3 = 3,
     Vec4 = 4,
-    Mat2 = 4,
     Mat3 = 9,
     Mat4 = 16,
     Unknown
@@ -113,7 +112,8 @@ constexpr ElementType fromType(){
 enum class Tex2DWrap : GLint {
     Repeat = GL_REPEAT,
     ClampToEdge = GL_CLAMP_TO_EDGE,
-    MirroredRepeat = GL_MIRRORED_REPEAT
+    MirroredRepeat = GL_MIRRORED_REPEAT,
+    Unknown
 };
 
 enum class Tex2DFilter : GLint {
@@ -122,7 +122,8 @@ enum class Tex2DFilter : GLint {
     LinearMipmapNearest = GL_LINEAR_MIPMAP_NEAREST,
     Nearest = GL_NEAREST,
     NearestMipmapLinear = GL_NEAREST_MIPMAP_LINEAR,
-    NearestMipmapNearest = GL_NEAREST_MIPMAP_NEAREST
+    NearestMipmapNearest = GL_NEAREST_MIPMAP_NEAREST,
+    Unknown
 };
 
 enum class Tex2DInternalFormat : GLenum {
@@ -234,7 +235,46 @@ std::string toString(T enum_value){
     return std::string(type_name) + std::string("::") + std::string(enum_name);
 }
 
-size_t getSize(ElementType elem_type);
-unsigned int getCount(ElementStruct elem_struct);
+constexpr size_t getSize(ElementType elem_type){
+    switch (elem_type){
+        case ElementType::Byte:
+            return sizeof(char);
+        case ElementType::UByte:
+            return sizeof(unsigned char);
+        case ElementType::Short:
+            return sizeof(short);
+        case ElementType::UShort:
+            return sizeof(unsigned short);
+        case ElementType::Int:
+            return sizeof(int);
+        case ElementType::UInt:
+            return sizeof(unsigned int);
+        case ElementType::Float:
+            return sizeof(float);
+        case ElementType::Double:
+            return sizeof(double);
+        default:
+            return 0;
+    }
+};
+
+constexpr unsigned int getSize(ElementStruct elem_struct){
+    switch (elem_struct){
+        case ElementStruct::Scalar:
+            return 1;
+        case ElementStruct::Vec2:
+            return 2;
+        case ElementStruct::Vec3:
+            return 3;
+        case ElementStruct::Vec4:
+            return 4;
+        case ElementStruct::Mat3:
+            return 9;
+        case ElementStruct::Mat4:
+            return 16;
+        default:
+            return 0;
+    }
+};
 
 }

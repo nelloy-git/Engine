@@ -12,9 +12,9 @@ public:
           Tex2DPixelFormat usage, Tex2DPixelType pixel_type);
     virtual ~Tex2D();
 
-    void bind();
-    void unbind();
-    void enable(GLuint index);
+    void bind() const;
+    void unbind() const;
+    void enable(GLuint index) const;
 
     void write(const void *data,  
                GLsizei x, GLsizei y,
@@ -22,16 +22,16 @@ public:
 
 
     void setWrapS(Tex2DWrap wrap);
-    Tex2DWrap getWrapS();
+    Tex2DWrap getWrapS() const;
 
     void setWrapT(Tex2DWrap wrap);
-    Tex2DWrap getWrapT();
+    Tex2DWrap getWrapT() const;
 
     void setMinFilter(Tex2DFilter filter);
-    Tex2DFilter getMinFilter();
+    Tex2DFilter getMinFilter() const;
 
     void setMagFilter(Tex2DFilter filter);
-    Tex2DFilter getMagFilter();
+    Tex2DFilter getMagFilter() const;
 
     const GLuint id;
 

@@ -12,11 +12,12 @@ GLwrap::DrawMode toDrawMode(int mode);
 GLwrap::ElementType toElemType(int elem_type);
 GLwrap::ElementStruct toElemStruct(int elem_struct);
 
+GLwrap::Tex2DFilter toTextureFilter(int filter);
+GLwrap::Tex2DWrap toTextureWrap(int wrap);
+
 // BufferElemStruct getBufferElemStruct(int gltf_elem_size);
 // PrimitiveDrawMode getDrawMode(int gltf_draw_mode);
 // PrimitiveAttribute getAttribute(const std::string &gltf_attr);
-// TextureFilter getTextureFilter(int gltf_filter);
-// TextureWrap getTextureWrap(int gltf_wrap);
 // TextureFormat getTextureFormat(int gltf_channels);
 
 // size_t getComponentTypeSize(ComponentType gltf_elem_type);
