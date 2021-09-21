@@ -22,6 +22,9 @@ void RendererGL::draw(const PrimitiveGL &primitive,
                       const glm::mat4 &pose,
                       const std::vector<float> &morph){
                           
-    gl->setUniformMat4f("pose", glm::value_ptr(pose));
+    if (!gl->setUniformMat4f("pose", glm::value_ptr(pose))){
+        std::cout << "Failed setting pose" << std::endl;
+        return;
+    }
     primitive.gl_object->draw(primitive.gl_draw_mode);
 }

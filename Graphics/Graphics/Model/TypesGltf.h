@@ -9,9 +9,10 @@ namespace Graphics::Model::gltf {
 
 GLwrap::BufferType toBufferType(int type);
 GLwrap::DrawMode toDrawMode(int mode);
+GLwrap::ElementType toElemType(int elem_type);
+GLwrap::ElementStruct toElemStruct(int elem_struct);
 
 // BufferElemStruct getBufferElemStruct(int gltf_elem_size);
-// BufferElemType getBufferElemType(int gltf_elem_type);
 // PrimitiveDrawMode getDrawMode(int gltf_draw_mode);
 // PrimitiveAttribute getAttribute(const std::string &gltf_attr);
 // TextureFilter getTextureFilter(int gltf_filter);

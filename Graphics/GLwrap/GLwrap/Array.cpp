@@ -18,23 +18,6 @@ GLint BufferArray::max_layouts(){
     return max;
 }
 
-// BufferArray::BufferArray(const Buffer &data,
-//                          const std::unordered_map<Layout, const BufferAccessor *> &accessors) :
-//     id(_newId()),
-//     indexed(false),
-//     _indices_type({}),
-//     _indices_count(0){
-//     _bindBuffers(data, accessors, {});
-// }
-
-// BufferArray::BufferArray(const std::unordered_map<Layout, BufferPair> &layouts) :
-//     id(_newId()),
-//     indexed(false),
-//     _indices_type({}),
-//     _indices_count(0){
-//     _bindBuffers(layouts, {});
-// }
-
 BufferArray::~BufferArray(){
     glDeleteVertexArrays(1, &id);
 }
@@ -58,19 +41,6 @@ void BufferArray::draw(DrawMode mode) const {
         glDrawArrays(static_cast<GLenum>(mode), 0, _vertex_count);    
     }
 }
-
-// void BufferArray::drawArrays(DrawMode mode, GLuint first, GLuint count) const {
-//     glBindVertexArray(id);
-//     glDrawArrays(static_cast<GLenum>(mode), first, count);
-//     glBindVertexArray(0);
-// }
-
-// void BufferArray::drawElements(DrawMode mode, ElementType type, GLuint vertex_count, GLuint64 byte_offset) const {
-//     glBindVertexArray(id);
-//     glDrawElements(static_cast<GLenum>(mode), vertex_count,
-//                    static_cast<GLenum>(_indices_type), (void*)byte_offset);
-//     glBindVertexArray(0);
-// }
 
 GLuint BufferArray::_newId(){
     GLuint id;

@@ -9,6 +9,9 @@
 #include "Graphics/Model/Node.hpp"
 
 namespace tinygltf {
+    class Accessor;
+    class Buffer;
+    class BufferView;
     class Model;
     class Primitive;
 }
@@ -26,7 +29,7 @@ friend class ModelLoader;
 
 public:
     // glTF2.0 only
-    Model(const std::string &path);
+    explicit Model(const std::string &path);
     virtual ~Model();
 
     std::vector<std::unique_ptr<Animation>> animations;
@@ -42,8 +45,11 @@ public:
 private:
     void _loadPrimitives(const tinygltf::Model &model);
     Render::PrimitiveGL *_loadPrimitive(const tinygltf::Model &model,
-                                        const tinygltf::Primitive &primitive)
+                                        const tinygltf::Primitive &primitive);
 
+    void _loadPrimitiveIndices(std::vector<unsigned int> &dst,
+                               const tinygltf::Model &model,
+                               const tinygltf::Accessor &accessor);
 
 };
 

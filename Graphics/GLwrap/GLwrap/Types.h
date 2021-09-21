@@ -44,7 +44,8 @@ enum class ElementStruct : GLint {
     Vec4 = 4,
     Mat2 = 4,
     Mat3 = 9,
-    Mat4 = 16
+    Mat4 = 16,
+    Unknown
 };
 
 enum class ElementType : GLenum {
@@ -56,6 +57,7 @@ enum class ElementType : GLenum {
     UInt = GL_UNSIGNED_INT,
     Float = GL_FLOAT,
     Double = GL_DOUBLE,
+    Unknown
 };
 
 template<ElementType E>
@@ -231,5 +233,8 @@ std::string toString(T enum_value){
     auto enum_name = magic_enum::enum_name(enum_value);
     return std::string(type_name) + std::string("::") + std::string(enum_name);
 }
+
+size_t getSize(ElementType elem_type);
+unsigned int getCount(ElementStruct elem_struct);
 
 }

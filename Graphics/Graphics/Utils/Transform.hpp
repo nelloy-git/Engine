@@ -10,7 +10,7 @@ namespace Graphics {
 class Transform {
 public:
     Transform();
-    Transform(const glm::mat4 &mat);
+    explicit Transform(const glm::mat4 &mat);
     Transform(const glm::vec3 &trans,
               const glm::quat &rot,
               const glm::vec3 &scale);

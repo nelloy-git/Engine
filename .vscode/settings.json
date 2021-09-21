@@ -97,6 +97,7 @@
         "*.vert": "cpp",
         "any": "cpp",
         "*.glsl": "cpp",
-        "shared_mutex": "cpp"
+        "shared_mutex": "cpp",
+        "cwctype": "cpp"
     }
 }

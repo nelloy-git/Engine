@@ -1,6 +1,6 @@
 #include "Graphics/Utils/Transform.hpp"
 
-using namespace Graphics::Draw;
+using namespace Graphics;
 
 Transform::Transform() :
     _trans(0.f),
