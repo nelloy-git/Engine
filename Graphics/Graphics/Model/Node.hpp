@@ -20,8 +20,9 @@ public:
                   const glm::vec3 &scale) noexcept :
         transform(translation, rotation, scale){
     };
-
-    virtual ~Node(){};
+    Node(const Node&) = delete;
+    Node(Node &&) = default;
+    virtual ~Node() = default;
 
     Transform transform;
     Mesh<S> *mesh = nullptr;

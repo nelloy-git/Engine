@@ -1,28 +1,38 @@
 #pragma once
 
 #include <string>
+#include <experimental/source_location>
+
+#include "tiny_gltf.h"
 
 #include "Graphics/Types.h"
 #include "GLwrap/Types.h"
 
 namespace Graphics::Model::gltf {
 
-GLwrap::BufferType toBufferType(int type);
-GLwrap::DrawMode toDrawMode(int mode);
-GLwrap::ElementType toElemType(int elem_type);
-GLwrap::ElementStruct toElemStruct(int elem_struct);
+namespace detailed {
+    
+using SrcLoc = std::experimental::source_location;
 
-GLwrap::Tex2DFilter toTextureFilter(int filter);
-GLwrap::Tex2DWrap toTextureWrap(int wrap);
+[[ noreturn ]] static inline void throwErr(const std::string &msg, SrcLoc loc = SrcLoc::current()){
+    throw std::runtime_error(std::string(loc.file_name()) + ":"
+                             + std::to_string(loc.line()) + " - "
+                             + msg);
+}
 
-// BufferElemStruct getBufferElemStruct(int gltf_elem_size);
-// PrimitiveDrawMode getDrawMode(int gltf_draw_mode);
-// PrimitiveAttribute getAttribute(const std::string &gltf_attr);
-// TextureFormat getTextureFormat(int gltf_channels);
+}
 
-// size_t getComponentTypeSize(ComponentType gltf_elem_type);
-// GLwrap::Tex2Dformat getImageFormat(int gltf_channels);
-// GLuint getImageWrap(int gltf_wrap);
-// GLuint getImageFilter(int gltf_filter);
+GLwrap::DrawMode getDrawMode(const tinygltf::Primitive &prim);
+GLwrap::ElementType getElemType(const tinygltf::Accessor &acc);
+GLwrap::ElementStruct getElemStruct(const tinygltf::Accessor &acc);
+
+GLwrap::Tex2DFilter getMinFilter(const tinygltf::Sampler &sampler);
+GLwrap::Tex2DFilter getMagFilter(const tinygltf::Sampler &sampler);
+GLwrap::Tex2DWrap getWrapT(const tinygltf::Sampler &sampler);
+GLwrap::Tex2DWrap getWrapS(const tinygltf::Sampler &sampler);
+
+GLwrap::Tex2DInternalFormat getInternalFormat(const tinygltf::Image& img);
+GLwrap::Tex2DPixelFormat getPixelFormat(const tinygltf::Image& img);
+GLwrap::Tex2DPixelType getPixelType(const tinygltf::Image& img);
 
 }

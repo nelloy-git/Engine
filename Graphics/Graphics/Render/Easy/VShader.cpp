@@ -130,7 +130,7 @@ std::string VShader::_createParseFuncSourceAll(){
 }
 
 std::string VShader::_createSourceAll(){
-    std::string src = "#version 420 core\n";
+    std::string src = "#version 450 core\n";
     src += _createInputSource() + "\n";
     src += _createParseFuncSourceAll() + "\n";
     src += R"(

@@ -1,19 +1,20 @@
 #pragma once
 
-#include "Graphics/Model/Data.hpp"
-
-#include "Graphics/Model/Texture.hpp"
+#include "GLwrap/Tex2D.h"
 
 namespace Graphics::Render::Base {
 
+using Texture = GLwrap::Tex2D;
+
 class Material {
+
 public:
     Material() = default;
     virtual ~Material() = default;
 
     struct TexInfo {
         TexInfo() = default;
-        GLwrap::Tex2D *tex = nullptr;
+        Texture *texture = nullptr;
         unsigned int layer = 0;
         // Multiplicator for pixels
         float scale[4] = {0.0, 0.0, 0.0, 0.0};

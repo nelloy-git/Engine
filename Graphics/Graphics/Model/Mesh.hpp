@@ -17,6 +17,7 @@ public:
     using Primitive = Graphics::Render::Base::Primitive<S>;
 
     Mesh() = default;
+    Mesh(const Mesh&) = delete;
     Mesh(Mesh&&) = default;
     virtual ~Mesh(){};
 

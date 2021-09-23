@@ -91,8 +91,8 @@ void Window::_glfwInit(){
         throw std::runtime_error("glfwInit failed.");
     }
 
-    glfwWindowHint(GLFW_VERSION_MAJOR, 3);
-    glfwWindowHint(GLFW_VERSION_MINOR, 2);
+    glfwWindowHint(GLFW_VERSION_MAJOR, 4);
+    glfwWindowHint(GLFW_VERSION_MINOR, 5);
 
     _glfw_inited = true;
 }

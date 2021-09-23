@@ -5,9 +5,7 @@
 #include "Graphics/Model/Mesh.hpp"
 #include "Graphics/Model/Node.hpp"
 
-#include "Graphics/Model/Loader/TinyGltf/Primitive.h"
-#include "Graphics/Model/Loader/TinyGltf/Types.h"
-#include "Graphics/Model/Loader/TinyGltf/Utils.h"
+#include "Graphics/Model/Loader/TinyGltf/Load.h"
 
 
 namespace Graphics::Model::Loader {
@@ -17,8 +15,10 @@ class TinyGltf {
 public:
     TinyGltf() = delete;
 
-    static Model<S> *newModel(const tinygltf::Model &gltf){
-        auto mdl = new Model<S>();
+    static std::unique_ptr<Model<S>> newModel(const tinygltf::Model &gltf){
+        auto mdl = std::make_unique<Model<S>>();
+
+        _loadTextures(gltf, *mdl);
 
         _loadMeshes(gltf, *mdl);
         _loadNodes(gltf, *mdl);
@@ -47,28 +47,15 @@ private:
         std::vector<Render::Base::Vertex<S>> data(count);
         _loadAttributes(gltf_model, gltf_prim, data);
 
-        std::cout << "Pos:" << std::endl;
-        std::cout << data[0].pos[0] << ", " << data[0].pos[1] << ", " << data[0].pos[2] << std::endl;
-        std::cout << data[1].pos[0] << ", " << data[1].pos[1] << ", " << data[1].pos[2] << std::endl;
-        std::cout << data[2].pos[0] << ", " << data[2].pos[1] << ", " << data[2].pos[2] << std::endl;
-
-        // auto indices = std::make_unique<std::vector<unsigned int>>();
-        // std::unique_ptr<std::vector<unsigned int>> indices;
+        // Load indices if exist
         std::unique_ptr<std::vector<unsigned int>> indices;
         if (gltf_prim.indices >= 0){
-            // indices = std::make_unique<std::vector<unsigned int>>();
-            // indices = new std::vector<unsigned int>();
+            indices = std::make_unique<std::vector<unsigned int>>();
             auto &accessor = gltf_model.accessors[gltf_prim.indices];
-            indices = gltf::loadIndices(gltf_model, accessor);
-            
-            std::cout << "Indices: "
-                      << indices->at(0) << ", "
-                      << indices->at(1) << ", "
-                      << indices->at(2) << std::endl;
+            gltf::loadIndices(gltf_model, accessor, *indices);
         }
         
         mesh.primitives.emplace_back(data, indices.get());
-        // return new Primitive<S>(data, Render::getAccessors(), indices.get());
     };
 
     static size_t _getPrimitiveVertCount(const tinygltf::Model &model,
@@ -92,47 +79,69 @@ private:
         for (auto &attr : gltf_prim.attributes){
             auto &name = attr.first;
             auto &gltf_accessor = gltf_model.accessors[attr.second];
-
-            if (name == "POSITION"){
-                gltf::loadPosition<S>(gltf_model, gltf_accessor, dst);
-            // } else if (name == "NORMAL"){
-            //     gltf::loadNormal(model, accessor, dst);
-            // } else if (name == "TANGENT"){
-            //     gltf::loadTangent(model, accessor, dst);
-            // } else if (name == "TEXCOORD_0"){
-            //     gltf::loadTex0(model, accessor, dst);
-            // } else if (name == "TEXCOORD_1"){
-            //     gltf::loadTex1(model, accessor, dst);
-            // } else if (name == "COLOR_0"){
-            //     gltf::loadColor(gltf_model, gltf_accessor, dst);
-            // } else if (name == "JOINTS_0"){
-            //     gltf::loadJoints(model, accessor, dst);
-            // } else if (name == "WEIGHTS_0"){
-            //     gltf::loadWeights(model, accessor, dst);
-            }
+            _loadAttribute(gltf_model, name, gltf_accessor, dst);
         }
     };
+
+    static void _loadAttribute(const tinygltf::Model &gltf_model,
+                               const std::string &name,
+                               const tinygltf::Accessor &gltf_accessor,
+                               std::vector<Render::Base::Vertex<S>> &dst){
+        if (name == "POSITION"){
+            gltf::loadPosition<S>(gltf_model, gltf_accessor, dst);
+        } else if (name == "NORMAL"){
+            gltf::loadNormal(gltf_model, gltf_accessor, dst);
+        } else if (name == "TANGENT"){
+            gltf::loadTangent(gltf_model, gltf_accessor, dst);
+        } else {
+            for (int i = 0; i < S.TEX_COORD_COUNT; ++i){
+                if (name == "TEXCOORD_" + std::to_string(i)){
+                    gltf::loadTex(gltf_model, gltf_accessor, i, dst);
+                }
+            }
+
+            for (int i = 0; i < S.COLOR_COUNT; ++i){
+                if (name == "COLOR_" + std::to_string(i)){
+                    gltf::loadColor(gltf_model, gltf_accessor, i, dst);
+                }
+            }
+
+            for (int i = 0; i < S.JOINTS_COUNT; ++i){
+                if (name == "JOINTS_" + std::to_string(i)){
+                    gltf::loadJoints(gltf_model, gltf_accessor, i, dst);
+                }
+            }
+
+            for (int i = 0; i < S.JOINTS_COUNT; ++i){
+                if (name == "WEIGHTS_" + std::to_string(i)){
+                    gltf::loadJoints(gltf_model, gltf_accessor, i, dst);
+                }
+            }
+        }
+    }
 
     static void _loadNodes(const tinygltf::Model &gltf_model,
                            Model<S> &mdl){
         for (int i = 0; i < gltf_model.nodes.size(); ++i){
             auto &gltf_node = gltf_model.nodes[i];
 
+            // Load matrices
             if (gltf_node.matrix.size() > 0){
-                mdl.nodes.emplace_back(gltf::detailed::loadMat4x4(gltf_node.matrix));
+                mdl.nodes.emplace_back(gltf::loadMat4x4(gltf_node.matrix));
             } else {
-                auto t = gltf::detailed::loadVec3(gltf_node.translation);
-                auto r = gltf::detailed::loadQuat(gltf_node.rotation);
-                auto s = gltf::detailed::loadVec3(gltf_node.scale);
+                auto t = gltf::loadVec3(gltf_node.translation);
+                auto r = gltf::loadQuat(gltf_node.rotation);
+                auto s = gltf::loadVec3(gltf_node.scale);
                 mdl.nodes.emplace_back(t, r, s);
             }
 
+            // Link mesh
             if (gltf_node.mesh >= 0){
                 mdl.nodes.back().mesh = &mdl.meshes[gltf_node.mesh];
-                std::cout << "Mesh detected" << std::endl;
             }
         }
 
+        // Link children
         for (int i = 0; i < gltf_model.nodes.size(); ++i){
             auto &gltf_node = gltf_model.nodes[i];
             auto &node = mdl.nodes[i];
@@ -142,6 +151,24 @@ private:
             }
         }
     };
+
+    static void _loadTextures(const tinygltf::Model &gltf_model,
+                              Model<S> &mdl){
+        for (int i = 0; i < gltf_model.textures.size(); ++i){
+            auto &gltf_tex = gltf_model.textures[i];
+            auto &gltf_img = gltf_model.images[gltf_tex.source];
+            auto &gltf_sampler = gltf_model.samplers[gltf_tex.sampler];
+
+            mdl.textures.emplace_back(gltf_img.width, gltf_img.height,
+                                      gltf::getInternalFormat(gltf_img),
+                                      gltf::getPixelFormat(gltf_img),
+                                      gltf::getPixelType(gltf_img));
+            mdl.textures.back().setMagFilter(gltf::getMagFilter(gltf_sampler));
+            mdl.textures.back().setMinFilter(gltf::getMinFilter(gltf_sampler));
+            mdl.textures.back().setWrapS(gltf::getWrapS(gltf_sampler));
+            mdl.textures.back().setWrapT(gltf::getWrapT(gltf_sampler));
+        }
+    }
 
 };
  

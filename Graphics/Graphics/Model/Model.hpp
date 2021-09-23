@@ -3,6 +3,7 @@
 #include <memory>
 #include <vector>
 
+#include "Graphics/Render/Base/Material.hpp"
 #include "Graphics/Render/Base/Vertex.hpp"
 
 namespace Graphics::Model {
@@ -12,6 +13,8 @@ class Mesh;
 
 template<Render::Base::VertexStruct S>
 class Node;
+
+using Texture = Render::Base::Texture;
 
 template<Render::Base::VertexStruct S>
 class Model {
@@ -24,6 +27,7 @@ public:
 
     std::vector<Mesh<S>> meshes;
     std::vector<Node<S>> nodes;
+    std::vector<Texture> textures;
 
 private:
 };

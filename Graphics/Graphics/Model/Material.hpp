@@ -6,6 +6,8 @@
 
 namespace Graphics::Model {
 
+using Texture = GLwrap::Tex2D;
+
 class Material {
 public:
     Material() = default;

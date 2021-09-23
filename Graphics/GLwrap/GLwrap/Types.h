@@ -15,8 +15,7 @@ enum class DrawMode : GLenum {
     LineStrip = GL_LINE_STRIP,
     Triangles = GL_TRIANGLES,
     TriangleStrip = GL_TRIANGLE_STRIP,
-    TriangleFan = GL_TRIANGLE_FAN,
-    Unknown,
+    TriangleFan = GL_TRIANGLE_FAN
 };
 
 enum class ShaderType : GLenum {
@@ -27,8 +26,7 @@ enum class ShaderType : GLenum {
 
 enum class BufferType : GLenum {
     Array = GL_ARRAY_BUFFER,
-    IndexArray = GL_ELEMENT_ARRAY_BUFFER,
-    Unknown
+    IndexArray = GL_ELEMENT_ARRAY_BUFFER
 };
 
 enum class BufferUsage : GLenum {
@@ -43,8 +41,7 @@ enum class ElementStruct : GLint {
     Vec3 = 3,
     Vec4 = 4,
     Mat3 = 9,
-    Mat4 = 16,
-    Unknown
+    Mat4 = 16
 };
 
 enum class ElementType : GLenum {
@@ -55,8 +52,7 @@ enum class ElementType : GLenum {
     Int = GL_INT,
     UInt = GL_UNSIGNED_INT,
     Float = GL_FLOAT,
-    Double = GL_DOUBLE,
-    Unknown
+    Double = GL_DOUBLE
 };
 
 template<ElementType E>
@@ -112,8 +108,7 @@ constexpr ElementType fromType(){
 enum class Tex2DWrap : GLint {
     Repeat = GL_REPEAT,
     ClampToEdge = GL_CLAMP_TO_EDGE,
-    MirroredRepeat = GL_MIRRORED_REPEAT,
-    Unknown
+    MirroredRepeat = GL_MIRRORED_REPEAT
 };
 
 enum class Tex2DFilter : GLint {
@@ -122,8 +117,7 @@ enum class Tex2DFilter : GLint {
     LinearMipmapNearest = GL_LINEAR_MIPMAP_NEAREST,
     Nearest = GL_NEAREST,
     NearestMipmapLinear = GL_NEAREST_MIPMAP_LINEAR,
-    NearestMipmapNearest = GL_NEAREST_MIPMAP_NEAREST,
-    Unknown
+    NearestMipmapNearest = GL_NEAREST_MIPMAP_NEAREST
 };
 
 enum class Tex2DInternalFormat : GLenum {

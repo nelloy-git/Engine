@@ -15,7 +15,7 @@ const std::string &FShader::_getSource(){
 
 std::string FShader::_createSourceAll(){
     std::string src = R"(
-    #version 420 core
+    #version 450 core
 
     in vec4 baseColor;
     in vec2 outTexCoord_0;
