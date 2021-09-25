@@ -15,6 +15,7 @@ template<Render::Base::VertexStruct S>
 class Node;
 
 using Texture = Render::Base::Texture;
+using Material = Render::Base::Material;
 
 template<Render::Base::VertexStruct S>
 class Model {
@@ -28,6 +29,7 @@ public:
     std::vector<Mesh<S>> meshes;
     std::vector<Node<S>> nodes;
     std::vector<Texture> textures;
+    std::vector<Material> materails;
 
 private:
 };

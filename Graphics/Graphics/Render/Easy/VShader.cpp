@@ -138,19 +138,24 @@ uniform mat4 uni_model;
 uniform mat4 uni_camera;
 
 out vec4 baseColor;
-out vec2 outTexCoord_0;
-out vec2 outTexCoord_1;
+out vec2 outTexCoord[)"
+ + std::to_string(sizeof(VShader::Vertex::tex_coord) / sizeof(VShader::Vertex::tex_coord[0])) +
+R"(];
 
 void main(){
     gl_Position = uni_camera * uni_model * vec4(getPos(), 1.0);
 
     baseColor = getColor_0();
-    outTexCoord_0 = getTexCoord_0();
-    outTexCoord_1 = getTexCoord_1();
-}
-    )";
+)";
 
-    std::cout << src.c_str();
+    for (int i = 0; i < sizeof(VShader::Vertex::tex_coord) / sizeof(VShader::Vertex::tex_coord[0]); ++i){
+        auto si = std::to_string(i);
+        src += "    outTexCoord[" + si + "] = getTexCoord_" + si + "();\n";
+    }
+
+    src += "}\n";
+
+    std::cout << "VShader:\n" << src.c_str();
 
     return src;
 }

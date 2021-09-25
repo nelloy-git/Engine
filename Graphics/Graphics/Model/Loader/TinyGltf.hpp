@@ -170,6 +170,33 @@ private:
         }
     }
 
+    static void _loadMaterials(const tinygltf::Model &gltf_model,
+                               Model<S> &mdl){
+        for (int i = 0; i < gltf_model.materials.size(); ++i){
+            mdl.materails.emplace_back();
+            // auto &material = mdl.materails.back();
+            // auto &gltf_material = gltf_model.materials[i];
+            // auto &gltf_pbr = gltf_material.pbrMetallicRoughness;
+
+            // auto color = material.addLayerInfo(Material::LayerType::Color);
+            // for (int j = 0)
+        }
+    }
+
+    static void _loadMaterial(const tinygltf::Model &gltf_model,
+                              const tinygltf::Material &gltf_material,
+                              Model<S> &mdl){
+        auto &gltf_pbr = gltf_material.pbrMetallicRoughness;
+
+        mdl.materails.emplace_back();
+        auto &material = mdl.materails.back();
+
+        auto color = material.addLayerInfo(Material::LayerType::Color);
+        for (int i = 0; i < S.TEX_COORD_COUNT; ++i){
+
+        }
+    }
+
 };
  
 } // namespace Graphics::Model::TinyGltf
