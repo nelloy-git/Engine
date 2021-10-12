@@ -1,5 +1,6 @@
 #pragma once
 
+#include <stdexcept>
 #include <string>
 #include <experimental/source_location>
 
@@ -23,8 +24,8 @@ using SrcLoc = std::experimental::source_location;
 }
 
 GLwrap::DrawMode getDrawMode(const tinygltf::Primitive &prim);
-GLwrap::ElementType getElemType(const tinygltf::Accessor &acc);
-GLwrap::ElementStruct getElemStruct(const tinygltf::Accessor &acc);
+GLwrap::Type getElemType(const tinygltf::Accessor &acc);
+GLwrap::Size getElemStruct(const tinygltf::Accessor &acc);
 
 GLwrap::Tex2DFilter getMinFilter(const tinygltf::Sampler &sampler);
 GLwrap::Tex2DFilter getMagFilter(const tinygltf::Sampler &sampler);

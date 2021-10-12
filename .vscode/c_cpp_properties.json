@@ -5,21 +5,20 @@
             "includePath": [
                 "${default}",
                 "Graphics",
-
                 "Graphics/Utils",
-                "Graphics/GLwrap",
-                "Graphics/GLwrap/glad/include",
-                "Graphics/GLwrap/glfw/include",
-
+                "Graphics/glw",
+                "Graphics/glw/glad/include",
+                "Graphics/glw/glfw/include",
+                "Graphics/glw/magic_enum/include",
                 "Graphics/3rdparty/tinygltf",
                 "Graphics/3rdparty/glm",
                 "Graphics/3rdparty/stb"
             ],
-            "defines": [
-            ],
-            "compilerPath": "C:\\MinGW\\mingw64\\bin\\g++",
+            "defines": [],
+            "compilerPath": "C:\\MinGW\\mingw64-g++-11.2\\bin\\g++.exe",
             "cStandard": "c17",
-            "cppStandard": "c++20"
+            "cppStandard": "c++20",
+            "configurationProvider": "ms-vscode.cmake-tools"
         }
     ],
     "version": 4

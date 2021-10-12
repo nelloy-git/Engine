@@ -12,7 +12,7 @@ namespace tinygltf {
 
 namespace Graphics::Model {
 
-class Texture : public Data, public GLwrap::Tex2D {
+class Texture : public Data, public glw::Tex2D {
 public:
     Texture(const ModelBase &model, int index,
             const tinygltf::Model &gltf_model, const tinygltf::Texture &gltf_texture);
@@ -21,9 +21,9 @@ public:
 private:
     static const tinygltf::Image &_getImg(const tinygltf::Model &gltf_model,
                                           const tinygltf::Texture &gltf_texture);
-    static GLwrap::Tex2DInternalFormat _getInternalFmt(const tinygltf::Image &gltf_image);
-    static GLwrap::Tex2DPixelFormat _getPixelFmt(const tinygltf::Image &gltf_image);
-    static GLwrap::Tex2DPixelType _getPixelType(const tinygltf::Image &gltf_image);
+    static glw::Tex2DInternalFormat _getInternalFmt(const tinygltf::Image &gltf_image);
+    static glw::Tex2DPixelDataFormat _getPixelFmt(const tinygltf::Image &gltf_image);
+    static glw::Tex2DPixelType _getPixelType(const tinygltf::Image &gltf_image);
 };
 
 }

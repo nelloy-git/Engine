@@ -9,7 +9,7 @@ using namespace Graphics::Model;
 Texture::Texture(const ModelBase &model, int index,
                  const tinygltf::Model &gltf_model, const tinygltf::Texture &gltf_texture) :
     Data(model, index),
-    GLwrap::Tex2D(_getImg(gltf_model, gltf_texture).width,
+    glw::Tex2D(_getImg(gltf_model, gltf_texture).width,
                   _getImg(gltf_model, gltf_texture).height,
                   _getInternalFmt(_getImg(gltf_model, gltf_texture)),
                   _getPixelFmt(_getImg(gltf_model, gltf_texture)),
@@ -51,33 +51,33 @@ const tinygltf::Image &Texture::_getImg(const tinygltf::Model &gltf_model,
     return gltf_model.images[gltf_texture.source];
 }
 
-GLwrap::Tex2DInternalFormat Texture::_getInternalFmt(const tinygltf::Image &gltf_image){
+glw::Tex2DInternalFormat Texture::_getInternalFmt(const tinygltf::Image &gltf_image){
     switch (gltf_image.component){
         case 1:
-            return GLwrap::Tex2DInternalFormat::RED;
+            return glw::Tex2DInternalFormat::RED;
         case 2:
-            return GLwrap::Tex2DInternalFormat::RG;
+            return glw::Tex2DInternalFormat::RG;
         case 3:
-            return GLwrap::Tex2DInternalFormat::RGB;
+            return glw::Tex2DInternalFormat::RGB;
         default:
-            return GLwrap::Tex2DInternalFormat::RGBA;
+            return glw::Tex2DInternalFormat::RGBA;
     }
 }
 
-GLwrap::Tex2DPixelFormat Texture::_getPixelFmt(const tinygltf::Image &gltf_image){
+glw::Tex2DPixelDataFormat Texture::_getPixelFmt(const tinygltf::Image &gltf_image){
     switch (gltf_image.component){
         case 1:
-            return GLwrap::Tex2DPixelFormat::RED;
+            return glw::Tex2DPixelDataFormat::RED;
         case 2:
-            return GLwrap::Tex2DPixelFormat::RG;
+            return glw::Tex2DPixelDataFormat::RG;
         case 3:
-            return GLwrap::Tex2DPixelFormat::RGB;
+            return glw::Tex2DPixelDataFormat::RGB;
         default:
-            return GLwrap::Tex2DPixelFormat::RGBA;
+            return glw::Tex2DPixelDataFormat::RGBA;
     }
 }
 
-GLwrap::Tex2DPixelType Texture::_getPixelType(const tinygltf::Image &gltf_image){
-    return gltf_image.bits == 8 ? GLwrap::Tex2DPixelType::UNSIGNED_BYTE
-                                : GLwrap::Tex2DPixelType::UNSIGNED_SHORT;
+glw::Tex2DPixelType Texture::_getPixelType(const tinygltf::Image &gltf_image){
+    return gltf_image.bits == 8 ? glw::Tex2DPixelType::UNSIGNED_BYTE
+                                : glw::Tex2DPixelType::UNSIGNED_SHORT;
 }

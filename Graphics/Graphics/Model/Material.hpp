@@ -6,7 +6,7 @@
 
 namespace Graphics::Model {
 
-using Texture = GLwrap::Tex2D;
+using Texture = glw::Tex2D;
 
 class Material {
 public:

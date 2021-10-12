@@ -20,11 +20,11 @@ ShaderGL::ShaderGL(const std::string &vertex_source,
                    const std::string &fragment_source) :
     Shader(){
 
-    GLwrap::Shader vert(GLwrap::ShaderType::Vertex, vertex_source);
-    GLwrap::Shader frag(GLwrap::ShaderType::Fragment, fragment_source);
+    glw::Shader vert(GLwrap::ShaderType::Vertex, vertex_source);
+    glw::Shader frag(GLwrap::ShaderType::Fragment, fragment_source);
 
-    std::vector<GLwrap::Shader *> list{&vert, &frag};
-    _program = std::make_unique<GLwrap::Program>(list);
+    std::vector<glw::Shader *> list{&vert, &frag};
+    _program = std::make_unique<glw::Program>(list);
     _program->use();
 }
 

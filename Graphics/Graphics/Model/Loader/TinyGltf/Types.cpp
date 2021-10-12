@@ -28,45 +28,45 @@ GLwrap::DrawMode gltf::getDrawMode(const tinygltf::Primitive &prim){
     }
 }
 
-GLwrap::ElementType gltf::getElemType(const tinygltf::Accessor &acc){
+GLwrap::Type gltf::getElemType(const tinygltf::Accessor &acc){
     switch (acc.componentType){
         case TINYGLTF_COMPONENT_TYPE_BYTE:
-            return GLwrap::ElementType::Byte;
+            return GLwrap::Type::Byte;
         case TINYGLTF_COMPONENT_TYPE_UNSIGNED_BYTE:
-            return GLwrap::ElementType::UByte;
+            return GLwrap::Type::UByte;
         case TINYGLTF_COMPONENT_TYPE_SHORT:
-            return GLwrap::ElementType::Short;
+            return GLwrap::Type::Short;
         case TINYGLTF_COMPONENT_TYPE_UNSIGNED_SHORT:
-            return GLwrap::ElementType::UShort;
+            return GLwrap::Type::UShort;
         case TINYGLTF_COMPONENT_TYPE_INT:
-            return GLwrap::ElementType::Int;
+            return GLwrap::Type::Int;
         case TINYGLTF_COMPONENT_TYPE_UNSIGNED_INT:
-            return GLwrap::ElementType::UInt;
+            return GLwrap::Type::UInt;
         case TINYGLTF_COMPONENT_TYPE_FLOAT:
-            return GLwrap::ElementType::Float;
+            return GLwrap::Type::Float;
         case TINYGLTF_COMPONENT_TYPE_DOUBLE:
-            return GLwrap::ElementType::Double;
+            return GLwrap::Type::Double;
         default:
             gltf::detailed::throwErr("Unknown GLwrap::ElementType");
     }
 }
 
-GLwrap::ElementStruct gltf::getElemStruct(const tinygltf::Accessor &acc){
+GLwrap::Size gltf::getElemStruct(const tinygltf::Accessor &acc){
     switch (acc.type){
         case TINYGLTF_TYPE_SCALAR:
-            return GLwrap::ElementStruct::Scalar;
+            return GLwrap::Size::Scalar;
         case TINYGLTF_TYPE_VEC2:
-            return GLwrap::ElementStruct::Vec2;
+            return GLwrap::Size::Vec2;
         case TINYGLTF_TYPE_VEC3:
-            return GLwrap::ElementStruct::Vec3;
+            return GLwrap::Size::Vec3;
         case TINYGLTF_TYPE_VEC4:
-            return GLwrap::ElementStruct::Vec4;
+            return GLwrap::Size::Vec4;
         case TINYGLTF_TYPE_MAT2:
-            return GLwrap::ElementStruct::Vec4;
+            return GLwrap::Size::Vec4;
         case TINYGLTF_TYPE_MAT3:
-            return GLwrap::ElementStruct::Mat3;
+            return GLwrap::Size::Mat3;
         case TINYGLTF_TYPE_MAT4:
-            return GLwrap::ElementStruct::Mat4;
+            return GLwrap::Size::Mat4;
         default:
             gltf::detailed::throwErr("Unknown GLwrap::ElementStruct");
     }

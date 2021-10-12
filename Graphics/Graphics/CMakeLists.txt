@@ -3,9 +3,9 @@ cmake_minimum_required(VERSION 3.1...3.17 FATAL_ERROR)
 project(GraphicsModel LANGUAGES CXX)
 
 include_directories(..)
-include_directories(../GLwrap)
-include_directories(../GLwrap/glad/include)
-include_directories(../GLwrap/glfw/include)
+include_directories(../glw)
+include_directories(../glw/glad/include)
+include_directories(../glw/glfw/include)
 include_directories(../Utils)
 include_directories(../3rdparty/tinygltf)
 include_directories(../3rdparty/glm)
@@ -14,18 +14,18 @@ add_library (${PROJECT_NAME} STATIC
 
     # ./Render/FragmentShaderGL.cpp
     # ./Render/RendererGL.cpp
-    ./Render/Easy/FShader.cpp
-    ./Render/Easy/VShader.cpp
-    ./Render/Easy/Renderer.cpp
+    # ./Render/Easy/FShader.cpp
+    # ./Render/Easy/VShader.cpp
+    # ./Render/Easy/Renderer.cpp
 
     # ./Model/Material.cpp
-    ./Model/Mesh.cpp
-    ./Model/Model.cpp
+    # ./Model/Mesh.cpp
+    # ./Model/Model.cpp
     # ./Model/Render.cpp
     # ./Model/Texture.cpp
 
     # ./Model/gltf/Primitive.cpp
-    ./Model/Loader/TinyGltf/Types.cpp
+    # ./Model/Loader/TinyGltf/Types.cpp
 
     ../Utils/Log.cpp
     ./Utils/Transform.cpp
@@ -62,7 +62,7 @@ add_library (${PROJECT_NAME} STATIC
 )
 
 target_link_libraries(${PROJECT_NAME}
-    GraphicsGLwrap
+    glw
 )
 
 set_property (TARGET ${PROJECT_NAME}

@@ -21,7 +21,7 @@ PrimitiveGL::~PrimitiveGL(){
 bool PrimitiveGL::init(){
     _inited = false;
 
-    std::unordered_map<GLwrap::BufferArray::Layout, GLwrap::BufferArray::BufferPair> gl_layouts;
+    std::unordered_map<GLwrap::Array::Layout, GLwrap::Array::BufferPair> gl_layouts;
 
     for (auto &iter : attributes){
         auto attr = iter.first;
@@ -122,9 +122,9 @@ bool PrimitiveGL::_verifyLoc(int loc, const std::string &name){
     if (loc < 0){
         LOG(WRN) << "gl program does not have attribute " << name << ". Attribute ignored.";
         return false;
-    } else if (loc > GLwrap::BufferArray::max_layouts()){
+    } else if (loc > GLwrap::Array::max_layouts()){
         LOG(WRN) << "OpenGL can not use location " << loc << " for attribute" << name
-                 << ". Only " << GLwrap::BufferArray::max_layouts() << " are available. Attribute ignored.";
+                 << ". Only " << GLwrap::Array::max_layouts() << " are available. Attribute ignored.";
         return false;
     }
     return true;

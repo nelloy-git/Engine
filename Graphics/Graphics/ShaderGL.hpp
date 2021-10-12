@@ -2,7 +2,7 @@
 
 #include "Graphics/Shader.h"
 
-namespace GLwrap {
+namespace glw {
     class Program;
 };
 
@@ -20,7 +20,7 @@ public:
     bool verify() override;
     void draw(const Object &obj) override;
 
-    GLwrap::Program *getProgram();
+    glw::Program *getProgram();
 
 
 private:
@@ -31,7 +31,7 @@ private:
     void _drawNode(const Node &node, const Object &obj);
     void _applyMaterial(const Material &material);
 
-    std::unique_ptr<GLwrap::Program> _program;
+    std::unique_ptr<glw::Program> _program;
 
     std::vector<std::string> _messages;
 

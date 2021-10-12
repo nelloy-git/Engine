@@ -65,7 +65,7 @@ void loadAccessor(const tinygltf::Model &model,
     auto &view = model.bufferViews[accessor.bufferView];
     auto src_type = gltf::getElemType(accessor);
     auto src_struct = gltf::getElemStruct(accessor);
-    auto src_size = GLwrap::getSize(src_type) * GLwrap::getSize(src_struct);
+    auto src_size = GLwrap::size(src_type) * GLwrap::count(src_struct);
 
     const char *src = reinterpret_cast<const char *>(model.buffers[view.buffer].data.data());
     size_t src_offset = view.byteOffset + accessor.byteOffset;
@@ -122,7 +122,7 @@ static void loadVecNormalized(const tinygltf::Model &model,
     auto elem_type = gltf::getElemType(accessor);
     auto elem_struct = gltf::getElemStruct(accessor);
 
-    if (GLwrap::getSize(elem_struct) != S){
+    if (GLwrap::count(elem_struct) != S){
         throwErr("Got invalid componentStruct.");
     }
 
@@ -133,27 +133,27 @@ static void loadVecNormalized(const tinygltf::Model &model,
     static normFunc<double, S> norm_double = &normVec<double, S, normDouble>;
     
     switch (elem_type){
-    case GLwrap::ElementType::UByte:
+    case GLwrap::Type::UByte:
         loadAccessor<unsigned char, S, float, S>(model, accessor, dst, offset, step, &norm_ubyte);
         break;
         
-    case GLwrap::ElementType::Byte:
+    case GLwrap::Type::Byte:
         loadAccessor<char, S, float, S>(model, accessor, dst, offset, step, &norm_byte);
         break;
 
-    case GLwrap::ElementType::UShort:
+    case GLwrap::Type::UShort:
         loadAccessor<unsigned short int, S, float, S>(model, accessor, dst, offset, step, &norm_ushort);
         break;
 
-    case GLwrap::ElementType::Short:
+    case GLwrap::Type::Short:
         loadAccessor<short int, S, float, S>(model, accessor, dst, offset, step, &norm_short);
         break;
 
-    case GLwrap::ElementType::Float:
+    case GLwrap::Type::Float:
         loadAccessor<float, S, float, S>(model, accessor, dst, offset, step);
         break;
 
-    case GLwrap::ElementType::Double:
+    case GLwrap::Type::Double:
         loadAccessor<double, S, float, S>(model, accessor, dst, offset, step, &norm_double);
         break;
     

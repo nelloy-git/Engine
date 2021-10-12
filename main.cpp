@@ -33,29 +33,29 @@ using namespace Graphics;
 const float cam_vel = 5;
 bool pause = false;
 
-void camMove(GLwrap::Window &window, Graphics::Draw::Camera &cam, float dist){
+void camMove(glw::Window &window, Graphics::Draw::Camera &cam, float dist){
         
-    if (!pause && window.keyboard.isDown(GLwrap::KeyboardKey::W)){
+    if (!pause && window.keyboard.isDown(glw::KeyboardKey::W)){
         cam.pos += cam.direction * dist;
     }
 
-    if (!pause && window.keyboard.isDown(GLwrap::KeyboardKey::S)){
+    if (!pause && window.keyboard.isDown(glw::KeyboardKey::S)){
         cam.pos -= cam.direction * dist;
     }
 
-    if (!pause && window.keyboard.isDown(GLwrap::KeyboardKey::D)){
+    if (!pause && window.keyboard.isDown(glw::KeyboardKey::D)){
         cam.pos += cam.right * dist;
     }
 
-    if (!pause && window.keyboard.isDown(GLwrap::KeyboardKey::A)){
+    if (!pause && window.keyboard.isDown(glw::KeyboardKey::A)){
         cam.pos -= cam.right * dist;
     }
 
-    if (!pause && window.keyboard.isDown(GLwrap::KeyboardKey::SPACE)){
+    if (!pause && window.keyboard.isDown(glw::KeyboardKey::SPACE)){
         cam.pos += cam.up * dist;
     }
 
-    if (!pause && window.keyboard.isDown(GLwrap::KeyboardKey::LEFT_CONTROL)){
+    if (!pause && window.keyboard.isDown(glw::KeyboardKey::LEFT_CONTROL)){
         cam.pos -= cam.up * dist;
     }
 
@@ -66,7 +66,7 @@ int main(int argc, const char** argv){
     int height = 480;
     bool running = true;
 
-    auto window = std::make_unique<GLwrap::Window>(width, height, "Test");
+    auto window = std::make_unique<glw::Window>(width, height, "Test");
     window->setActive(true);
 
     glEnable(GL_DEPTH_TEST);
@@ -118,7 +118,7 @@ int main(int argc, const char** argv){
         object->transform.applyTRS();
     }
 
-    auto timer = std::make_shared<GLwrap::Timer>();
+    auto timer = std::make_shared<glw::Timer>();
     timer->start();
 
     glm::vec4 back_color(0.2f, 0.3f, 0.3f, 1.0f);
@@ -130,8 +130,8 @@ int main(int argc, const char** argv){
     float rot_vel = (float)(3.14 / 8);
     float angle = 0;
 
-    window->keyboard.onPress.add([](GLwrap::KeyboardKey key, GLwrap::KeyMode mode){
-        if (key == GLwrap::KeyboardKey::P){
+    window->keyboard.onPress.add([](glw::KeyboardKey key, glw::KeyMode mode){
+        if (key == glw::KeyboardKey::P){
             pause = !pause;
             std::cout << "Pressed" <<std::endl;
         }

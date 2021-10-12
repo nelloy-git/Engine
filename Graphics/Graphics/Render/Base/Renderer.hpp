@@ -6,27 +6,27 @@
 #include "glm/glm.hpp"
 #include "glm/gtc/type_ptr.hpp"
 
-#include "GLwrap/Program.h"
-#include "GLwrap/Shader.h"
+#include "GLwrap/Program.hpp"
+#include "GLwrap/Shader.hpp"
 
-#include "Graphics/Render/Base/Primitive.hpp"
+// #include "Graphics/Render/Base/Primitive.hpp"
 // #include ""
 
 namespace Graphics::Render::Base {
 
 
-class VShader : public GLwrap::Shader {
+class VShader : public glw::Shader {
 public:
-    explicit VShader(const std::string &src) : GLwrap::Shader(GLwrap::ShaderType::Vertex, src){};
+    explicit VShader(const std::string &src) : glw::Shader(glw::ShaderType::Vertex, src){};
     VShader(const VShader &) = delete;
     virtual ~VShader(){}; // = 0;
 };
 // inline VShader::~VShader(){};
 
 
-class FShader : public GLwrap::Shader {
+class FShader : public glw::Shader {
 public:
-    explicit FShader(const std::string &src) : GLwrap::Shader(GLwrap::ShaderType::Fragment, src){};
+    explicit FShader(const std::string &src) : glw::Shader(glw::ShaderType::Fragment, src){};
     FShader(const FShader &) = delete;
     virtual ~FShader(){}; // = 0;
 };
@@ -37,7 +37,7 @@ template<VertexStruct S>
 class Renderer {
 public:
     Renderer(const VShader &vert, const FShader &frag) :
-        _gl_program(new GLwrap::Program({&vert, &frag})){
+        _gl_program(new glw::Program({&vert, &frag})){
     };
     Renderer(const Renderer &) = delete;
     virtual ~Renderer(){};
@@ -55,7 +55,7 @@ public:
     //                   const std::vector<float> &morph) const = 0;
 
 protected:
-    std::unique_ptr<GLwrap::Program> _gl_program;
+    std::unique_ptr<glw::Program> _gl_program;
 };
 
 }

@@ -2,12 +2,12 @@ cmake_minimum_required(VERSION 3.1...3.17 FATAL_ERROR)
 
 project(Graphics LANGUAGES C CXX)
 
-add_subdirectory(./GLwrap)
+add_subdirectory(./glw)
 add_subdirectory(./Graphics)
 
 include_directories(.)
-include_directories(./GLwrap)
-include_directories(./GLwrap/glad/include)
+include_directories(./glw)
+include_directories(./glw/glad/include)
 include_directories(./Utils)
 include_directories(./3rdparty/tinygltf)
 include_directories(./3rdparty/glm)

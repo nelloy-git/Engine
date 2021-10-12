@@ -16,49 +16,49 @@ GLwrap::BufferType Draw::toGLwrap(Draw::BufferType type){
     }
 }
 
-GLwrap::ElementType Draw::toGLwrap(Draw::BufferElemType elem_type){
+GLwrap::Type Draw::toGLwrap(Draw::BufferElemType elem_type){
     switch (elem_type){
         case Draw::BufferElemType::Byte:
-            return GLwrap::ElementType::Byte;
+            return GLwrap::Type::Byte;
         case Draw::BufferElemType::UByte:
-            return GLwrap::ElementType::UByte;
+            return GLwrap::Type::UByte;
         case Draw::BufferElemType::Short:
-            return GLwrap::ElementType::Short;
+            return GLwrap::Type::Short;
         case Draw::BufferElemType::UShort:
-            return GLwrap::ElementType::UShort;
+            return GLwrap::Type::UShort;
         case Draw::BufferElemType::Int:
-            return GLwrap::ElementType::Int;
+            return GLwrap::Type::Int;
         case Draw::BufferElemType::UInt:
-            return GLwrap::ElementType::UInt;
+            return GLwrap::Type::UInt;
         case Draw::BufferElemType::Float:
-            return GLwrap::ElementType::Float;
+            return GLwrap::Type::Float;
         case Draw::BufferElemType::Double:
-            return GLwrap::ElementType::Double;
+            return GLwrap::Type::Double;
         default:
             LOG(WRN) << "unknown " << toString(elem_type);
-            return GLwrap::ElementType::Byte;
+            return GLwrap::Type::Byte;
     }
 }
 
-GLwrap::ElementStruct Draw::toGLwrap(Draw::BufferElemStruct elem_struct){
+GLwrap::Size Draw::toGLwrap(Draw::BufferElemStruct elem_struct){
     switch(elem_struct){
         case Draw::BufferElemStruct::Scalar:
-            return GLwrap::ElementStruct::Scalar;
+            return GLwrap::Size::Scalar;
         case Draw::BufferElemStruct::Vec2:
-            return GLwrap::ElementStruct::Vec2;
+            return GLwrap::Size::Vec2;
         case Draw::BufferElemStruct::Vec3:
-            return GLwrap::ElementStruct::Vec3;
+            return GLwrap::Size::Vec3;
         case Draw::BufferElemStruct::Vec4:
-            return GLwrap::ElementStruct::Vec4;
+            return GLwrap::Size::Vec4;
         case Draw::BufferElemStruct::Mat2:
-            return GLwrap::ElementStruct::Mat2;
+            return GLwrap::Size::Mat2;
         case Draw::BufferElemStruct::Mat3:
-            return GLwrap::ElementStruct::Mat3;
+            return GLwrap::Size::Mat3;
         case Draw::BufferElemStruct::Mat4:
-            return GLwrap::ElementStruct::Mat4;
+            return GLwrap::Size::Mat4;
         default:
             LOG(WRN) << "unknown " << toString(elem_struct);
-            return GLwrap::ElementStruct::Scalar;
+            return GLwrap::Size::Scalar;
     }
 }
 

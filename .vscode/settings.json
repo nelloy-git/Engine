@@ -99,6 +99,9 @@
         "*.glsl": "cpp",
         "shared_mutex": "cpp",
         "cwctype": "cpp",
-        "source_location": "cpp"
-    }
+        "source_location": "cpp",
+        "numbers": "cpp",
+        "semaphore": "cpp"
+    },
+    "cmake.configureOnOpen": false
 }

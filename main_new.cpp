@@ -11,11 +11,13 @@
 #include "Context/Timer.h"
 #include "Context/Window.h"
 
-#include "Graphics/Model/Model.hpp"
-#include "Graphics/Render/Easy/Renderer.hpp"
+// #include "Graphics/Render/Base/Vertex.hpp"
+// #include "Graphics/Model/Model.hpp"
+// #include "Graphics/Render/Base/Primitive.hpp"-
+#include "Graphics/Render/Base/Primitive.hpp"
 #include "Graphics/Utils/Camera.hpp"
 
-#include "Graphics/Model/Loader/TinyGltf.hpp"
+// #include "Graphics/Model/Loader/TinyGltf.hpp"
 
 #include "Log.h"
 
@@ -32,81 +34,83 @@ bool pause = false;
 //     return new Render::RendererGL(vert, frag);
 // }
 
-void camMove(GLwrap::Window &window, Graphics::Draw::Camera &cam, float dist, float angle){
+void camMove(glw::Window &window, Graphics::Draw::Camera &cam, float dist, float angle){
     if (pause){
         return;
     }
         
-    if (window.keyboard.isDown(GLwrap::KeyboardKey::W)){
+    if (window.keyboard.isDown(glw::KeyboardKey::W)){
         cam.pos += cam.direction * dist;
     }
 
-    if (window.keyboard.isDown(GLwrap::KeyboardKey::S)){
+    if (window.keyboard.isDown(glw::KeyboardKey::S)){
         cam.pos -= cam.direction * dist;
     }
 
-    if (window.keyboard.isDown(GLwrap::KeyboardKey::D)){
+    if (window.keyboard.isDown(glw::KeyboardKey::D)){
         cam.pos += cam.right * dist;
     }
 
-    if (window.keyboard.isDown(GLwrap::KeyboardKey::A)){
+    if (window.keyboard.isDown(glw::KeyboardKey::A)){
         cam.pos -= cam.right * dist;
     }
 
-    if (window.keyboard.isDown(GLwrap::KeyboardKey::SPACE)){
+    if (window.keyboard.isDown(glw::KeyboardKey::SPACE)){
         cam.pos += cam.up * dist;
     }
 
-    if (window.keyboard.isDown(GLwrap::KeyboardKey::LEFT_CONTROL)){
+    if (window.keyboard.isDown(glw::KeyboardKey::LEFT_CONTROL)){
         cam.pos -= cam.up * dist;
     }
 
-    if (window.keyboard.isDown(GLwrap::KeyboardKey::LEFT)){
+    if (window.keyboard.isDown(glw::KeyboardKey::LEFT)){
         cam.yaw -= angle;
     }
 
-    if (window.keyboard.isDown(GLwrap::KeyboardKey::RIGHT)){
+    if (window.keyboard.isDown(glw::KeyboardKey::RIGHT)){
         cam.yaw += angle;
     }
 
-    if (window.keyboard.isDown(GLwrap::KeyboardKey::UP)){
+    if (window.keyboard.isDown(glw::KeyboardKey::UP)){
         cam.pitch -= angle;
     }
 
-    if (window.keyboard.isDown(GLwrap::KeyboardKey::DOWN)){
+    if (window.keyboard.isDown(glw::KeyboardKey::DOWN)){
         cam.pitch += angle;
     }
 }
 
-tinygltf::Model *loadMdlData(const std::string &path){
-    static tinygltf::TinyGLTF loader;
-    std::string err;
-    std::string warn;
+// tinygltf::Model *loadMdlData(const std::string &path){
+//     static tinygltf::TinyGLTF loader;
+//     std::string err;
+//     std::string warn;
 
-    auto gltf_model = new tinygltf::Model();
+//     auto gltf_model = new tinygltf::Model();
 
-    bool res = loader.LoadASCIIFromFile(gltf_model, &err, &warn, path);
-    if (!warn.empty()){
-        throw std::runtime_error(warn);
-    }
+//     bool res = loader.LoadASCIIFromFile(gltf_model, &err, &warn, path);
+//     if (!warn.empty()){
+//         throw std::runtime_error(warn);
+//     }
 
-    if (!err.empty()) {
-        throw std::runtime_error(err);
-    }
+//     if (!err.empty()) {
+//         throw std::runtime_error(err);
+//     }
 
-    if (!res){
-        throw std::runtime_error("Failed to load glTF: " + path);
-    }
+//     if (!res){
+//         throw std::runtime_error("Failed to load glTF: " + path);
+//     }
 
-    return gltf_model;
-}
+//     return gltf_model;
+// }
+
+
 
 int main(int argc, const char** argv){
     int width = 640;
     int height = 480;
     bool running = true;
-
-    auto window = std::make_unique<GLwrap::Window>(width, height, "Test");
+    
+    auto window = std::make_unique<glw::Window>(width, height, "Test");
     window->setActive(true);
 
     glEnable(GL_DEPTH_TEST);
@@ -116,12 +120,22 @@ int main(int argc, const char** argv){
     });
 
 
+    std::vector<Render::Base::Vertex> vert;
+    std::vector<unsigned int> index;
+
+    // glw::ObjectIndexed(vert, index);
+    Render::Base::Primitive prim(vert, index);
+    
+
+
+
+
     auto cam = std::make_shared<Graphics::Draw::Camera>();
     cam->width = width;
     cam->height = height;
     cam->pos = glm::vec3(-0.3, 0, 0);
 
-    auto timer = std::make_shared<GLwrap::Timer>();
+    auto timer = std::make_shared<glw::Timer>();
     timer->start();
 
     glm::vec4 back_color(0.2f, 0.3f, 0.3f, 1.0f);
@@ -138,21 +152,21 @@ int main(int argc, const char** argv){
     float rot_vel = (float)(3.14 / 8);
     // float angle = 0;
 
-    window->keyboard.onPress.add([](GLwrap::KeyboardKey key, GLwrap::KeyMode mode){
-        if (key == GLwrap::KeyboardKey::P){
+    window->keyboard.onPress.add([](glw::KeyboardKey key, glw::KeyMode mode){
+        if (key == glw::KeyboardKey::P){
             pause = !pause;
             std::cout << "Pressed" <<std::endl;
         }
     });
 
-    Graphics::Render::Easy::Renderer renderer;
-    renderer.use();
+    // Graphics::Render::Easy::Renderer renderer;
+    // renderer.use();
     // Graphics::Model::Model mdl("../test/book/scene.gltf");
     // auto cube = Graphics::Render::Easy::Renderer::newCube();
 
-    auto model_data = loadMdlData("../test/book/scene.gltf");
-    auto model = Model::Loader::TinyGltf<Render::Easy::VERT_STRUCT>::newModel(*model_data);
-    delete model_data;
+    // auto model_data = loadMdlData("../test/book/scene.gltf");
+    // auto model = Model::Loader::TinyGltf<Render::Easy::VERT_STRUCT>::newModel(*model_data);
+    // delete model_data;
 
     while (running){
         float dt = timer->elapsed();
@@ -173,9 +187,9 @@ int main(int argc, const char** argv){
         //         renderer.draw(*prim, cam->mat * mat, {});
         //     }
         // }
-        renderer.setCamera(cam->mat);
+        // renderer.setCamera(cam->mat);
         // renderer.draw(*cube, mat, {});
-        renderer.draw(*model, mat, {});
+        // renderer.draw(*model, mat, {});
         
         window->swapBuffers();
         glfwPollEvents();

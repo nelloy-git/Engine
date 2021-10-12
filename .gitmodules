@@ -10,3 +10,6 @@
 [submodule "Graphics/3rdparty/tinygltf"]
 	path = Graphics/3rdparty/tinygltf
 	url = https://github.com/syoyo/tinygltf.git
+[submodule "Graphics/GLwrap/magic_enum"]
+	path = Graphics/GLwrap/magic_enum
+	url = https://github.com/Neargye/magic_enum.git

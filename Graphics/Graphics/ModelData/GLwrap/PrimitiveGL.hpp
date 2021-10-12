@@ -19,7 +19,7 @@ public:
     bool init() override;
     bool draw() const;
 
-    std::shared_ptr<GLwrap::BufferArray> vao;
+    std::shared_ptr<glw::Array> vao;
 
 protected:
     bool _verifyLoc(int loc, const std::string &name);
