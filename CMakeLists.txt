@@ -2,38 +2,20 @@ cmake_minimum_required(VERSION 3.1...3.17 FATAL_ERROR)
 
 project(Engine VERSION 0.1 LANGUAGES CXX)
 
-if (WIN32)
-    set(CMAKE_CXX_COMPILER C:/MinGW/mingw64-g++-11.2/bin/g++.exe)
-    set(CMAKE_C_COMPILER C:/MinGW/mingw64-g++-11.2/bin/gcc.exe)
-else ()
-    set(/usr/bin/g++-11.exe)
-    set(/usr/bin/gcc-11.exe)
-endif (WIN32)
+# add_compile_options(-g -O0)
 
-add_compile_definitions(DEBUG)
-add_compile_options(-g -O0)
-
-add_subdirectory(Graphics)
-
+add_subdirectory(./3rdparty/glwpp)
 include_directories(
     ./include
-    ./Graphics
-    ./Graphics/Utils
-    ./Graphics/glw
-    ./Graphics/glw/glad/include
-    ./Graphics/glw/glfw/include
-    ./Graphics/3rdparty/glm
-    ./Graphics/3rdparty/tinygltf
+    ./3rdparty/glwpp/include
 )
 
-find_package(OpenMP REQUIRED)
-
-add_executable(${PROJECT_NAME} main_new.cpp)
+add_executable(${PROJECT_NAME} main.cpp)
 target_link_libraries(${PROJECT_NAME}
-    Graphics
-    OpenMP::OpenMP_CXX
+    glwpp
 )
 
+target_compile_features(${PROJECT_NAME} PUBLIC cxx_std_20)
 set_property (TARGET ${PROJECT_NAME}
   PROPERTY
     # Enable C++20 standard compliance

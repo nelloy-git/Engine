@@ -1,24 +1,14 @@
 {
     "configurations": [
         {
-            "name": "Linux",
+            "name": "Win64",
             "includePath": [
                 "${default}",
-                "Graphics",
-                "Graphics/Utils",
-                "Graphics/glw",
-                "Graphics/glw/glad/include",
-                "Graphics/glw/glfw/include",
-                "Graphics/glw/magic_enum/include",
-                "Graphics/3rdparty/tinygltf",
-                "Graphics/3rdparty/glm",
-                "Graphics/3rdparty/stb"
+                "include",
+                "3rdparty/glwpp/include",
             ],
-            "defines": [],
-            "compilerPath": "C:\\MinGW\\mingw64-g++-11.2\\bin\\g++.exe",
-            "cStandard": "c17",
-            "cppStandard": "c++20",
-            "configurationProvider": "ms-vscode.cmake-tools"
+            "compilerPath": "D:\\VisualStudio\\VC\\Tools\\MSVC\\14.29.30037\\bin\\Hostx64\\x64\\cl.exe",
+            "cppStandard": "c++20"
         }
     ],
     "version": 4

@@ -1,4 +1,0 @@
-*:*/3rdparty/*
-*:*/glad/*
-*:*/glfw/*
-*:*/build/*
